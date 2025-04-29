@@ -14,7 +14,7 @@ export abstract class BaseMockService<TModel extends ObjectId> extends BaseServi
   abstract createRegistry(props?: Partial<TModel>): TModel;
 
   private _populateInitialValues() {
-    for(let index of Array.from(Array(30).keys())) this.registries.push(this.createRegistry());
+    for(let index of Array.from(Array(fakerJs.number.int({ min: 10, max: 50 })).keys())) this.registries.push(this.createRegistry());
   };
 
   override get(id: string): Observable<TModel> {
