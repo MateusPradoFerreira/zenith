@@ -48,6 +48,9 @@
       ],
       "@spartan-ng/ui-calendar-helm": [
         ".\\src/app/common/libs/ui/ui-calendar-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-badge-helm": [
+        ".\\src/app/common/libs/ui/ui-badge-helm/src/index.ts"
       ]
     },
     "strictPropertyInitialization": false,

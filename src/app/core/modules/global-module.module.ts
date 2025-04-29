@@ -11,11 +11,12 @@ import { HlmSelectModule } from '../../common/libs/ui/ui-select-helm/src';
 import { HlmTemplateDirective } from '../../common/directives/hlm-template.directive';
 import { HlmDatePickerModule } from '../../common/libs/ui/ui-datepicker-helm/src';
 import { HlmCalendarModule } from '../../common/libs/ui/ui-calendar-helm/src';
+import { NgFor, NgForOf, NgIf } from '@angular/common';
+import { HlmBadgeModule } from '../../common/libs/ui/ui-badge-helm/src';
 
+const generalModules = [HlmTemplateDirective, FormsModule, ReactiveFormsModule, LucideAngularModule, NgIf, NgFor, NgForOf];
 
-const generalModules = [HlmTemplateDirective, FormsModule, ReactiveFormsModule, LucideAngularModule];
-
-const spartanUIModules = [HlmDatePickerModule, HlmCalendarModule, HlmButtonModule, HlmInputDirective, HlmTableModule, HlmPopoverModule, BrnPopoverModule, HlmPaginationModule, HlmSelectModule];
+const spartanUIModules = [HlmBadgeModule, HlmDatePickerModule, HlmCalendarModule, HlmButtonModule, HlmInputDirective, HlmTableModule, HlmPopoverModule, BrnPopoverModule, HlmPaginationModule, HlmSelectModule];
 
 @NgModule({
 	imports: [ ...generalModules, ...spartanUIModules ],

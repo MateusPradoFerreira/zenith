@@ -1,17 +1,16 @@
-import { Directive, computed, input, signal } from '@angular/core';
+import { Directive, computed, input } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ClassValue } from 'clsx';
-import { injectBrnButtonConfig } from './hlm-button.token';
 
-export const buttonVariants = cva(
-	"[&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px] border-2 border-transparent inline-flex items-center gap-2 cursor-pointer justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+export const badgeVariants = cva(
+	'inline-flex items-center border rounded-full px-2.5 py-0.5 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
 	{
 		variants: {
 			variant: {
 				default: "bg-zinc-900 text-white hover:bg-zinc-800",
 				outline: "border-zinc-900 bg-transparent hover:bg-zinc-900 hover:text-white",
-				secondary: "bg-slate-100 hover:bg-slate-200/70",
+				secondary: "bg-slate-100 hover:bg-slate-200/70 border-transparent",
 				ghost: "hover:bg-slate-200/70",
 			},
 			severity: {
@@ -23,8 +22,8 @@ export const buttonVariants = cva(
 				danger: "bg-rose-500 text-white hover:bg-rose-800",
 			},
 			size: {
-				default: "h-[38px] px-4",
-				icon: "h-[38px] w-[38px] p-0",
+				default: 'text-sm',
+				lg: 'text-sm',
 			},
 		},
 		defaultVariants: {
@@ -56,33 +55,22 @@ export const buttonVariants = cva(
 		],
 	},
 );
-export type ButtonVariants = VariantProps<typeof buttonVariants>;
+export type BadgeVariants = VariantProps<typeof badgeVariants>;
 
 @Directive({
-	selector: "[hlmBtn]",
+	selector: '[hlmBadge]',
 	standalone: true,
-	exportAs: "hlmBtn",
 	host: {
-		"[class]": "_computedClass()",
+		'[class]': '_computedClass()',
 	},
 })
-export class HlmButtonDirective {
-	private readonly _config = injectBrnButtonConfig();
-
-	private readonly _additionalClasses = signal<ClassValue>("");
-
-	public readonly userClass = input<ClassValue>("", { alias: "class" });
-
+export class HlmBadgeDirective {
 	protected readonly _computedClass = computed(() =>
-		hlm(buttonVariants({ variant: this.variant(), size: this.size(), severity: this.severity() }), this.userClass(), this._additionalClasses()),
-	);
+		hlm(badgeVariants({ variant: this.variant(), size: this.size(), severity: this.severity() }), this.userClass()),
+	);		
 
-	public readonly variant = input<ButtonVariants["variant"]>(this._config.variant);
-	public readonly size = input<ButtonVariants["size"]>(this._config.size);
-	public readonly severity = input<ButtonVariants["severity"]>(this._config.severity);
-
-	setClass(classes: string): void {
-		this._additionalClasses.set(classes);
-	}
-
+	public readonly userClass = input<ClassValue>('', { alias: 'class' });
+	public readonly variant = input<BadgeVariants["variant"]>("secondary");
+	public readonly size = input<BadgeVariants["size"]>("default");
+	public readonly severity = input<BadgeVariants["severity"]>("primary");
 }

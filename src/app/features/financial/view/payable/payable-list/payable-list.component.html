@@ -21,10 +21,13 @@
     </ng-template>
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
-      <hlm-td class="w-60">{{ rowData.method }}</hlm-td>
-      <hlm-td class="w-60">{{ rowData.status }}</hlm-td>
-      <hlm-td class="justify-end w-60">{{ rowData.amount | currency: "BRL" }}</hlm-td> 
-      <hlm-td class="justify-end w-16 py-0">
+      <hlm-td class="w-40">{{ rowData.paidAt | date: "dd/MM/YYYY" }}</hlm-td>
+      <hlm-td class="w-40">{{ rowData.dueAt | date: "dd/MM/YYYY" }}</hlm-td>
+      <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PENDING'"> <span hlmBadge severity="warn">Pendente</span> </hlm-td>
+      <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PAID'"> <span hlmBadge severity="success">Pago</span> </hlm-td>
+      <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'OVERDUE'"> <span hlmBadge severity="danger">Vencido</span> </hlm-td>
+      <hlm-td class="justify-end w-40">{{ rowData.value | currency: "BRL" }}</hlm-td> 
+      <hlm-td class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
         <span class="flex items-center gap-2">
           <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical"></button>
         </span>
