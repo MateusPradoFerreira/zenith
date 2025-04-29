@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 
