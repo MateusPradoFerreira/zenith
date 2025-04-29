@@ -1,0 +1,28 @@
+<aside class="absolute overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid grid-cols-1 grid-rows-[64px_1fr_auto] {{ active || hovering? 'w-64' : 'w-16' }}" (mouseover)="state.setHovering(true)" (mouseleave)="state.setHovering(false)">
+  <div class="px-6 flex items-center relative gap-3">
+    <i-lucide name="origami" size="28" [strokeWidth]="1.5" class="-ml-0.5"></i-lucide>
+    <span class="text-xl transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
+    <button class="w-8 h-8 hover:bg-slate-200/70 flex items-center justify-center rounded-lg cursor-pointer absolute top-0 right-0 mr-1.5 mt-1.5 transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}" (click)="state.setActive(!active)">
+      <i-lucide [name]="active? 'pin-off' : 'pin'" size="18"></i-lucide>
+    </button>
+  </div>
+  <nav class="px-2 py-3 list-none">
+    <ms-nav-separator label="Geral"/>
+    <ms-nav-item label="Dashboard" icon="layout-dashboard" to="/dashboard"/>
+    <ms-nav-item label="Agenda" icon="calendar" to="/calendar"/>
+    <ms-nav-item label="Projetos" icon="square-kanban" to="/projects"/>
+    <ms-nav-separator label="Financeiro"/>
+    <ms-nav-item label="Fluxo" icon="piggy-bank"/>
+    <ms-nav-item label="Despesa" icon="banknote-arrow-down" to="/payables"/>
+    <ms-nav-item label="Receita" icon="banknote-arrow-up" to=""/>
+    <ms-nav-item label="Recorrência" icon="clock-fading" to=""/>
+    <ms-nav-item label="Cadastros" icon="clipboard-pen-line" to=""/>
+    <ms-nav-separator label="Outros"/>
+    <ms-nav-item label="Relatórios" icon="clipboard-list" to=""/>
+    <ms-nav-item label="Documentos" icon="folder-open" to=""/>
+  </nav>
+  <div class="px-2 py-3">
+    <ms-nav-item label="Suporte" icon="message-circle-more"/>
+    <ms-nav-item label="Configurações" icon="settings" (command)="openSettings()"/>
+  </div>
+</aside>

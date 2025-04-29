@@ -1,0 +1,34 @@
+<div class="mb-2 flex items-center justify-between" *ngIf="headerTemplate">
+  <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+</div>
+
+<div class="mb-2 flex items-center justify-between" *ngIf="!headerTemplate">
+  <h1 class="text-xl font-medium">{{ header }}</h1>
+  <div class="flex items-center gap-2">
+    <div class="hlm-input-left-icon">
+      <input hlmInput placeholder="Buscar..." [(ngModel)]="query" class="w-[356px] bg-slate-100 border-transparent"/>
+      <i-lucide name="search"></i-lucide>
+    </div>
+    <ng-container *ngTemplateOutlet="actionTemplate"></ng-container>
+  </div>
+</div>
+
+<hlm-table hlm stickyHeader [class]="_computedClass()">
+
+  <hlm-trow>
+    <hlm-th *ngFor="let column of columns" [class]="column.class">{{ column.header }}</hlm-th>
+  </hlm-trow>
+
+  <hlm-trow class="cursor-pointer" *ngFor="let rowData of paginatedValues" (click)="onSelect.emit(rowData)">
+    <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
+  </hlm-trow>
+
+  <hlm-trow class="justify-center hover:bg-transparent">
+    <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="pageSize" [totalItems]="filteredValues.length"/>
+  </hlm-trow>
+
+  <hlm-trow class="bg-slate-100 hover:bg-slate-100" *ngIf="footerTemplate">
+    <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+  </hlm-trow>
+
+</hlm-table>

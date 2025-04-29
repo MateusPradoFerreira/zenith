@@ -1,0 +1,8 @@
+<app-main-sidebar />
+<div class="overflow-hidden w-screen h-screen grid grid-cols-1 grid-rows-[64px_1fr_36px] transition-all text-zinc-900 {{ active? 'pl-64' : 'pl-16' }}">
+  <app-main-header />
+  <main class="overflow-x-hidden overflow-y-auto">
+    <router-outlet />
+  </main>
+  <footer class="border-t border-slate-200"></footer>
+</div>
