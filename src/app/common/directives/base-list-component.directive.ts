@@ -1,13 +1,19 @@
-import { Directive, inject, OnInit, signal, Type, WritableSignal } from '@angular/core';
+import { Directive, inject, Input, OnInit, signal, Type, WritableSignal } from '@angular/core';
 import { BaseFacade, BaseFacadeList } from '../../core/base/base-facade';
 import { FormSchema, FormSchemaConfig, FormSchemaError, ObjectId } from '../../core/types/form-schema.type';
 import { lastValueFrom } from 'rxjs';
 import { HlmDataTableColumn } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
 import { DialogFacade, DialogWidth } from '../facades/dialog.facade';
+import { ClassValue } from 'clsx';
+import { hlm } from '@spartan-ng/brain/core';
 
 @Directive()
 export abstract class BaseListComponentDirective<TModel extends ObjectId, Params extends Object = any> implements OnInit {  
+  @Input() class: string = "";
+
   abstract facade: BaseFacade<any> & BaseFacadeList<TModel, Params>;
+
+  hlm = hlm;
 
   // dialog config
   abstract component: Type<any>;

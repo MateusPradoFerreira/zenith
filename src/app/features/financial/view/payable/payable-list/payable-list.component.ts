@@ -26,8 +26,9 @@ export class PayableListComponent extends BaseListComponentDirective<Payable, Ge
   };
 
   override columns: HlmDataTableColumn[] = [
+    { header: "N° Doc", class: "w-40" },
     { header: "Nome", class: "flex-1" },
-    { header: "Pagamento", class: "w-40" },
+    { header: "Emissão", class: "w-40" },
     { header: "Vencimento", class: "w-40" },
     { header: "Status", class: "w-40" },
     { header: "Valor", class: "w-40 justify-end" },

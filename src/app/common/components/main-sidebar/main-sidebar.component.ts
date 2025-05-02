@@ -4,8 +4,8 @@ import { MainLayoutlState } from '../../states/main-layout.state';
 import { MainSidebarNavItemComponent } from './components/main-sidebar-nav-item.component';
 import { MainSidebarNavSeparatorComponent } from './components/main-sidebar-nav-separator.component';
 import { DialogFacade } from '../../facades/dialog.facade';
-import { DashboardComponent } from '../../../features/dashboard/view/dashboard/dashboard.component';
 import { GlobalModule } from '../../../core/modules/global-module.module';
+import { PayableFormComponent } from '../../../features/financial/view/payable/payable-form/payable-form.component';
 
 @Component({
   selector: 'app-main-sidebar',
@@ -25,7 +25,7 @@ export class MainSidebarComponent implements OnInit {
   };
 
   openSettings() {
-    this.dialogFacade.open(DashboardComponent, { header: "Configurações" }).closed$.subscribe(res => {})
+    this.dialogFacade.open(PayableFormComponent, { header: "Configurações" }).closed$.subscribe(res => {})
   };
   
 }

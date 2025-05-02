@@ -12,12 +12,15 @@ export class PayableFacade extends BaseFacade<Payable> implements BaseFacadeList
   
   override formSchema: FormSchemaConfig<Payable, Payable> = {
     id: { defaultValue: null },
-    categoryIds: { defaultValue: [] },
+    centerOfCostId: { defaultValue: null, validators: [Validators.required] },
+    planOfAccountId: { defaultValue: null, validators: [Validators.required] },
+    secrecyId: { defaultValue: null, validators: [Validators.required] },
+    docNumber: { defaultValue: String("").padStart(10, "0"), validators: [Validators.required], disabled: true },
     name: { defaultValue: null, validators: [Validators.required] },
     value: { defaultValue: 0, validators: [Validators.min(0), Validators.required] },
     dueAt: { defaultValue: null },
-    paidAt: { defaultValue: null },
-    createdAt: { defaultValue: new Date() },
+    paidAt: { defaultValue: null, disabled: true },
+    createdAt: { defaultValue: new Date(), disabled: true },
     status: { defaultValue: "PENDING" },
     description: { defaultValue: null },
   };

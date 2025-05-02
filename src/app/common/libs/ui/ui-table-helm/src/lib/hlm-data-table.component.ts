@@ -10,9 +10,15 @@ import { HlmTemplateDirective } from '../../../../../directives/hlm-template.dir
 import { LucideAngularModule } from 'lucide-angular';
 import { HlmInputModule } from '../../../ui-input-helm/src';
 import { FormsModule } from '@angular/forms';
+import { ID } from '../../../../../../core/types/form-schema.type';
 
 export type HlmDataTableColumn = { header: string, class: string };
 export type HlmPaginationQuery = { query: string, page: number, pageSize: number };
+
+export type HlmDataTableRegistry = Record<any, any> & {
+  id: ID;
+  active?: boolean;
+};
 
 @Component({
   selector: 'hlm-data-table',
@@ -23,7 +29,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   protected readonly _computedClass = computed(() => hlm("border border-slate-200 rounded-md", this.userClass()));
 
-  @Input() values: WritableSignal<Record<any, any>[]> = signal([]);;
+  @Input() values: WritableSignal<HlmDataTableRegistry[]> = signal([]);;
   @Input() columns: HlmDataTableColumn[] = [];
 
   @Input() header: string = "";
@@ -41,8 +47,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ContentChild("footer", { static: true }) footerTemplate: TemplateRef<any>;
   @ContentChild("action", { static: true }) actionTemplate: TemplateRef<any>;
 
-  filteredValues: Record<any, any>[] = [];
-  paginatedValues: Record<any, any>[] = [];
+  filteredValues: HlmDataTableRegistry[] = [];
+  paginatedValues: HlmDataTableRegistry[] = [];
 
   // pagination and filtration
   page: WritableSignal<number> = signal(1);
