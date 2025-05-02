@@ -51,6 +51,12 @@
       ],
       "@spartan-ng/ui-badge-helm": [
         ".\\src/app/common/libs/ui/ui-badge-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-checkbox-helm": [
+        ".\\src/app/common/libs/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-tabs-helm": [
+        ".\\src/app/common/libs/ui/ui-tabs-helm/src/index.ts"
       ]
     },
     "strictPropertyInitialization": false,

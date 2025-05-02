@@ -1,0 +1,18 @@
+<div class="px-6 py-4">
+  <hlm-tabs tab="secrecy" class="w-full">
+    <hlm-tabs-list aria-label="tabs example">
+      <button hlmTabsTrigger="secrecy">Títulos</button>
+      <button hlmTabsTrigger="center-of-cost">Centros de Custo</button>
+      <button hlmTabsTrigger="plan-of-cost">Planos de Conta</button>
+    </hlm-tabs-list>
+    <div hlmTabsContent="secrecy">
+      <app-secrecy-list class="p-0" />
+    </div>
+    <div hlmTabsContent="center-of-cost">
+      <app-center-of-cost-list class="p-0" />
+    </div>
+    <div hlmTabsContent="plan-of-cost">
+      <app-plan-of-account-list class="p-0" />
+    </div>
+  </hlm-tabs>
+</div>

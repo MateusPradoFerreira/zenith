@@ -122,7 +122,7 @@
   position: relative;
 
   label {
-    @apply pointer-events-none absolute text-sm text-zinc-900 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-3 peer-focus:px-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1;
+    @apply pointer-events-none absolute text-sm text-zinc-900 duration-300 transform -translate-y-4 scale-85 top-2 z-10 origin-[0] bg-white px-3 peer-focus:px-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-85 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1;
   }
 }
 

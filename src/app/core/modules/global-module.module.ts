@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { HlmInputDirective } from '../../common/libs/ui/ui-input-helm/src';
 import { HlmButtonModule } from '../../common/libs/ui/ui-button-helm/src';
 import { HlmTableModule } from '../../common/libs/ui/ui-table-helm/src';
 import { HlmPopoverModule } from '../../common/libs/ui/ui-popover-helm/src';
@@ -13,10 +12,15 @@ import { HlmDatePickerModule } from '../../common/libs/ui/ui-datepicker-helm/src
 import { HlmCalendarModule } from '../../common/libs/ui/ui-calendar-helm/src';
 import { NgFor, NgForOf, NgIf } from '@angular/common';
 import { HlmBadgeModule } from '../../common/libs/ui/ui-badge-helm/src';
+import { HlmInputModule } from '../../common/libs/ui/ui-input-helm/src';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { BrnSelectModule } from '@spartan-ng/brain/select';
+import { HlmCheckboxModule } from '../../common/libs/ui/ui-checkbox-helm/src';
+import { HlmTabsModule } from '../../common/libs/ui/ui-tabs-helm/src';
 
-const generalModules = [HlmTemplateDirective, FormsModule, ReactiveFormsModule, LucideAngularModule, NgIf, NgFor, NgForOf];
+const generalModules = [NgxMaskDirective, NgxMaskPipe, HlmTemplateDirective, FormsModule, ReactiveFormsModule, LucideAngularModule, NgIf, NgFor, NgForOf];
 
-const spartanUIModules = [HlmBadgeModule, HlmDatePickerModule, HlmCalendarModule, HlmButtonModule, HlmInputDirective, HlmTableModule, HlmPopoverModule, BrnPopoverModule, HlmPaginationModule, HlmSelectModule];
+const spartanUIModules = [HlmTabsModule, HlmCheckboxModule, BrnSelectModule, HlmBadgeModule, HlmDatePickerModule, HlmCalendarModule, HlmButtonModule, HlmInputModule, HlmTableModule, HlmPopoverModule, BrnPopoverModule, HlmPaginationModule, HlmSelectModule];
 
 @NgModule({
 	imports: [ ...generalModules, ...spartanUIModules ],

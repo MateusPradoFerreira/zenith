@@ -1,0 +1,16 @@
+<form [class]="hlm('px-6 py-4 grid grid-cols-12 gap-x-2 gap-y-3', class)" [formGroup]="form.fb" (ngSubmit)="onSubmit()" *ngIf="formReady">
+
+  <div class="col-span-12 hlm-float-label">
+    <input hlmInput formControlName="name"/>
+    <label>Nome</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 flex items-center">
+    <hlm-checkbox class="mr-2" formControlName="active" />
+    <span>Ativo</span>
+  </div>
+
+  <div class="col-span-6"></div>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="secondary" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn [disabled]="form.invalid || processing || loading">Salvar</button>
+</form>

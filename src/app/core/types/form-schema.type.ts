@@ -1,7 +1,8 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
+export type ID = string;
 export type Object = Record<any, any>;
-export type ObjectId = { id: string };
+export type ObjectId = { id: ID };
 export type Mapper<TModel> = { [K in keyof TModel]: any };
 export type PMapper<TModel> = Partial<Mapper<TModel>>;
 export type Union<Ta, Tb> = Ta & Tb;
@@ -14,11 +15,13 @@ export type FormSchemaConfig<TSchema extends Object, TMapper extends PMapper<TSc
 export type FormSchemaField<TFormValue, Ta, Tb= Ta> = Ta extends Tb? {
   defaultValue: Ta,
   validators?: Validators[],
+  disabled?: boolean,
   initializers?: Initializer<Ta, Tb>[],
   refiners?: Refiner<Tb, Ta, TFormValue>[],
 } : {
   defaultValue: Tb,
   validators?: Validators[],
+  disabled?: boolean,
   initializers: Initializer<Ta, Tb>[],
   refiners: Refiner<Tb, Ta, TFormValue>[],
 };
@@ -34,8 +37,9 @@ export class FormSchema<TSchema extends Object, TMapper extends PMapper<TSchema>
   private _schema: FormSchemaConfig<TSchema, TMapper>;
   fb: FormGroup<{[Key in keyof Union<TSchema, TMapper>]: FormControl<Union<TSchema, TMapper>[Key]>}>;
 
-  get value() { return this.fb.value };
+  get value() { return this.fb.getRawValue() };
   get valid() { return this.fb.valid };
+  get invalid() { return this.fb.invalid };
   get controls() { return this.fb.controls };
 
   constructor(config: FormSchemaConfig<TSchema, TMapper>) {
@@ -45,13 +49,13 @@ export class FormSchema<TSchema extends Object, TMapper extends PMapper<TSchema>
 
   private _configureForm() {
     const fb: any = new FormGroup({});
-    Object.entries(this._schema).forEach(([field, { defaultValue, validators }]) => {
-      fb.addControl(field, new FormControl(defaultValue, validators || []));
+    Object.entries(this._schema).forEach(([field, { defaultValue, validators, disabled }]) => {
+      fb.addControl(field, new FormControl({ value: defaultValue, disabled }, validators || []));
     });
     this.fb = fb;
   };
 
-  async populateForm(data: Partial<TSchema>) {
+  async populate(data: Partial<TSchema>) {
     const fields = Object.entries(data);
     for (let fieldEntry of fields) {
       const fieldKey: string = fieldEntry[0];
@@ -78,21 +82,21 @@ export class FormSchema<TSchema extends Object, TMapper extends PMapper<TSchema>
     };
   };
 
-  async formatRegistry(data: Union<TSchema, TMapper> = this.fb.value as Union<TSchema, TMapper>): Promise<[TSchema, errors: FormSchemaError<TSchema> | null]> {
+  async formatRegistry(data: Union<TSchema, TMapper> = this.fb.getRawValue() as Union<TSchema, TMapper>): Promise<[TSchema, errors: FormSchemaError<TSchema> | null]> {
     const registry: TSchema = Object.assign({}, data);
     const fields = Object.entries(this._schema);
     const errors: any = {};
     for (let fieldEntry of fields) {
       const fieldKey: keyof TSchema = fieldEntry[0];
       const fieldConfig: FormSchemaField<any, any, any> = fieldEntry[1];
-      const [refinedValue, fieldErrors] = await this._useRefiners(fieldKey, registry[fieldKey], registry, fieldConfig);
+      const [refinedValue, fieldErrors] = await this._useRefiners(registry[fieldKey], registry, fieldConfig);
       registry[fieldKey] = refinedValue;
       if(fieldErrors.length) errors[fieldKey] = fieldErrors;
     };
     return [registry, Object.keys(errors).length? errors : null];
   };
 
-  private async _useRefiners(fieldKey: string, fieldValue: any, formValue: any, fieldConfig: FormSchemaField<any, any, any>): Promise<[any, FormSchemaFieldError[]]> {
+  private async _useRefiners(fieldValue: any, formValue: any, fieldConfig: FormSchemaField<any, any, any>): Promise<[any, FormSchemaFieldError[]]> {
     var errors: FormSchemaFieldError[] = [];
     if(fieldConfig.refiners) {
       for(let refiner of fieldConfig.refiners) {

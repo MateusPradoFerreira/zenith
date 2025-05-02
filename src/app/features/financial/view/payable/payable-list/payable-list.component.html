@@ -1,4 +1,4 @@
-<div class="px-6 py-4">
+<div [class]="hlm('px-6 py-4', class)">
   <hlm-data-table header="Despesas" [values]="values" [columns]="columns" (onSelect)="onSelect($event)">
     <ng-template hlmTemplate="action">
       <button hlmBtn size="icon" variant="secondary" hlmBtnIcon="rotate-ccw" [hlmBtnLoading]="loading" [disabled]="loading" (click)="updateUI()"></button>
@@ -20,8 +20,9 @@
       <button hlmBtn hlmBtnIcon="plus" (click)="onCreate()">Adicionar</button>
     </ng-template>
     <ng-template hlmTemplate="row" let-rowData>
+      <hlm-td class="w-40">{{ rowData.docNumber }}</hlm-td>
       <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
-      <hlm-td class="w-40">{{ rowData.paidAt | date: "dd/MM/YYYY" }}</hlm-td>
+      <hlm-td class="w-40">{{ rowData.createdAt | date: "dd/MM/YYYY" }}</hlm-td>
       <hlm-td class="w-40">{{ rowData.dueAt | date: "dd/MM/YYYY" }}</hlm-td>
       <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PENDING'"> <span hlmBadge severity="warn">Pendente</span> </hlm-td>
       <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PAID'"> <span hlmBadge severity="success">Pago</span> </hlm-td>
