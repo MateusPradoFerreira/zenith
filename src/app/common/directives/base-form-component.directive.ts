@@ -52,7 +52,7 @@ export abstract class BaseFormComponentDirective<TModel extends ObjectId, TMappe
       return;
     };
 
-    await lastValueFrom(this.facade.get(this.id)).then(async res => {
+    await lastValueFrom(this.facade.service.get(this.id)).then(async res => {
       console.log("UPDATE-UI", res);
       this.originalRegistry = res;
       this.registry = res;

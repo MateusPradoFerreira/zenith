@@ -38,7 +38,7 @@ export abstract class BaseMockService<TModel extends ObjectId> extends BaseServi
   };
   
   override put(data: TModel): Observable<TModel> {
-    return of(data).pipe(switchMap(registry => this.delete(registry.id)), switchMap(registry => this.post(registry))) as Observable<TModel>;
+    return of(data).pipe(switchMap(registry => this.delete(registry.id)), switchMap(() => this.post(data))) as Observable<TModel>;
   };
 
   override post(data: TModel): Observable<TModel> {

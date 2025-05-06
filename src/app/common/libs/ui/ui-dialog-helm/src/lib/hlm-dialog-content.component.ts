@@ -43,7 +43,7 @@ export class HlmDialogContentComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
 		hlm(
-			'max-w-[95vw] xl:max-w-[1280px] max-h-[95vh] overflow-hidden border-border grid w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background shadow-lg [animation-duration:200] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[2%] data-[state=open]:slide-in-from-top-[2%] sm:rounded-lg',
+			'max-w-[95vw] xl:max-w-[1280px] max-h-[95vh] overflow-hidden border-zinc-200 grid w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background shadow-lg [animation-duration:200] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-top-[2%] data-[state=open]:slide-in-from-top-[2%] sm:rounded-lg',
 			this.userClass(),
 			this._dynamicComponentClass,
 		),

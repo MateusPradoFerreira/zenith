@@ -2,7 +2,7 @@ import { Directive, inject, Input, OnInit, signal, Type, WritableSignal } from '
 import { BaseFacade, BaseFacadeList } from '../../core/base/base-facade';
 import { FormSchema, FormSchemaConfig, FormSchemaError, ObjectId } from '../../core/types/form-schema.type';
 import { lastValueFrom } from 'rxjs';
-import { HlmDataTableColumn } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
+import { HlmDataTableActionFc, HlmDataTableColumn } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
 import { DialogFacade, DialogWidth } from '../facades/dialog.facade';
 import { ClassValue } from 'clsx';
 import { hlm } from '@spartan-ng/brain/core';
@@ -23,11 +23,12 @@ export abstract class BaseListComponentDirective<TModel extends ObjectId, Params
   // filter and table config
   abstract filterSchema: FormSchemaConfig<Params>;
   abstract columns: HlmDataTableColumn[];
+  actionFn: HlmDataTableActionFc<TModel>;
 
   filter: FormSchema<Params>;
   private _filterValue: Params;
 
-  values: WritableSignal<TModel[]> = signal([]);
+  values: TModel[] = [];
 
   loading: boolean = false;
   processing: boolean = false;
@@ -50,7 +51,7 @@ export abstract class BaseListComponentDirective<TModel extends ObjectId, Params
     await this._formaFilterValue().then(async () => {
       await lastValueFrom(this.facade.getByAllFilters(this._filterValue)).then(async res => {
         console.log("UPDATE-UI", res);
-        this.values.set(res);
+        this.values = res;
         await this.evOnUpdateUI();
         this.loading = false;
       }).catch(error => console.error(error));
@@ -88,6 +89,21 @@ export abstract class BaseListComponentDirective<TModel extends ObjectId, Params
 
   onCreate() {
     this.dialogFacade.open(this.component, { header: this.dialogHeader, width: this.dialogWidth }).closed$.subscribe(() => this.updateUI());
+  };
+
+  delete(rowData: TModel) {
+    this.dialogFacade.confirm({
+      header: "Excluir este registro?",
+      severity: "danger",
+      onConfirm: () => this._delete(rowData),
+    });
+  };
+
+  private _delete(rowData: TModel) {
+    this.facade.service.delete(rowData.id).subscribe(() => {
+      console.log("DELETE-REGISTRY", rowData);
+      this.updateUI();
+    }, error => console.error(error));
   };
 
 }

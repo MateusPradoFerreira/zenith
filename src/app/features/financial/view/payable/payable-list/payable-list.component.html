@@ -1,6 +1,6 @@
 <div [class]="hlm('px-6 py-4', class)">
-  <hlm-data-table header="Despesas" [values]="values" [columns]="columns" (onSelect)="onSelect($event)">
-    <ng-template hlmTemplate="action">
+  <hlm-data-table header="Despesas" [values]="values" [columns]="columns" [actionFn]="actionFn" (onSelect)="onSelect($event)">
+    <ng-template hlmTemplate="action" let-selection="selection">
       <button hlmBtn size="icon" variant="secondary" hlmBtnIcon="rotate-ccw" [hlmBtnLoading]="loading" [disabled]="loading" (click)="updateUI()"></button>
       <brn-popover>
         <button hlmBtn size="icon" variant="secondary" hlmBtnIcon="funnel-plus" brnPopoverTrigger></button>
@@ -27,12 +27,8 @@
       <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PENDING'"> <span hlmBadge severity="warn">Pendente</span> </hlm-td>
       <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'PAID'"> <span hlmBadge severity="success">Pago</span> </hlm-td>
       <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'OVERDUE'"> <span hlmBadge severity="danger">Vencido</span> </hlm-td>
+      <hlm-td class="w-40 py-0" *ngIf="rowData.status === 'CANCELED'"> <span hlmBadge severity="danger">Cancelado</span> </hlm-td>
       <hlm-td class="justify-end w-40">{{ rowData.value | currency: "BRL" }}</hlm-td> 
-      <hlm-td class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
-        <span class="flex items-center gap-2">
-          <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical"></button>
-        </span>
-      </hlm-td>
     </ng-template>
   </hlm-data-table>
 </div>

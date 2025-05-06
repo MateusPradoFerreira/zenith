@@ -5,10 +5,6 @@ import { FormSchemaConfig, ID, ObjectId, PMapper } from "../types/form-schema.ty
 export abstract class BaseFacade<TModel extends ObjectId, TMapper extends PMapper<TModel> = TModel> {
   abstract service: BaseService<TModel>;
   abstract formSchema: FormSchemaConfig<TModel, TMapper>;
-
-  get(id: ID): Observable<TModel> { 
-    return this.service.get(id);
-  };
 };
 
 export abstract class BaseFacadeList<TModel extends ObjectId, params = any> {

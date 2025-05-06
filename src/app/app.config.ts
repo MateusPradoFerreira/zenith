@@ -1,7 +1,7 @@
 import { ApplicationConfig, EnvironmentProviders, importProvidersFrom, LOCALE_ID, Provider, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { Bell, Calendar, CalendarRange, HelpCircle, Home, LucideAngularModule, Settings, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, ClipboardPenLine, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff, Origami, MessagesSquare, MessageSquareMore, MessageCircleMore, Funnel, Plus, FunnelPlus, Search, RefreshCcw, LoaderCircle, RotateCcw, EllipsisVertical, FolderClosed, ChartPie, Archive, PanelLeft } from 'lucide-angular';
+import { Bell, Calendar, CalendarRange, HelpCircle, Home, LucideAngularModule, Settings, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, ClipboardPenLine, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff, Origami, MessagesSquare, MessageSquareMore, MessageCircleMore, Funnel, Plus, FunnelPlus, Search, RefreshCcw, LoaderCircle, RotateCcw, EllipsisVertical, FolderClosed, ChartPie, Archive, PanelLeft, Trash2, CircleOff } from 'lucide-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { PayableService } from './features/financial/services/payable.service';
 import { PayableMockService } from './features/financial/services/mock/payable-mock.service';
@@ -27,7 +27,7 @@ const services: (Provider | EnvironmentProviders)[] = [
   { provide: SecrecyService, useClass: SecrecyMockService },
 ];
 
-const lucideIcons = { EllipsisVertical, PanelLeft, ChartPie, Archive, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff };
+const lucideIcons = { Trash2, CircleOff, EllipsisVertical, PanelLeft, ChartPie, Archive, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff };
 
 export const appConfig: ApplicationConfig = {
   providers: [

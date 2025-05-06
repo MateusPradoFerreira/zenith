@@ -18,6 +18,7 @@
   <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="warn" *ngIf="form.value.status === 'PENDING'">Pendente</div>
   <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="success" *ngIf="form.value.status === 'PAID'">Pago</div>
   <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="danger" *ngIf="form.value.status === 'OVERDUE'">Vencido</div>
+  <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="danger" *ngIf="form.value.status === 'CANCELED'">Cancelado</div>
 
   <div class="col-span-12 xl:col-span-2 hlm-float-label">
     <hlm-date-picker formControlName="dueAt">Selecione uma Data</hlm-date-picker>
@@ -77,5 +78,5 @@
 
   <div class="col-span-8"></div>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="secondary" type="button" (click)="back()">Voltar</button>
-  <button class="col-span-12 xl:col-span-2" hlmBtn [disabled]="!form.valid || processing || loading">Salvar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn [disabled]="!form.valid || processing || loading || form.value.status === 'CANCELED'">Salvar</button>
 </form>

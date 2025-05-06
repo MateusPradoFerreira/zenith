@@ -1,11 +1,10 @@
-
 import { Component, inject, Type } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseListComponentDirective } from '../../../../../common/directives/base-list-component.directive';
 import { GetAllSecrecyByFilterParams } from '../../../services/secrecy.service';
 import { SecrecyFacade } from '../../../facades/secrecy.facade';
 import { FormSchemaConfig } from '../../../../../core/types/form-schema.type';
-import { HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
+import { HlmDataTableActionFc, HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
 import { SecrecyFormComponent } from '../secrecy-form/secrecy-form.component';
 import { Secrecy } from '../../../models/secrecy.model';
 import { DialogWidth } from '../../../../../common/facades/dialog.facade';
@@ -27,6 +26,9 @@ export class SecrecyListComponent extends BaseListComponentDirective<Secrecy, Ge
 
   override columns: HlmDataTableColumn[] = [
     { header: "Nome", class: "flex-1" },
-    { header: "", class: "w-16" },
   ];
+
+  override actionFn: HlmDataTableActionFc<Secrecy> = (data: Secrecy) => ([
+    { label: "Excluir", icon: "trash-2", command: () => this.delete(data), disabled: data.default },
+  ]);
 };

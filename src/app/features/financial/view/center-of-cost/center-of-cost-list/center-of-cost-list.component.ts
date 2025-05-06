@@ -1,11 +1,10 @@
-
 import { Component, inject, Type } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseListComponentDirective } from '../../../../../common/directives/base-list-component.directive';
 import { GetAllCenterOfCostByFilterParams } from '../../../services/center-of-cost.service';
 import { CenterOfCostFacade } from '../../../facades/center-of-cost.facade';
 import { FormSchemaConfig } from '../../../../../core/types/form-schema.type';
-import { HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
+import { HlmDataTableActionFc, HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
 import { CenterOfCostFormComponent } from '../center-of-cost-form/center-of-cost-form.component';
 import { CenterOfCost } from '../../../models/center-of-cost.model';
 import { DialogWidth } from '../../../../../common/facades/dialog.facade';
@@ -27,6 +26,9 @@ export class CenterOfCostListComponent extends BaseListComponentDirective<Center
 
   override columns: HlmDataTableColumn[] = [
     { header: "Nome", class: "flex-1" },
-    { header: "", class: "w-16" },
   ];
+
+  override actionFn: HlmDataTableActionFc<CenterOfCost> = (data: CenterOfCost) => ([
+    { label: "Excluir", icon: "trash-2", command: () => this.delete(data), disabled: data.default },
+  ]);
 };

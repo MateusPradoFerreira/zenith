@@ -2,9 +2,9 @@ import { inject, Injectable } from "@angular/core";
 import { Receivable } from "../models/receivable.model";
 import { GetAllReceivableByFilterParams, ReceivableService } from "../services/receivable.service";
 import { BaseFacade, BaseFacadeList } from "../../../core/base/base-facade";
-import { FormSchemaConfig } from "../../../core/types/form-schema.type";
+import { FormSchemaConfig, ID } from "../../../core/types/form-schema.type";
 import { Validators } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Observable, switchMap } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class ReceivableFacade extends BaseFacade<Receivable> implements BaseFacadeList<Receivable, GetAllReceivableByFilterParams> {
@@ -23,9 +23,14 @@ export class ReceivableFacade extends BaseFacade<Receivable> implements BaseFaca
     createdAt: { defaultValue: new Date(), disabled: true },
     status: { defaultValue: "PENDING" },
     description: { defaultValue: null },
+    active: { defaultValue: true },
   };
 
   getByAllFilters(params: GetAllReceivableByFilterParams): Observable<Receivable[]> {
     return this.service.getAllByFilter(params);
+  };
+
+  cancel(id: ID): Observable<Receivable> {
+    return this.service.get(id).pipe(switchMap(res => this.service.put({ ...res, active: false, status: "CANCELED" })));
   };
 };

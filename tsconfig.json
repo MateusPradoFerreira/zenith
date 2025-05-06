@@ -57,6 +57,9 @@
       ],
       "@spartan-ng/ui-tabs-helm": [
         ".\\src/app/common/libs/ui/ui-tabs-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-menu-helm": [
+        ".\\src/app/common/libs/ui/ui-menu-helm/src/index.ts"
       ]
     },
     "strictPropertyInitialization": false,

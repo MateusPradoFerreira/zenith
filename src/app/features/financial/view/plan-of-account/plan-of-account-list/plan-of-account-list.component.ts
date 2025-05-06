@@ -1,11 +1,10 @@
-
 import { Component, inject, Type } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseListComponentDirective } from '../../../../../common/directives/base-list-component.directive';
 import { GetAllPlanOfAccountByFilterParams } from '../../../services/plan-of-account.service';
 import { PlanOfAccountFacade } from '../../../facades/plan-of-account.facade';
 import { FormSchemaConfig } from '../../../../../core/types/form-schema.type';
-import { HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
+import { HlmDataTableActionFc, HlmDataTableColumn } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table.component';
 import { PlanOfAccountFormComponent } from '../plan-of-account-form/plan-of-account-form.component';
 import { PlanOfAccount } from '../../../models/plan-of-account.model';
 import { DialogWidth } from '../../../../../common/facades/dialog.facade';
@@ -27,6 +26,9 @@ export class PlanOfAccountListComponent extends BaseListComponentDirective<PlanO
 
   override columns: HlmDataTableColumn[] = [
     { header: "Nome", class: "flex-1" },
-    { header: "", class: "w-16" },
   ];
+
+  override actionFn: HlmDataTableActionFc<PlanOfAccount> = (data: PlanOfAccount) => ([
+    { label: "Excluir", icon: "trash-2", command: () => this.delete(data), disabled: data.default },
+  ]);
 };

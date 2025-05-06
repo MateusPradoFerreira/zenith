@@ -1,5 +1,5 @@
 <div [class]="hlm('px-6 py-4', class)">
-  <hlm-data-table header="Títulos" [values]="values" [columns]="columns" (onSelect)="onSelect($event)">
+  <hlm-data-table header="Títulos" [values]="values" [columns]="columns" [actionFn]="actionFn" (onSelect)="onSelect($event)">
     <ng-template hlmTemplate="action">
       <button hlmBtn size="icon" variant="secondary" hlmBtnIcon="rotate-ccw" [hlmBtnLoading]="loading" [disabled]="loading" (click)="updateUI()"></button>
       <brn-popover>
@@ -26,11 +26,6 @@
     </ng-template>
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="flex-1">{{ rowData.name }} {{ rowData.default? "(Padrão)" : "" }} </hlm-td>
-      <hlm-td class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
-        <span class="flex items-center gap-2">
-          <button hlmBtn size="icon" variant="ghost" [severity]="rowData.active? 'primary' : 'danger'" hlmBtnIcon="ellipsis-vertical"></button>
-        </span>
-      </hlm-td>
     </ng-template>
   </hlm-data-table>
 </div>

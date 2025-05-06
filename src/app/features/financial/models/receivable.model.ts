@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { InitialPlanOfAccountMockRegistries } from "../services/mock/plan-of-account-mock.service";
 import { InitialCenterOfCostMockRegistries } from "../services/mock/center-of-cost-mock.service";
 
-export type ReceivableStatus = "PENDING" | "PAID" | "OVERDUE";
+export type ReceivableStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELED";
 
 export class Receivable {
   id: ID;
@@ -19,6 +19,7 @@ export class Receivable {
   createdAt: Date;
   status: ReceivableStatus;
   description: string;
+  active: boolean;
 
   constructor(props: Partial<Receivable>) {
     Object.assign(this, props);
@@ -40,6 +41,7 @@ export class Receivable {
       createdAt: fakerJs.date.past({ refDate: dueAt }),
       status,
       description: fakerJs.finance.transactionDescription(),
+      active: true,
       ...props,
     });
   };
