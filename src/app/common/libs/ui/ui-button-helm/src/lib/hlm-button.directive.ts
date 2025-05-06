@@ -5,7 +5,7 @@ import type { ClassValue } from 'clsx';
 import { injectBrnButtonConfig } from './hlm-button.token';
 
 export const buttonVariants = cva(
-	"[&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px] border-2 border-transparent inline-flex items-center gap-2 cursor-pointer justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+	"border-2 border-transparent inline-flex items-center gap-2 cursor-pointer justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
 	{
 		variants: {
 			variant: {
@@ -23,8 +23,9 @@ export const buttonVariants = cva(
 				danger: "bg-rose-500 text-white hover:bg-rose-800",
 			},
 			size: {
-				default: "h-[38px] px-4",
-				icon: "h-[38px] w-[38px] p-0",
+				default: "h-[38px] px-4 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
+				icon: "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
+				"icon-lg": "h-[42px] w-[42px] p-0 [&_i-lucide]:[&_svg]:w-[24px] shrink-0 [&_i-lucide]:[&_svg]:h-[24px] [&_lucide-angular]:[&_svg]:w-[24px] [&_lucide-angular]:[&_svg]:h-[24px]",
 			},
 		},
 		defaultVariants: {

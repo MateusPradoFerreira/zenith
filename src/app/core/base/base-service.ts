@@ -9,7 +9,6 @@ export abstract class BaseService<TModel extends ObjectId> {
   abstract route: string;
 
   get(id: ID): Observable<TModel> {
-    console.log("environment", environment)
     return this.http.get(`${environment.apiUrl}/${this.route}/${id}`) as Observable<TModel>;
   };
   

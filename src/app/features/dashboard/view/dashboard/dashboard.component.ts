@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { GlobalModule } from '../../../../core/modules/global-module.module';
 

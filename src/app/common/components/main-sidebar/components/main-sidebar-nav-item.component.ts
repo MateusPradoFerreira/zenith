@@ -8,7 +8,7 @@ import { GlobalModule } from '../../../../core/modules/global-module.module';
   selector: 'ms-nav-item',
   imports: [GlobalModule, RouterLink],
   template: `
-    <a [routerLink]="to" class="{{ isActive()? 'bg-slate-200/70' : 'hover:bg-slate-200/70' }} rounded-lg cursor-pointer flex items-center mb-1" (click)="command.emit()">
+    <a [routerLink]="to" class="{{ isActive()? 'bg-slate-200/70' : 'hover:bg-slate-200/70' }} rounded-lg cursor-pointer flex items-center mb-0.5" (click)="command.emit()">
       <div class="w-[47px] h-[47px] flex items-center justify-center shrink-0">
         <i-lucide [name]="icon" size="22"></i-lucide>
       </div>

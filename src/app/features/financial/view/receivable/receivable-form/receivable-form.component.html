@@ -1,0 +1,81 @@
+<form [class]="hlm('px-6 py-4 grid grid-cols-12 gap-x-2 gap-y-3', class)" [formGroup]="form.fb" (ngSubmit)="onSubmit()" *ngIf="formReady">
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <input hlmInput formControlName="docNumber"/>
+    <label>N° do Documento</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-4 hlm-float-label">
+    <input hlmInput formControlName="name"/>
+    <label>Nome</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <hlm-date-picker formControlName="createdAt">Selecione uma Data</hlm-date-picker>
+    <label>Emissão</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="warn" *ngIf="form.value.status === 'PENDING'">Pendente</div>
+  <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="success" *ngIf="form.value.status === 'PAID'">Pago</div>
+  <div class="col-span-12 xl:col-span-4 rounded-md justify-center" hlmBadge severity="danger" *ngIf="form.value.status === 'OVERDUE'">Vencido</div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <hlm-date-picker formControlName="dueAt">Selecione uma Data</hlm-date-picker>
+    <label>Vencimento</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <hlm-date-picker formControlName="paidAt">Selecione uma Data</hlm-date-picker>
+    <label>Pagamento</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <brn-select formControlName="centerOfCostId" placeholder="Nenhum">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option [value]="planOfAccount.id" *ngFor="let planOfAccount of centerOfCostOptions">{{ planOfAccount.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Centro de Custo</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <brn-select formControlName="planOfAccountId" placeholder="Nenhum">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option [value]="planOfAccount.id" *ngFor="let planOfAccount of planOnAccountOptions">{{ planOfAccount.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Plano de Conta</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <brn-select formControlName="secrecyId" placeholder="Nenhum">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option [value]="planOfAccount.id" *ngFor="let planOfAccount of centerOfCostOptions">{{ planOfAccount.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Título</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-2 hlm-float-label">
+    <input hlmInput hlmInputNumber prefix="R$ " formControlName="value"/>
+    <label>Valor</label>
+  </div>
+
+  <div class="col-span-12 hlm-float-label">
+    <input hlmInput formControlName="description"/>
+    <label>Descrição</label>
+  </div>
+
+  <div class="col-span-8"></div>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="secondary" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn [disabled]="!form.valid || processing || loading">Salvar</button>
+</form>
