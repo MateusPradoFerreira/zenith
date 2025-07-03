@@ -1,18 +1,23 @@
-import { Observable } from "rxjs";
-import { BaseService } from "../../../core/base/base-service";
+import { PllRestService } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
+import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Injectable } from "@angular/core";
 
 export type GetAllSecrecyByFilterParams = {
-  status: "ALL" | "ACTIVE" | "INACTIVE";
+  status?: "ACTIVE" | "INACTIVE" | "ALL";
 };
 
-@Injectable()
-export class SecrecyService extends BaseService<Secrecy> {
-  route: string = "secrecy";
+export type GetAllSecrecyByFilterResponse = Secrecy;
 
-  getAllByFilter({ status }: GetAllSecrecyByFilterParams): Observable<Secrecy[]> {
-    return this.http.get(`${environment.apiUrl}/${this.route}/status/${status}`) as Observable<Secrecy[]>;
+@Injectable()
+export class SecrecyService extends PllRestService<Secrecy> {
+  override baseRoute: string = environment.apiUrl;
+  override pathRoute: string = "secrecy";
+
+  getAllByFilter({ status }: GetAllSecrecyByFilterParams): Observable<GetAllSecrecyByFilterResponse[]> {
+    return this.http.get<GetAllSecrecyByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+      status,
+    }});
   };
 };

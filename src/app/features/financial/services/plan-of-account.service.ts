@@ -1,18 +1,23 @@
-import { Observable } from "rxjs";
-import { BaseService } from "../../../core/base/base-service";
+import { PllRestService } from "@pollaris";
 import { PlanOfAccount } from "../models/plan-of-account.model";
+import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Injectable } from "@angular/core";
 
 export type GetAllPlanOfAccountByFilterParams = {
-  status: "ALL" | "ACTIVE" | "INACTIVE";
+  status?: "ACTIVE" | "INACTIVE" | "ALL";
 };
 
-@Injectable()
-export class PlanOfAccountService extends BaseService<PlanOfAccount> {
-  route: string = "planOfAccount";
+export type GetAllPlanOfAccountByFilterResponse = PlanOfAccount;
 
-  getAllByFilter({ status }: GetAllPlanOfAccountByFilterParams): Observable<PlanOfAccount[]> {
-    return this.http.get(`${environment.apiUrl}/${this.route}/status/${status}`) as Observable<PlanOfAccount[]>;
+@Injectable()
+export class PlanOfAccountService extends PllRestService<PlanOfAccount> {
+  override baseRoute: string = environment.apiUrl;
+  override pathRoute: string = "secrecy";
+
+  getAllByFilter({ status }: GetAllPlanOfAccountByFilterParams): Observable<GetAllPlanOfAccountByFilterResponse[]> {
+    return this.http.get<GetAllPlanOfAccountByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+      status,
+    }});
   };
 };

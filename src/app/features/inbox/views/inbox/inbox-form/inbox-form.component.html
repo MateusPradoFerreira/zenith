@@ -1,0 +1,44 @@
+<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+
+  <div class="hlm-float-label col-span-12 xl:col-span-8">
+    <input hlmInput formControlName="title"/>
+    <label>Nome</label>
+  </div>
+
+  <button *ngIf="form.value.status === 'PENDING'" class="col-span-12 xl:col-span-4" type="button" hlmBtn variant="soft" severity="warn">Pendente</button>
+  <button *ngIf="form.value.status === 'PROCESSED'" class="col-span-12 xl:col-span-4" type="button" hlmBtn variant="soft" severity="success">Processado</button>
+  <button *ngIf="form.value.status === 'OVERDUE'" class="col-span-12 xl:col-span-4" type="button" hlmBtn variant="soft" severity="danger">Vencido</button>
+  <button *ngIf="form.value.status === 'CANCELLED'" class="col-span-12 xl:col-span-4" type="button" hlmBtn variant="soft" severity="danger">Cancelado</button>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-4">
+    <brn-select formControlName="priority" placeholder="Selecione um Status">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of priorityOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Prioridade</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-4">
+    <hlm-date-picker formControlName="createdAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Data</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-4">
+    <hlm-date-picker formControlName="dueAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Vencimento</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-8"></div>
+
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form>

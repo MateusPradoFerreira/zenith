@@ -1,19 +1,38 @@
+import { PllID, PllRestService } from "@pollaris";
+import { Payable, PayableStatus } from "../models/payable.model";
 import { Observable } from "rxjs";
-import { BaseService } from "../../../core/base/base-service";
-import { Payable } from "../models/payable.model";
 import { environment } from "../../../../environments/environment";
+import moment from "moment";
 import { Injectable } from "@angular/core";
 
 export type GetAllPayableByFilterParams = {
+  status?: PayableStatus | "TOPAY" | "ALL";
+  centerOfCostId?: PllID | null;
+  planOfAccountId?: PllID | null;
+  secrecyId?: PllID | null;
   startsAt: Date;
   endsAt: Date;
 };
 
-@Injectable()
-export class PayableService extends BaseService<Payable> {
-  route: string = "payable";
+export type GetAllPayableByFilterResponse = Payable & {
+  centerOfCost: string;
+  planOfAccount: string;
+  secrecy: string;
+};
 
-  getAllByFilter({ startsAt, endsAt }: GetAllPayableByFilterParams): Observable<Payable[]> {
-    return this.http.get(`${environment.apiUrl}/${this.route}/startsAt/${startsAt}/endsAt/${endsAt}`) as Observable<Payable[]>;
+@Injectable()
+export class PayableService extends PllRestService<Payable> {
+  override baseRoute: string = environment.apiUrl;
+  override pathRoute: string = "payable";
+
+  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllPayableByFilterParams): Observable<GetAllPayableByFilterResponse[]> {
+    return this.http.get<GetAllPayableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+      status,
+      centerOfCostId,
+      planOfAccountId,
+      secrecyId,
+      startsAt: moment(startsAt).format("YYYY-MM-DD"),
+      endsAt: moment(endsAt).format("YYYY-MM-DD"),
+    }});
   };
 };

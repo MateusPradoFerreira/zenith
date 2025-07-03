@@ -23,7 +23,7 @@ import { HlmPaginationDirective } from './hlm-pagination.directive';
 @Component({
 	selector: 'hlm-numbered-pagination', 
 	template: `
-		<div class="flex items-center justify-between gap-2 px-4 py-2">
+		<div class="flex items-center justify-between gap-2 px-2 py-2">
 			<div class="flex items-center gap-1 text-nowrap text-sm text-gray-600">
 				<b>{{ totalItems() }}</b>
 				itens |

@@ -1,123 +1,115 @@
-import { ChangeDetectorRef, Directive, inject, Input, OnInit } from '@angular/core';
-import { BaseFacade } from '../../core/base/base-facade';
-import { FormSchema, FormSchemaError, ObjectId, PMapper } from '../../core/types/form-schema.type';
-import { lastValueFrom } from 'rxjs';
-import { BrnDialogRef } from '@spartan-ng/brain/dialog';
-import { hlm } from '@spartan-ng/brain/core';
+import { computed, Directive, input, model, OnInit, signal } from "@angular/core";
+import { PllFacade, PllID, PllRecordId } from "../../core/lib/pollaris";
+import { PllFormSchema } from "../../core/lib/pollaris/forms";
+import { map, Observable, of, OperatorFunction, switchMap, tap } from "rxjs";
+import { injectBrnDialogCtx } from "@spartan-ng/brain/dialog";
+import { ClassValue } from "clsx";
+import { hlm } from "@spartan-ng/brain/core";
+
+export type EventObs<T = void> = (data?: T) => Observable<any>;
+export const event = <T = void>(...operators: OperatorFunction<T, any>[]) => {
+  return (data: T) => (of(data || null) as any).pipe(...operators) as Observable<any>;
+};
 
 @Directive()
-export abstract class BaseFormComponentDirective<TModel extends ObjectId, TMapper extends PMapper<TModel> = TModel> implements OnInit {  
-  @Input() id: string;
-  @Input() class: string = "";
-
-  abstract facade: BaseFacade<TModel, TMapper>;
-  hlm = hlm;
+export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordId> implements OnInit {
+  public readonly userClass = input<ClassValue>("", { alias: "class" });
+	protected readonly _computedClass = computed(() =>
+		hlm("px-6 py-4 grid grid-cols-12 gap-3 gap-x-2", this.userClass()),
+	);
   
+  id = model<PllID>(null);
+  closeOnSave = model<boolean>(true);
 
-  form: FormSchema<TModel, TMapper>;
-  formReady: boolean = false;
+  abstract facade: PllFacade<TRecordModel, any, any, any, any>;
+  private readonly _context = injectBrnDialogCtx();
 
-  originalRegistry: TModel;
-  registry: TModel;
+  orgRecord: TRecordModel;
+  crrRecord: TRecordModel;
 
-  loading: boolean = false;
-  processing: boolean = false;
+  form: PllFormSchema<TRecordModel>;
+  formReady = signal<boolean>(false);
 
-  // events
-  async evOnInit(): Promise<void> {};
-  async evOnUpdateUI(): Promise<void> {};
-  async evOnPopulateForm(): Promise<void> {};
-  async evOnPopulateToInsertRegistry(): Promise<void> {};
-  async evOnPopulateToUpdateRegistry(): Promise<void> {};
-  async evOnInsertRegistry(res: TModel): Promise<void> {};
-  async evOnUpdateRegistry(res: TModel): Promise<void> {};
-  async evOnSubmitPrev(): Promise<void> {};
-  async evOnSubmitNext(): Promise<void> {};
+  loading = signal<boolean>(false);
+  processing = signal<boolean>(false);
 
-  private readonly _dialogRef = inject<BrnDialogRef<any>>(BrnDialogRef);
-  public readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef)
+  onNgOnInit: EventObs<void> = event();
+  onUpdateUI: EventObs<TRecordModel> = event();
+  onInitCreateRecord: EventObs<void> = event();
+  onInitUpdateRecord: EventObs<void> = event();
+  onInitSumit: EventObs<void> = event();
+  onFinishSumit: EventObs<void> = event();
 
   async ngOnInit() {
-    this._configureForm();
-    await this.evOnInit();
-    await this.updateUI();
-  };
-
-  async updateUI() {
-    this.loading = true;
-    
-    if(!this.id) {
-      await this.populateForm();
-      this.loading = false;
-      return;
-    };
-
-    await lastValueFrom(this.facade.service.get(this.id)).then(async res => {
-      console.log("UPDATE-UI", res);
-      this.originalRegistry = res;
-      this.registry = res;
-      await this.populateForm(res);
-      await this.evOnUpdateUI();
-      this.loading = false;
-      this.changeDetectorRef.detectChanges();
-    }).catch(async error => {
-      console.error(error);
-      await this.populateForm();
-      this.loading = false;
-      this.changeDetectorRef.detectChanges();
+    this.loading = this.facade.loading;
+    this.processing = this.facade.processing;
+    this.configureFormSchema();
+    await this.onNgOnInit().pipe(
+      switchMap(() => this.handleUpdateUI()),
+    ).subscribe({
+      error: error => console.error(error),
     });
   };
 
-  private _configureForm() {
-    this.form = new FormSchema(this.facade.formSchema);
-  };
-
-  async populateForm(data?: Partial<TModel>) {
-    if(!data) {
-      this._configureForm();
-      await this.evOnPopulateToInsertRegistry();
-      await this.evOnPopulateForm();
-      this.formReady = true;
-      this.changeDetectorRef.detectChanges();
-      return;
-    };
-
-    this.form.populate(data);
-    await this.evOnPopulateToUpdateRegistry();
-    await this.evOnPopulateForm();
-    this.formReady = true;
-    this.changeDetectorRef.detectChanges();
-  };
-
-  private async _formatRegistry(): Promise<TModel> {
-    const [registry, errors] = await this.form.formatRegistry();
-    return new Promise((resolve, reject) => {
-      if(errors) { reject(errors); return };
-      this.registry = registry;
-      resolve(registry);
+  updateUI() {
+    this.handleUpdateUI().subscribe({
+      error: error => console.error(error),
     });
   };
 
-  async onSubmit() {
-    await this._formatRegistry().then(async () => {
-      await this.evOnSubmitPrev();
-      !this.id? await this.insertRegistry() : await this.updateRegistry();
-      await this.evOnSubmitNext();
-    }).catch((error: FormSchemaError<TModel>) => {
-      console.error(error);
+  handleUpdateUI(): Observable<TRecordModel> {
+    return of(this.id()).pipe(
+      switchMap(id => {
+        if(!id) return this.handlePopulateForm().pipe(tap(response => console.log("DEFAULT-DATA", response)));
+        return this.facade.getRecord(id).pipe(
+          tap(response => console.log("UPDATE-UI", response)),
+          tap(response => this.orgRecord = response),
+          tap(response => this.crrRecord = response),
+          switchMap(response => this.handlePopulateForm(response)),
+          switchMap(response => this.onUpdateUI(response)),
+        );
+      }),
+    );
+  };
+
+  configureFormSchema() {
+    this.form = new PllFormSchema(this.facade.recordSchema);
+  };
+
+  handlePopulateForm(data?: TRecordModel): Observable<TRecordModel> {
+    return of(data).pipe(
+      switchMap(response => {
+        if(response) return this.form.setValue(data).pipe(switchMap(() => this.onInitUpdateRecord()));
+        this.configureFormSchema();
+        return this.onInitCreateRecord();
+      }),
+      tap(() => this.formReady.set(true)),
+      map(() => this.form.value),
+    );
+  };
+
+  onSubmit() {
+    this.handleSubmit().subscribe({
+      error: error => console.error(error),
     });
   };
 
-  async insertRegistry() {
-    console.log("INSERT-REGISTRY", this.registry);
-  };
-
-  async updateRegistry() {
-    console.log("UPDATE-REGISTRY", this.registry);
+  handleSubmit(): Observable<TRecordModel> {
+    return this.form.handleSubmit().pipe(
+      switchMap(response => this.onInitSumit().pipe(map(() => response))),
+      switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
+      tap(response => console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response)),
+      tap(response => this.id.set(response.id)),
+      tap(response => this.orgRecord = response),
+      tap(response => this.crrRecord = response),
+      switchMap(response => this.handlePopulateForm(response)),
+      switchMap(() => this.onFinishSumit()),
+      tap(() => this.closeOnSave() && this._context.close(this.crrRecord))
+    );
   };
 
   back() {
-    this._dialogRef.close();
+    this._context.close();
   };
 
-}
+};

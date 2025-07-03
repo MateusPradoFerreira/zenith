@@ -1,0 +1,70 @@
+<div [class]="_computedClass()">
+  <hlm-data-table header="Inbox" [showHeader]="showHeader()" [multiselect]="true" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
+    <ng-template hlmTemplate="row" let-rowData>
+      <hlm-td class="flex-1">{{ rowData.title }}</hlm-td>
+      <hlm-td class="w-38 2xl:w-48">
+        <button hlmBtn size="sm" variant="soft" severity="warn" *ngIf="rowData.status === 'PENDING'">Pendente</button>
+        <button hlmBtn size="sm" variant="soft" severity="success" *ngIf="rowData.status === 'PROCESSED'">Processado</button>
+        <button hlmBtn size="sm" variant="soft" severity="danger" *ngIf="rowData.status === 'OVERDUE'">Vencido</button>
+        <button hlmBtn size="sm" variant="soft" severity="danger" *ngIf="rowData.status === 'CANCELLED'">Cancelado</button>
+      </hlm-td>
+      <hlm-td class="w-38 2xl:w-48">
+        <button hlmBtn size="sm" variant="soft" severity="success" *ngIf="rowData.priority === 'LOW'">Baixa</button>
+        <button hlmBtn size="sm" variant="soft" severity="warn" *ngIf="rowData.priority === 'MEDIUM'">Média</button>
+        <button hlmBtn size="sm" variant="soft" severity="danger" *ngIf="rowData.priority === 'HIGH'">Alta</button>
+      </hlm-td>
+      <hlm-td class="w-38 2xl:w-48">{{ rowData.createdAt | date: "dd/MM/YYYY" }}</hlm-td>
+      <hlm-td class="w-38 2xl:w-48">{{ rowData.dueAt | date: "dd/MM/YYYY" }}</hlm-td>
+    </ng-template>
+    <ng-template hlmTemplate="action">
+      <ng-container [formGroup]="filter.form" *ngIf="filter">
+        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
+        <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
+      </ng-container>
+    </ng-template>
+    <ng-template hlmTemplate="filter" let-ctx>
+      <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="status" placeholder="Selecione um Status">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content class="w-56">
+              <hlm-option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Status</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="priority" placeholder="Selecione um Status">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content class="w-56">
+              <hlm-option *ngFor="let option of priorityOptions" [value]="option.value">{{ option.label }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Prioridade</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <hlm-date-picker formControlName="startsAt" [forceSelection]="true">
+            <span>Escolha uma Data</span>
+          </hlm-date-picker>
+          <label>Início</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <hlm-date-picker formControlName="endsAt" [forceSelection]="true">
+            <span>Escolha uma Data</span>
+          </hlm-date-picker>
+          <label>Fim</label>
+        </div>
+
+        <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
+        <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
+      </div>
+    </ng-template>
+  </hlm-data-table>
+</div>

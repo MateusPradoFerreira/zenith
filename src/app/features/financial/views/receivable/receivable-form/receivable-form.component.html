@@ -1,0 +1,97 @@
+<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+
+  <div class="hlm-float-label col-span-12 xl:col-span-2">
+    <input hlmInput formControlName="docNumber" [readOnly]="true"/>
+    <label>N° Documento</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-1">
+    <input hlmInput [value]="formatSequence(form.value.sequence)" [disabled]="true"/>
+    <label>Seq.</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
+    <input hlmInput formControlName="name"/>
+    <label>Nome</label>
+  </div>
+
+  <button *ngIf="form.value.status === 'PENDING'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="warn">Pendente</button>
+  <button *ngIf="form.value.status === 'PAID'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="success">Pago</button>
+  <button *ngIf="form.value.status === 'OVERDUE'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="danger">Vencido</button>
+  <button *ngIf="form.value.status === 'CANCELLED'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="danger">Cancelado</button>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="centerOfCostId" placeholder="Selecione um Centro de Custo">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.id">{{ option.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Centro de Custo</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="planOfAccountId" placeholder="Selecione um Plano de Conta">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Plano de Conta</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
+    <brn-select formControlName="secrecyId" placeholder="Selecione um Título">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of secrecyOptions" [value]="option.id">{{ option.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Título</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <hlm-date-picker formControlName="createdAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Emissão</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <hlm-date-picker formControlName="dueAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Vencimento</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <hlm-date-picker formControlName="paidAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Recebimento</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <input hlmInput formControlName="value" [currencyMask]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+    <label>Valor</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
+    <input hlmInput formControlName="description"/>
+    <label>Observação</label>
+  </div>
+
+  <div class="col-span-12 {{ !['PAID'].includes(form.value.status)? 'xl:col-span-6' : 'xl:col-span-8' }}"></div>
+
+  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" hlmBtnIcon="dollar-sign">Receber</button>
+  <button *ngIf="['CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button">Rabrir</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form> 

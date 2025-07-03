@@ -1,28 +1,30 @@
 <aside class="absolute overflow-y-hidden hover:overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid grid-cols-1 grid-rows-[64px_1fr_auto] {{ active || hovering? 'w-64' : 'w-16' }}" (mouseover)="state.setHovering(true)" (mouseleave)="state.setHovering(false)">
-  <div class="px-6 flex items-center relative gap-3">
-    <i-lucide name="origami" size="28" [strokeWidth]="1.5" class="-ml-0.5"></i-lucide>
-    <span class="text-xl transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
-    <button class="w-8 h-8 hover:bg-slate-200/70 flex items-center justify-center rounded-lg cursor-pointer absolute top-0 right-0 mr-1.5 mt-1.5 transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}" (click)="state.setActive(!active)">
+  <div class="pr-3 flex items-center relative border-b border-slate-200">
+    <div class="w-16 h-16 flex items-center justify-center shrink-0">
+      <i-lucide name="shrimp" size="28" [strokeWidth]="1.5"></i-lucide>
+    </div>
+    <span class="text-xl transition-all w-full -ml-2 {{ active || hovering? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
+    <button class="w-8 h-8 hover:bg-slate-200/70 shrink-0 flex items-center justify-center rounded-lg cursor-pointer transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}" (click)="state.setActive(!active)">
       <i-lucide [name]="active? 'pin-off' : 'pin'" size="18"></i-lucide>
     </button>
   </div>
-  <nav class="px-2 py-3 list-none">
+  <nav class="p-2 list-none">
     <ms-nav-separator label="Geral"/>
     <ms-nav-item label="Dashboard" icon="layout-dashboard" to="/dashboard"/>
-    <ms-nav-item label="Agenda" icon="calendar"/>
+    <ms-nav-item label="Inbox" icon="archive" to="/inbox"/>
+    <ms-nav-separator label="Gerenciamento"/>
+    <ms-nav-item label="Agenda" icon="calendar" to="/schedules"/>
     <ms-nav-item label="Projetos" icon="square-kanban"/>
+    <ms-nav-item label="Documentos" icon="folder-open"/>
     <ms-nav-separator label="Financeiro"/>
     <ms-nav-item label="Fluxo" icon="piggy-bank"/>
     <ms-nav-item label="Despesa" icon="banknote-arrow-down" to="/payables"/>
     <ms-nav-item label="Receita" icon="banknote-arrow-up" to="/receivables"/>
-    <ms-nav-item label="Recorrência" icon="clock-fading"/>
-    <ms-nav-item label="Cadastros" icon="clipboard-pen-line" to="financial-registries"/>
-    <ms-nav-separator label="Outros"/>
     <ms-nav-item label="Relatórios" icon="clipboard-list"/>
-    <ms-nav-item label="Documentos" icon="folder-open"/>
+    <ms-nav-item label="Cadastros" icon="clipboard-pen-line" to="financial-registries"/>
   </nav>
   <div class="px-2 py-3">
     <ms-nav-item label="Suporte" icon="message-circle-more"/>
-    <ms-nav-item label="Configurações" icon="settings" (command)="openSettings()"/>
+    <ms-nav-item label="Configurações" icon="settings"/>
   </div>
 </aside>

@@ -1,4 +1,4 @@
-import { Component, computed, input, OnInit, signal, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, computed, input, InputSignal, isSignal, OnInit, signal, Type, ViewChild, ViewContainerRef } from "@angular/core";
 import { injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { NgIf } from "@angular/common";
 import { cva, VariantProps } from "class-variance-authority";
@@ -10,15 +10,20 @@ export const dialogVariants = cva(
     variants: {
       severity: {
         primary: "",
-        success: "[&>h1]:text-emerald-500",
-        info: "[&>h1]:text-blue-500",
-        warn: "[&>h1]:text-amber-500",
-        help: "[&>h1]:text-violet-500",
-        danger: "[&>h1]:text-rose-500",
+        success: "[&>h1]:text-white [&>h1]:bg-emerald-500",
+        info: "[&>h1]:text-white [&>h1]:bg-blue-500",
+        warn: "[&>h1]:text-white [&>h1]:bg-amber-500",
+        help: "[&>h1]:text-white [&>h1]:bg-violet-500",
+        danger: "[&>h1]:text-white [&>h1]:bg-rose-500",
+      },
+      scroll: {
+        true: "[&_]:overflow-y-auto",
+        false: "[&_]:overflow-hidden",
       },
     },
     defaultVariants: {
       severity: "primary",
+      scroll: true,
     },
   },
 );
@@ -30,46 +35,41 @@ export type DialogVariants = VariantProps<typeof dialogVariants>;
   imports: [NgIf],
   template: `
     <div [class]="_computedClass()">
-      <h1 *ngIf="header()" class="text-xl flex items-center px-6 border-b border-slate-200">{{header()}}</h1>
-      <div class="{{ blockScrollContent? 'overflow-hidden' : 'overflow-y-auto' }}"> 
+      <h1 *ngIf="header()" class="text-lg flex items-center px-6 border-b border-slate-200">{{header()}}</h1>
+      <main>
         <ng-template #container></ng-template>
-      </div>
+      </main>
     <div>
   `,
 })
 export class DialogComponent implements OnInit {
-  public readonly component = signal<Type<any>>(null);
-  public readonly context = signal<Record<any, any>>({});
-
-  public readonly header = signal<string>("");
-  public readonly severity = signal<DialogVariants["severity"]>("primary");
-  public readonly blockScrollContent = signal<boolean>(false);
-
   protected readonly _computedClass = computed(() =>
-    hlm(dialogVariants({ severity: this.severity() }), this.header() && "grid-rows-[48px_1fr]"),
+    hlm(dialogVariants({ severity: this.severity(), scroll: this.scroll() }), this.header() && "grid-rows-[48px_1fr]"),
   );
 
-  private readonly _dialogContext = injectBrnDialogContext<any>();
+  private readonly _context = injectBrnDialogContext();
+
+  public readonly header = signal<string>(this._context?.header || "");
+  public readonly severity = signal<DialogVariants["severity"]>(this._context?.severity || "primary");
+  public readonly component = signal<Type<any>>(this._context?.component || null);
+  public readonly scroll = signal<DialogVariants["scroll"]>(this._context?.scroll || true);
+  public readonly inputs = signal<boolean>(this._context?.inputs || {});
+  public readonly events = signal<boolean>(this._context?.events || {});
+
   @ViewChild("container", { read: ViewContainerRef, static: true }) viewRef!: ViewContainerRef;
 
   ngOnInit() {
-    this.loadContext();
     this.loadComponent();
   };
 
   loadComponent() {
     const componentRef = this.viewRef.createComponent(this.component());
-    Object.keys(this.context()).forEach(prop => componentRef.instance[prop] = this.context()[prop]);
-  };
-
-  loadContext() {
-    console.log("DIALOG-PROPS", this._dialogContext);
-    if("component" in this._dialogContext) this.component.set(this._dialogContext.component);
-    if("context" in this._dialogContext) this.context.set(this._dialogContext.context);
-    if("header" in this._dialogContext) this.header.set(this._dialogContext.header);
-    if("blockScrollContent" in this._dialogContext) this.blockScrollContent.set(this._dialogContext.blockScrollContent);
-    if("severity" in this._dialogContext) this.severity.set(this._dialogContext.severity);
-    console.log("DIALOG-PROPS", this.context());
+    Object.entries(this.inputs()).forEach(([prop, value]) => {
+      componentRef.setInput(prop, value);
+    });
+    Object.entries(this.events()).forEach(([prop, value]) => {
+      componentRef.instance[prop].subscribe(value);
+    });
   };
   
-}
+};

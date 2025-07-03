@@ -1,8 +1,8 @@
 import { Injectable, signal, WritableSignal } from "@angular/core";
-import { ID } from "../../core/types/form-schema.type";
+import { PllID } from "../../core/lib/pollaris";
 
 export type UserData = {
-  id: ID;
+  id: PllID;
   name: string;
   email: string;
   avatar: string;

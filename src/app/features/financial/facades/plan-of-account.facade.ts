@@ -1,23 +1,40 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, Type } from "@angular/core";
+import { PllFacade } from "../../../core/lib/pollaris";
 import { PlanOfAccount } from "../models/plan-of-account.model";
-import { GetAllPlanOfAccountByFilterParams, PlanOfAccountService } from "../services/plan-of-account.service";
-import { BaseFacade, BaseFacadeList } from "../../../core/base/base-facade";
-import { FormSchemaConfig } from "../../../core/types/form-schema.type";
+import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { GetAllPlanOfAccountByFilterParams, PlanOfAccountService } from "../services/plan-of-account.service";
+import { PlanOfAccountState } from "../states/plan-of-account.state";
+import { PlanOfAccountMapper } from "../mappers/plan-of-account.mapper";
+import { DialogWidth } from "../../../common/facades/dialog.facade";
+import { PlanOfAccountFormComponent } from "../views/plan-of-account/plan-of-account-form/plan-of-account-form.component";
+
+export type PlanOfAccountUseQueryParams = GetAllPlanOfAccountByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class PlanOfAccountFacade extends BaseFacade<PlanOfAccount> implements BaseFacadeList<PlanOfAccount, GetAllPlanOfAccountByFilterParams> {
-  override service: PlanOfAccountService = inject(PlanOfAccountService);
-  
-  override formSchema: FormSchemaConfig<PlanOfAccount, PlanOfAccount> = {
-    id: { defaultValue: null },
-    name: { defaultValue: null, validators: [Validators.required] },
-    active: { defaultValue: true },
-    default: { defaultValue: false },
+export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccount, PlanOfAccount, PlanOfAccountUseQueryParams, PlanOfAccountFormComponent> {
+  override state = inject(PlanOfAccountState);
+  override service = inject(PlanOfAccountService);
+  override mapper = inject(PlanOfAccountMapper);
+  override queryFn = (params: PlanOfAccountUseQueryParams) => this.service.getAllByFilter(params);
+
+  override header: string = "Plano de Conta";
+  override component: Type<any> = PlanOfAccountFormComponent;
+  override dialogWidth: DialogWidth = "65";
+  override closeOnSave: boolean = true;
+
+  override recordSchema: PllFormSchemaConfig<PlanOfAccount> = {
+    fields: {
+      id: { value: null },
+      name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
+      active: { value: true },
+    },
   };
 
-  getByAllFilters(params: GetAllPlanOfAccountByFilterParams): Observable<PlanOfAccount[]> {
-    return this.service.getAllByFilter(params);
+  override filterSchema: PllFormSchemaConfig<PlanOfAccountUseQueryParams> = {
+    fields: {
+      status: { value: "ACTIVE" },
+    },
   };
 };

@@ -1,16 +1,20 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './common/layouts/main-layout/main-layout.component';
-import { DashboardComponent } from './features/dashboard/view/dashboard/dashboard.component';
-import { PayableListComponent } from './features/financial/view/payable/payable-list/payable-list.component';
-import { FinancialRegistriesComponent } from './features/financial/view/financial-registries/financial-registries.component';
-import { ReceivableListComponent } from './features/financial/view/receivable/receivable-list/receivable-list.component';
+import { DashboardComponent } from './features/dashboard/views/dashboard/dashboard.component';
+import { InboxListingComponent } from './features/inbox/views/inbox/inbox-listing/inbox-listing.component';
+import { PayableListingComponent } from './features/financial/views/payable/payable-listing/payable-listing.component';
+import { FinancialRegistriesPanelComponent } from './features/financial/views/financial-registries-panel/financial-registries-panel.component';
+import { ScheduleListingComponent } from './features/schedule/views/schedule/schedule-listing/schedule-listing.component';
+import { ReceivableListingComponent } from './features/financial/views/receivable/receivable-listing/receivable-listing.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: '/dashboard', pathMatch: 'full' },
   { path: "", component: MainLayoutComponent, children: [
     { path: "dashboard", component: DashboardComponent },
-    { path: "payables", component: PayableListComponent },
-    { path: "receivables", component: ReceivableListComponent },
-    { path: "financial-registries", component: FinancialRegistriesComponent },
+    { path: "inbox", component: InboxListingComponent },
+    { path: "payables", component: PayableListingComponent },
+    { path: "receivables", component: ReceivableListingComponent },
+    { path: "financial-registries", component: FinancialRegistriesPanelComponent },
+    { path: "schedules", component: ScheduleListingComponent },
   ]},
 ];

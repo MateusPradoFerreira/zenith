@@ -17,7 +17,7 @@ export class HlmTabsTriggerDirective {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected _computedClass = computed(() =>
 		hlm(
-			'inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-foreground',
+			'inline-flex cursor-pointer duration-300 border-b-2 border-transparent items-center justify-center whitespace-nowrap rounded-t-sm px-4 h-full text-sm font-medium transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50  data-[state=active]:text-violet-500 data-[state=active]:border-violet-300 mb-[-1px]',
 			this.userClass(),
 		),
 	);

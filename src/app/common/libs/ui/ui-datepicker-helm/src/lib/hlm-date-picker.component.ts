@@ -101,6 +101,8 @@ export class HlmDatePickerComponent<T> {
 	/** Defines how the date should be transformed before saving to model/form. */
 	public readonly transformDate = input<(date: T) => T>(this._config.transformDate);
 
+	public readonly forceSelection = input<boolean>(false);
+
 	protected readonly popoverState = signal<BrnDialogState | null>(null);
 
 	protected readonly state = computed(() => ({

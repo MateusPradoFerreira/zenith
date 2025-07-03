@@ -39,6 +39,6 @@ export class HlmTdComponent {
 
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
-		hlm('flex flex-none p-4 items-center [&:has([role=checkbox])]:pr-0', this._columnDef?.class(), this.userClass()),
+		hlm('flex flex-none px-4 py-3 items-center [&:has([role=checkbox])]:pr-0', this._columnDef?.class(), this.userClass()),
 	);
 }

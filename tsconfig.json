@@ -60,7 +60,9 @@
       ],
       "@spartan-ng/ui-menu-helm": [
         ".\\src/app/common/libs/ui/ui-menu-helm/src/index.ts"
-      ]
+      ],
+      "@pollaris": [".\\src/app/core/lib/pollaris/index.ts"],
+      "@pollaris/*": [".\\src/app/core/lib/pollaris/*"]
     },
     "strictPropertyInitialization": false,
     "strictNullChecks": false

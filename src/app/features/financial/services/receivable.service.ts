@@ -1,19 +1,38 @@
+import { PllID, PllRestService } from "@pollaris";
+import { Receivable, ReceivableStatus } from "../models/receivable.model";
 import { Observable } from "rxjs";
-import { BaseService } from "../../../core/base/base-service";
-import { Receivable } from "../models/receivable.model";
 import { environment } from "../../../../environments/environment";
+import moment from "moment";
 import { Injectable } from "@angular/core";
 
 export type GetAllReceivableByFilterParams = {
+  status?: ReceivableStatus | "TOPAY" | "ALL";
+  centerOfCostId?: PllID | null;
+  planOfAccountId?: PllID | null;
+  secrecyId?: PllID | null;
   startsAt: Date;
   endsAt: Date;
 };
 
-@Injectable()
-export class ReceivableService extends BaseService<Receivable> {
-  route: string = "payable";
+export type GetAllReceivableByFilterResponse = Receivable & {
+  centerOfCost: string;
+  planOfAccount: string;
+  secrecy: string;
+};
 
-  getAllByFilter({ startsAt, endsAt }: GetAllReceivableByFilterParams): Observable<Receivable[]> {
-    return this.http.get(`${environment.apiUrl}/${this.route}/startsAt/${startsAt}/endsAt/${endsAt}`) as Observable<Receivable[]>;
+@Injectable()
+export class ReceivableService extends PllRestService<Receivable> {
+  override baseRoute: string = environment.apiUrl;
+  override pathRoute: string = "receivable";
+
+  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllReceivableByFilterParams): Observable<GetAllReceivableByFilterResponse[]> {
+    return this.http.get<GetAllReceivableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+      status,
+      centerOfCostId,
+      planOfAccountId,
+      secrecyId,
+      startsAt: moment(startsAt).format("YYYY-MM-DD"),
+      endsAt: moment(endsAt).format("YYYY-MM-DD"),
+    }});
   };
 };

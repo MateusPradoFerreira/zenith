@@ -10,7 +10,7 @@ import { HlmSelectModule } from '../../common/libs/ui/ui-select-helm/src';
 import { HlmTemplateDirective } from '../../common/directives/hlm-template.directive';
 import { HlmDatePickerModule } from '../../common/libs/ui/ui-datepicker-helm/src';
 import { HlmCalendarModule } from '../../common/libs/ui/ui-calendar-helm/src';
-import { NgFor, NgForOf, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgFor, NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
 import { HlmBadgeModule } from '../../common/libs/ui/ui-badge-helm/src';
 import { HlmInputModule } from '../../common/libs/ui/ui-input-helm/src';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
@@ -18,6 +18,7 @@ import { BrnSelectModule } from '@spartan-ng/brain/select';
 import { HlmCheckboxModule } from '../../common/libs/ui/ui-checkbox-helm/src';
 import { HlmTabsModule } from '../../common/libs/ui/ui-tabs-helm/src';
 import { HlmMenuModule } from '../../common/libs/ui/ui-menu-helm/src';
+import { NgxCurrencyDirective } from "ngx-currency";
 
 const generalModules = [
 	NgxMaskDirective, 
@@ -29,6 +30,10 @@ const generalModules = [
 	NgIf, 
 	NgFor, 
 	NgForOf,
+	DatePipe,
+	CurrencyPipe,
+	NgTemplateOutlet,
+	NgxCurrencyDirective,
 ];
 
 const spartanUIModules = [
@@ -45,7 +50,7 @@ const spartanUIModules = [
 	HlmPopoverModule,
 	BrnPopoverModule,
 	HlmPaginationModule,
-	HlmSelectModule
+	HlmSelectModule,
 ];
 
 @NgModule({
