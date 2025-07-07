@@ -6,7 +6,6 @@ import { faker } from "@faker-js/faker";
 import { DialogFacade, DialogWidth, Inputkeys } from "../../../common/facades/dialog.facade";
 import { BaseFormComponentDirective } from "../../../common/directives/base-form-component.directive";
 import moment from "moment";
-import { ConfirmationComponent } from "../../../common/components/confirmation.component";
 
 export type PllID = string;
 export type PllRecord = Record<any, any>;
@@ -105,6 +104,9 @@ export abstract class PllMockedRestService<TRecordModel extends PllRecordId> ext
   override baseRoute: string = "";
   override pathRoute: string = "";
 
+  minDelay: number = 50;
+  maxDelay: number = 400;
+
   abstract createRecord(data: Partial<TRecordModel>): TRecordModel;
 
   constructor (initialData: TRecordModel[] = []) {
@@ -113,31 +115,31 @@ export abstract class PllMockedRestService<TRecordModel extends PllRecordId> ext
   };
 
   override get(id: PllID): Observable<TRecordModel> {
-    return of(this.records().find(record => record.id === id)).pipe(delay(faker.helpers.rangeToNumber({ min: 100, max: 500 })), tap(response => {
+    return of(this.records().find(record => record.id === id)).pipe(delay(faker.helpers.rangeToNumber({ min: this.minDelay, max: this.maxDelay })), tap(response => {
       if(!response) throw new HttpErrorResponse({ status: 404, error: new Error("Not Found Record!") });
     }));
   };
 
   override post(data: TRecordModel): Observable<TRecordModel> {
-    return of(this.createRecord(data)).pipe(delay(faker.helpers.rangeToNumber({ min: 100, max: 500 })), tap(response => {
+    return of(this.createRecord(data)).pipe(delay(faker.helpers.rangeToNumber({ min: this.minDelay, max: this.maxDelay })), tap(response => {
       this.records.set([ ...this.records(), response ]);
     }));
   };
 
   override postMany(data: TRecordModel[]): Observable<TRecordModel[]> {
-    return of(data.map(record => this.createRecord(record))).pipe(delay(faker.helpers.rangeToNumber({ min: 100, max: 500 })), tap(response => {
+    return of(data.map(record => this.createRecord(record))).pipe(delay(faker.helpers.rangeToNumber({ min: this.minDelay, max: this.maxDelay })), tap(response => {
       this.records.set([ ...this.records(), ...response ]);
     }));
   };
 
   override put(data: TRecordModel): Observable<TRecordModel> {
-    return of(data).pipe(delay(faker.helpers.rangeToNumber({ min: 100, max: 500 })), tap(response => {
+    return of(data).pipe(delay(faker.helpers.rangeToNumber({ min: this.minDelay, max: this.maxDelay })), tap(response => {
       this.records.set(this.records().map(record => record.id !== response.id? record : response));
     }));
   };
 
   override putMany(data: TRecordModel[]): Observable<TRecordModel[]> {
-    return of(data).pipe(delay(faker.helpers.rangeToNumber({ min: 100, max: 500 })), tap(response => {
+    return of(data).pipe(delay(faker.helpers.rangeToNumber({ min: this.minDelay, max: this.maxDelay })), tap(response => {
       this.records.set(this.records().map(record => {
         const mapRecord = response.find(rec => rec.id === record.id);
         return mapRecord || record;

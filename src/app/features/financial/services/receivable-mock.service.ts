@@ -1,7 +1,7 @@
-import { PllMockedRestService } from "@pollaris";
+import { PllID, PllMockedRestService } from "@pollaris";
 import { Receivable } from "../models/receivable.model";
 import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "./receivable.service";
-import { delay, map, Observable, of } from "rxjs";
+import { delay, map, Observable, of, switchMap } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { inject } from "@angular/core";
 import moment from "moment";
@@ -17,6 +17,7 @@ export function createMokedReceivable(data: Partial<Receivable>): Receivable {
   const status = fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
   const createdAt = fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
   const paidAt = status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
+  const cancelledAt = status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
 
   return new Receivable({
     name: "New Receivable",
@@ -24,6 +25,7 @@ export function createMokedReceivable(data: Partial<Receivable>): Receivable {
     dueAt: createdAt,
     paidAt,
     createdAt,
+    cancelledAt,
     value: fakerJs.number.float({ min: 200, max: 300, fractionDigits: 2 }),
     description: fakerJs.finance.transactionDescription(),
     active: true,
@@ -78,6 +80,18 @@ export class ReceivableMockedService extends PllMockedRestService<Receivable> im
     records = records.filter(record => !params.centerOfCostId? true : record.centerOfCostId === params.centerOfCostId);
     records = records.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
     records = records.filter(record => !params.secrecyId? true : record.secrecyId === params.secrecyId);
-    return records.filter(record => moment(record.status === "PAID"? record.paidAt : record.status === "OVERDUE"? record.dueAt : record.createdAt).isBetween(params.startsAt, params.endsAt));
+    return records.filter(record => moment(record.status === "PAID"? record.paidAt : record.status === "OVERDUE"? record.dueAt : record.status === "CANCELLED"? record.cancelledAt : record.createdAt).isBetween(params.startsAt, params.endsAt));
+  };  
+  
+  pay(id: PllID): Observable<Receivable> {
+    return this.get(id).pipe(switchMap(response => this.put({ ...response, paidAt: new Date(), status: "PAID" })));
+  };
+
+  cancel(id: PllID): Observable<Receivable> {
+    return this.get(id).pipe(switchMap(response => this.put({ ...response, cancelledAt: new Date(), status: "CANCELLED" })));
+  };
+
+  reopen(id: PllID): Observable<Receivable> {
+    return this.get(id).pipe(switchMap(response => this.put({ ...response, cancelledAt: null, paidAt: null, status: moment().isAfter(response.dueAt)? "OVERDUE" : "PENDING" })));
   };
 };

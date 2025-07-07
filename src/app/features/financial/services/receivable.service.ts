@@ -35,4 +35,16 @@ export class ReceivableService extends PllRestService<Receivable> {
       endsAt: moment(endsAt).format("YYYY-MM-DD"),
     }});
   };
+
+  pay(id: PllID): Observable<Receivable> {
+    return this.http.post<Receivable>(`${this.baseRoute}/${this.pathRoute}/${id}/pay`, {});
+  };
+
+  cancel(id: PllID): Observable<Receivable> {
+    return this.http.post<Receivable>(`${this.baseRoute}/${this.pathRoute}/${id}/cancel`, {});
+  };
+
+  reopen(id: PllID): Observable<Receivable> {
+    return this.http.post<Receivable>(`${this.baseRoute}/${this.pathRoute}/${id}/reopen`, {});
+  };
 };

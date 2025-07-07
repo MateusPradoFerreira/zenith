@@ -35,4 +35,16 @@ export class PayableService extends PllRestService<Payable> {
       endsAt: moment(endsAt).format("YYYY-MM-DD"),
     }});
   };
+
+  pay(id: PllID): Observable<Payable> {
+    return this.http.post<Payable>(`${this.baseRoute}/${this.pathRoute}/${id}/pay`, {});
+  };
+
+  cancel(id: PllID): Observable<Payable> {
+    return this.http.post<Payable>(`${this.baseRoute}/${this.pathRoute}/${id}/cancel`, {});
+  };
+
+  reopen(id: PllID): Observable<Payable> {
+    return this.http.post<Payable>(`${this.baseRoute}/${this.pathRoute}/${id}/reopen`, {});
+  };
 };

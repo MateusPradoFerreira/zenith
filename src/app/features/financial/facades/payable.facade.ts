@@ -1,6 +1,6 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
-import { Payable, PayableStatus } from "../models/payable.model";
+import { PllFacade, PllID } from "../../../core/lib/pollaris";
+import { Payable } from "../models/payable.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
@@ -11,6 +11,7 @@ import { DialogWidth } from "../../../common/facades/dialog.facade";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { PayableFormComponent } from "../views/payable/payable-form/payable-form.component";
+import { Observable, Subject } from "rxjs";
 
 export type PayableUseQueryParams = GetAllPayableByFilterParams;
 export type PayableUseQueryResponse = GetAllPayableByFilterResponse;
@@ -25,7 +26,7 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
   override header: string = "Despesa";
   override component: Type<any> = PayableFormComponent;
   override dialogWidth: DialogWidth = "95";
-  override closeOnSave: boolean = true;
+  override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Payable> = {
     fields: {
@@ -46,6 +47,7 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
       dueAt: { value: new Date(), validators: [Validators.required] },
       paidAt: { value: null, disabled: true },
       createdAt: { value: new Date(), validators: [Validators.required] },
+      cancelledAt: { value: null, validators: [Validators.required], disabled: true },
       active: { value: true },
       centerOfCostId: { value: null, validators: [Validators.required] },
       planOfAccountId: { value: null, validators: [Validators.required] },
@@ -66,6 +68,71 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
       startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
     },
+  };
+
+  handlePay(id: PllID): Observable<Payable> {
+    const sub$ = new Subject<Payable>();
+    this.dialogFacade.confirm({ 
+      header: "Confirmar Pagamento?",
+      severity: "success",
+      onConfirm: () => {
+        this.service.pay(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
+  };
+
+  handleCancel(id: PllID): Observable<Payable> {
+    const sub$ = new Subject<Payable>();
+    this.dialogFacade.confirm({ 
+      header: "Cancelar Despesa?",
+      severity: "danger",
+      onConfirm: () => {
+        this.service.cancel(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
+  };
+
+  handleReopen(id: PllID): Observable<Payable> {
+    const sub$ = new Subject<Payable>();
+    this.dialogFacade.confirm({ 
+      header: "Reabrir Despesa?",
+      onConfirm: () => {
+        this.service.reopen(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
   };
 };
 

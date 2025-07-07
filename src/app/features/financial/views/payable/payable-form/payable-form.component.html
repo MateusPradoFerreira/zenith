@@ -70,11 +70,18 @@
     <label>Vencimento</label>
   </div>
 
-  <div class="hlm-float-label col-span-12 xl:col-span-3">
+  <div class="hlm-float-label col-span-12 xl:col-span-3" *ngIf="form.value.status !== 'CANCELLED'">
     <hlm-date-picker formControlName="paidAt" [forceSelection]="true">
       <span>Escolha uma Data</span>
     </hlm-date-picker>
     <label>Pagamento</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3" *ngIf="form.value.status === 'CANCELLED'">
+    <hlm-date-picker formControlName="cancelledAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Cancelamento</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-3">
@@ -89,8 +96,8 @@
 
   <div class="col-span-12 {{ !['PAID'].includes(form.value.status)? 'xl:col-span-6' : 'xl:col-span-8' }}"></div>
 
-  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" hlmBtnIcon="dollar-sign">Pagar</button>
-  <button *ngIf="['CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button">Rabrir</button>
+  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" hlmBtnIcon="dollar-sign" (click)="pay()">Pagar</button>
+  <button *ngIf="['CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="reopen()">Rabrir</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 

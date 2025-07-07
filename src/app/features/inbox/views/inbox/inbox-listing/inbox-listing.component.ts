@@ -6,6 +6,7 @@ import { GetAllInboxByFilterParams } from '../../../services/inbox.service';
 import { InboxFacade, InboxPriorityOptions, InboxStatusOptions } from '../../../facades/inbox.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { PayableFacade } from '../../../../financial/facades/payable.facade';
+import { ReceivableFacade } from '../../../../financial/facades/receivable.facade';
 
 @Component({
   standalone: true,
@@ -15,6 +16,7 @@ import { PayableFacade } from '../../../../financial/facades/payable.facade';
 })
 export class InboxListingComponent extends BaseRecordListingComponentDirective<Inbox, GetAllInboxByFilterParams> {
   payableFacade = inject(PayableFacade);
+  receivableFacade = inject(ReceivableFacade);
 
   override facade = inject(InboxFacade);
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
@@ -26,7 +28,7 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
   ]);
 
   override actionFn: HlmDataTableActionFc<Inbox> = (data: Inbox) => ([
-    { icon: "pencil-line", label: "Editar", command: () => this.handleCreate() },
+    { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
     { icon: "list-todo", label: "Processar", command: () => this.changeStatus(data, "PROCESSED") },
     { separator: true },
     { icon: "circle-fading-arrow-up", label: "Converter em", items: [
@@ -34,7 +36,7 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
       { icon: "square-kanban", label: "Projeto", command: () => this.changeStatus(data, "PROCESSED") },
       { separator: true },
       { icon: "banknote-arrow-down", label: "Despesa", command: () => this.convertRecordIn(data, "PAYABLE") },
-      { icon: "banknote-arrow-up", label: "Receita", command: () => this.changeStatus(data, "PROCESSED") },
+      { icon: "banknote-arrow-up", label: "Receita", command: () => this.convertRecordIn(data, "RECEIVABLE") },
       { icon: "clock-fading", label: "Recorrência", command: () => this.changeStatus(data, "PROCESSED") },
     ]},
     { separator: true },
@@ -74,14 +76,15 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
     });
   };
 
-  convertRecordIn(rowData: Inbox, to: "PAYABLE") {
+  convertRecordIn(rowData: Inbox, to: "PAYABLE" | "RECEIVABLE") {
     if(to === "PAYABLE") {
-      this.payableFacade.openToCreate({
-        name: rowData.title,
-      }).subscribe(response => {
+      this.payableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
         if(response) this.changeStatus(rowData, "PROCESSED");
       });
-      return;
+    } else if(to == "RECEIVABLE") {
+      this.receivableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
+        if(response) this.changeStatus(rowData, "PROCESSED");
+      });
     };
   };
 };

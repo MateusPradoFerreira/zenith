@@ -14,6 +14,7 @@ export class Receivable {
   dueAt: Date;
   paidAt: Date;
   createdAt: Date;
+  cancelledAt: Date;
   status: ReceivableStatus;
   description: string;
   active: boolean;

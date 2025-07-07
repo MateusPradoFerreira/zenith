@@ -14,6 +14,7 @@ export class Payable {
   dueAt: Date;
   paidAt: Date;
   createdAt: Date;
+  cancelledAt: Date;
   status: PayableStatus;
   description: string;
   active: boolean;

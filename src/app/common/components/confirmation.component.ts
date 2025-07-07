@@ -9,7 +9,7 @@ import { BrnDialogRef } from "@spartan-ng/brain/dialog";
   imports: [GlobalModule],
   template: `
     <div class="p-2 grid grid-cols-2 gap-x-2.5 min-w-96">
-      <button hlmBtn variant="text" (click)="confirm()">Voltar</button>
+      <button hlmBtn variant="text" (click)="cancel()">Voltar</button>
       <button hlmBtn [severity]="severity()" (click)="confirm()">Confirmar</button>
     <div>
   `,
@@ -28,6 +28,6 @@ export class ConfirmationComponent {
 
   cancel() {
     this.onCancel.emit();
-    this._dialogRef.close();
+    this._dialogRef.close({ status: "CANCEL" });
   };
 };

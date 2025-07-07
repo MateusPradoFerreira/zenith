@@ -13,6 +13,7 @@ import { PlanOfAccount } from '../../../models/plan-of-account.model';
 import { SecrecyFacade } from '../../../facades/secrecy.facade';
 import { CenterOfCostFacade } from '../../../facades/center-of-cost.facade';
 import { PlanOfAccountFacade } from '../../../facades/plan-of-account.facade';
+import { PllID } from '../../../../../core/lib/pollaris';
 
 @Component({
   standalone: true,
@@ -32,11 +33,11 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
   ]);
 
   override actionFn: HlmDataTableActionFc<Payable> = (data: Payable) => ([
-    { icon: "pencil-line", label: "Editar", command: () => this.handleCreate() },
-    { icon: "dollar-sign", label: "Pagar", visible: data.status !== "PAID" },
+    { icon: "pencil-line", label: "Editar", disabled: this.processing(), command: () => this.handleUpdate(data) },
+    { icon: "dollar-sign", label: "Pagar", disabled: this.processing(), command: () => this.handlePay(data.id), visible: data.status !== "PAID" },
     { separator: true, visible: data.status !== "PAID" },
-    { icon: "circle-x", label: "Cancelar", visible: data.status !== "CANCELLED" && data.status !== "PAID" },
-    { icon: "check", label: "Reabrir", visible: data.status === "CANCELLED" },
+    { icon: "circle-x", label: "Cancelar", disabled: this.processing(), command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" && data.status !== "PAID" },
+    { icon: "check", label: "Reabrir", disabled: this.processing(), command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
   ]);
 
   secrecyFacade = inject(SecrecyFacade);
@@ -48,7 +49,7 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
   planOfAccountOptions: PlanOfAccount[] = [];
   statusOptions = [
     { label: "Todos", value: "ALL" },
-    { label: "A Receber", value: "TOPAY" },
+    { label: "A Pagar", value: "TOPAY" },
     ...PayableStatusOptions,
   ];
 
@@ -75,5 +76,32 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
 
   formatSequence(number: number): string {
     return number.toString().padStart(4, '0');
+  };
+
+  handlePay(id: PllID) {
+    this.processing.set(false),
+    this.facade.handlePay(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
+
+  handleCancel(id: PllID) {
+    this.processing.set(false),
+    this.facade.handleCancel(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
+
+  handleReopen(id: PllID) {
+    this.processing.set(false),
+    this.facade.handleReopen(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
   };
 };

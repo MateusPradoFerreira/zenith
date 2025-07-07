@@ -51,4 +51,22 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
   formatSequence(number: number): string {
     return number.toString().padStart(4, '0');
   };
+  
+  pay() {
+    this.processing.set(true);
+    this.facade.handlePay(this.id()).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
+
+  reopen() {
+    this.processing.set(false),
+    this.facade.handleReopen(this.id()).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
 };

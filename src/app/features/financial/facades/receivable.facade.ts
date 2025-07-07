@@ -1,6 +1,6 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
-import { Receivable, ReceivableStatus } from "../models/receivable.model";
+import { PllFacade, PllID } from "../../../core/lib/pollaris";
+import { Receivable } from "../models/receivable.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
@@ -11,6 +11,7 @@ import { DialogWidth } from "../../../common/facades/dialog.facade";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
+import { Observable, Subject } from "rxjs";
 
 export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
 export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
@@ -25,7 +26,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
   override header: string = "Receita";
   override component: Type<any> = ReceivableFormComponent;
   override dialogWidth: DialogWidth = "95";
-  override closeOnSave: boolean = true;
+  override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Receivable> = {
     fields: {
@@ -46,6 +47,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
       dueAt: { value: new Date(), validators: [Validators.required] },
       paidAt: { value: null, disabled: true },
       createdAt: { value: new Date(), validators: [Validators.required] },
+      cancelledAt: { value: null, validators: [Validators.required], disabled: true },
       active: { value: true },
       centerOfCostId: { value: null, validators: [Validators.required] },
       planOfAccountId: { value: null, validators: [Validators.required] },
@@ -66,6 +68,71 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
       startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
     },
+  };
+  
+  handlePay(id: PllID): Observable<Receivable> {
+    const sub$ = new Subject<Receivable>();
+    this.dialogFacade.confirm({ 
+      header: "Confirmar Recebimento?",
+      severity: "success",
+      onConfirm: () => {
+        this.service.pay(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
+  };
+
+  handleCancel(id: PllID): Observable<Receivable> {
+    const sub$ = new Subject<Receivable>();
+    this.dialogFacade.confirm({ 
+      header: "Cancelar Receita?",
+      severity: "danger",
+      onConfirm: () => {
+        this.service.cancel(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
+  };
+
+  handleReopen(id: PllID): Observable<Receivable> {
+    const sub$ = new Subject<Receivable>();
+    this.dialogFacade.confirm({ 
+      header: "Reabrir Receita?",
+      onConfirm: () => {
+        this.service.reopen(id).subscribe({
+          next: response => {
+            this.state.remove(response.id);
+            sub$.next(response);
+            sub$.complete();
+          },
+          error: error => sub$.error(error),
+        })
+      },
+      onCancel: () => sub$.complete(),
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
   };
 };
 
