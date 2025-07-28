@@ -1,8 +1,80 @@
 <form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
 
-  <div class="hlm-float-label col-span-12 xl:col-span-12">
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
     <input hlmInput formControlName="title"/>
     <label>Titulo</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="categoryId" placeholder="Selecione uma Categoria">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of scheduleCategoryOptions" [value]="option.id">{{ option.name }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Categoria</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="frequency" placeholder="Selecione uma Frequência">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of frequencyOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Frequência</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 {{ ['WEEKLY'].includes(form.value.frequency)? 'xl:col-span-6' : 'xl:col-span-12' }}" *ngIf="form.value.frequency !== 'NO_REPETITION'">
+    <input hlmInput formControlName="interval" [currencyMask]="{ suffix: ' ' + frequencySuffix, prefix: '', precision: 0, allowNegative: false, align: 'left' }"/>
+    <label>Repetir a cada</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-6" *ngIf="form.value.frequency === 'WEEKLY'">
+    <brn-select formControlName="byWeekday" placeholder="Selecione uma Categoria" [multiple]="true">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of weekdayOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Repetir nos dias</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <hlm-date-picker formControlName="startsAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Data de Início</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <hlm-date-picker formControlName="endsAt" [forceSelection]="true">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker>
+    <label>Data de Término</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <input hlmInput type="time" formControlName="startsAtTime" step="1"/>
+    <label>Hora de Início</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <input hlmInput type="time" formControlName="endsAtTime" step="1"/>
+    <label>Hora de Término</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12" *ngIf="form.value.frequency !== 'NO_REPETITION'">
+    <hlm-date-picker-multi formControlName="exceptions">
+      <span>Escolha uma Data</span>
+    </hlm-date-picker-multi>
+    <label>Exceções</label>
   </div>
 
   <div class="col-span-12 xl:col-span-8"></div>

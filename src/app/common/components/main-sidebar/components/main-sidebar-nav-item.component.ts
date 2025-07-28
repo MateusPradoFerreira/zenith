@@ -12,7 +12,7 @@ import { GlobalModule } from '../../../../core/modules/global-module.module';
       <div class="w-[47px] h-[47px] flex items-center justify-center shrink-0">
         <i-lucide [name]="icon" size="22"></i-lucide>
       </div>
-      <span class="text-sm mt-0.5 transition {{ active || hovering? 'opacity-100' : 'opacity-0' }}">{{label}}</span>
+      <span class="text-[13px] mt-0.5 transition {{ active || hovering? 'opacity-100' : 'opacity-0' }}">{{label}}</span>
     </a>
   `,
 })

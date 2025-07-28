@@ -15,7 +15,7 @@ export const event = <T = void>(...operators: OperatorFunction<T, any>[]) => {
 export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordId> implements OnInit {
   public readonly userClass = input<ClassValue>("", { alias: "class" });
 	protected readonly _computedClass = computed(() =>
-		hlm("px-6 py-4 grid grid-cols-12 gap-3 gap-x-2", this.userClass()),
+		hlm("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3 gap-x-2", this.userClass()),
 	);
   
   id = model<PllID>(null);

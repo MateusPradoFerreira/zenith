@@ -1,20 +1,62 @@
-<header class="h-full border-b border-slate-200 flex items-center justify-between gap-4 px-6">
+<header class="h-full border-b border-slate-200 flex items-center justify-between gap-4 px-3 xl:px-6">
   <div class="flex items-center gap-2">
-    <img class="w-12 h-12 object-cover rounded-full border border-slate-200 shrink-0" [src]="userData().avatar" alt="profile-picture">
-    <div class="overflow-hidden">
-      <div class="truncate text-sm">{{userData().name}}</div>
-      <div class="truncate text-xs text-slate-600">{{userData().email}}</div>
-    </div>
+    <button class="text-slate-500 flex xl:hidden" hlmBtn hlmBtnIcon="menu" size="icon" variant="ghost"></button>
+    <h1 class="text-xl font-medium">{{header()}}</h1>
+    <button class="ml-1" hlmBtn variant="soft" severity="help" size="sm">HOM</button>
   </div>
-  <div class="flex items-center gap-1">
-    <button hlmBtn hlmBtnIcon="search" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="archive" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="folder-closed" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="square-kanban" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="calendar" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="chart-pie" size="icon-lg" variant="ghost"></button>
+  <div class="hidden xl:flex items-center gap-1">
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="search" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="archive" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="folder-closed" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="square-kanban" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="calendar" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="chart-pie" size="icon" variant="ghost"></button>
     <div class="mx-1 h-6 w-0.5 bg-slate-200 rounded"></div>
-    <button hlmBtn hlmBtnIcon="bell" size="icon-lg" variant="ghost"></button>
-    <button hlmBtn hlmBtnIcon="settings" size="icon-lg" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="shopping-cart" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="bell" size="icon" variant="ghost"></button>
+    <button class="text-slate-500" hlmBtn hlmBtnIcon="settings" size="icon" variant="ghost"></button>
+    <div class="mx-1 h-6 w-0.5 bg-slate-200 rounded"></div>
+    <img class="w-9 h-9 object-cover rounded-full border border-slate-200 shrink-0 cursor-pointer" [src]="userData().avatar" alt="profile-picture" [brnMenuTriggerFor]="selectionMenu">
+  </div>
+  <div class="flex xl:hidden items-center gap-1">
+    <img class="w-9 h-9 object-cover rounded-full border border-slate-200 shrink-0 cursor-pointer" [src]="userData().avatar" alt="profile-picture" [brnMenuTriggerFor]="selectionMenu">
   </div>
 </header>
+
+<ng-template #selectionMenu>
+  <hlm-menu class="w-64">
+    <hlm-menu-group>
+      <button hlmMenuItem class="bg-white hover:bg-white active:bg-white focus:bg-white overflow-hidden">
+        <img class="w-10 h-10 object-cover rounded-md border border-slate-200 shrink-0 cursor-pointer mr-2" [src]="userData().avatar" alt="profile-picture">
+        <div class="w-full text-left overflow-hidden">
+          <div class="font-medium truncate">Mateus do Prado</div>
+          <div class="text-xs text-slate-500 truncate">{{ "mateuspradoferreira123@gmail.com" }}</div>
+        </div>
+      </button>
+      <hlm-menu-separator />
+      <div class="flex">
+        <button hlmMenuItem class="justify-center bg-slate-100 rounded-r-none"> <i-lucide class="m-0" name="sun" size="16" hlmMenuIcon></i-lucide> </button>
+        <button hlmMenuItem class="justify-center bg-slate-100 rounded-none"> <i-lucide class="m-0" name="moon-star" size="16" hlmMenuIcon></i-lucide> </button>
+        <button hlmMenuItem class="justify-center bg-white bg-white rounded-l-none border-3 border-slate-100"> <i-lucide class="m-0" name="monitor" size="16" hlmMenuIcon></i-lucide> </button>
+      </div>
+      <hlm-menu-separator />
+      <button hlmMenuItem> <i-lucide name="settings" size="16" hlmMenuIcon></i-lucide> Configurações </button>
+      <hlm-menu-separator />
+      <!-- <button hlmMenuItem> <i-lucide name="calendar" size="16" hlmMenuIcon></i-lucide> Cadastros da Agenda </button>
+      <button hlmMenuItem> <i-lucide name="clipboard-pen-line" size="16" hlmMenuIcon></i-lucide> Cadastros de Financeiro </button>
+      <hlm-menu-separator /> -->
+      <button hlmMenuItem> <i-lucide name="book-open-text" size="16" hlmMenuIcon></i-lucide> Documentação </button>
+      <button hlmMenuItem> <i-lucide name="headset" size="16" hlmMenuIcon></i-lucide> Centro de Suporte </button>
+      <hlm-menu-separator />
+      <button hlmMenuItem>
+        <div class="w-full text-left">
+          <div class="font-semibold">Plano Freemium</div>
+          <div class="text-xs">Licenciado até 10/10/2025</div>
+        </div>
+        <i-lucide class="mr-0.5" name="circle-fading-arrow-up" size="22" hlmMenuIcon></i-lucide>
+      </button>
+      <hlm-menu-separator />
+      <button hlmMenuItem> <i-lucide name="log-out" size="16" hlmMenuIcon></i-lucide> Sair </button>
+    </hlm-menu-group>
+  </hlm-menu>
+</ng-template>

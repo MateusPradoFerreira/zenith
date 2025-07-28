@@ -1,0 +1,17 @@
+<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+
+  <div class="hlm-float-label col-span-12 xl:col-span-12 flex gap-2">
+    <input hlmInput formControlName="name" class="w-full"/>
+    <input type="color" class="p-1 h-[38px] w-14 block bg-white border border-slate-200 cursor-pointer rounded-md disabled:opacity-50 disabled:pointer-events-none" formControlName="color" title="Choose your color">
+    <label>Nome</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-8 flex items-center">
+    <hlm-checkbox *ngIf="form.value.type === 'SCHEDULE'" id="active-field" class="mr-2" formControlName="active" />
+    <label *ngIf="form.value.type === 'SCHEDULE'" for="active-field">Ativo</label>
+  </div>
+
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form>

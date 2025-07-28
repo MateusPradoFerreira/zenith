@@ -1,5 +1,5 @@
 <div [class]="_computedClass()">
-  <hlm-data-table header="Receitas" [showHeader]="showHeader()" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
+  <hlm-data-table header="Receitas" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="w-44">{{ rowData.docNumber }}-{{ formatSequence(rowData.sequence) }}</hlm-td>
       <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>

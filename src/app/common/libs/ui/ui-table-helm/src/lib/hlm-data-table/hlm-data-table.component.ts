@@ -10,7 +10,6 @@ type HlmSeparator = Partial<HlmAction> & { separator: boolean };
 export type HlmDataTableRecord = Record<any, any> & { id: PllID };
 export type HlmDataTableColumn = { header: string, field?: string, class?: string };
 export type HlmDataTableAction = HlmAction | HlmSeparator;
-export type HlmDataTableLayout = { icon?: string; label?: string; template: string; class?: string };
 export type HlmDataTableActionFc<TModel> = (data: TModel) => HlmDataTableAction[];
 export type HlmDataTableSelectionActionFc<TModel> = (data: TModel[]) => HlmDataTableAction[];
 
@@ -21,16 +20,12 @@ export type HlmDataTableSelectionActionFc<TModel> = (data: TModel[]) => HlmDataT
 })
 export class HlmDataTableComponent implements OnInit, AfterContentInit {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
-  protected readonly _computedClass = computed(() => hlm("border border-slate-200 rounded-md", this.userClass()));
+  protected readonly _computedClass = computed(() => hlm("border-y border-slate-200 max-h-[700px]", this.userClass()));
 
   header = input<string>();
-  showHeader = input<boolean>(true);
 
   values = input<HlmDataTableRecord[]>([]);
   columns = input<HlmDataTableColumn[]>([]);
-  layouts = input<HlmDataTableLayout[]>([
-    { icon: "table", template: "table" },
-  ]);
 
   actionFn = input<HlmDataTableActionFc<any>>();
   actions = computed<{[key: PllID]: HlmDataTableAction[]}>(() => {
@@ -47,8 +42,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   });
 
   layout = model<string>("table");
-  layoutData = computed(() => this.layouts().find(layout => layout.template === this.layout()));
-  
+
   layoutEffect = effect(() => {
     if(this.layout() === "table") {
       this.body.set(this.tableTemplate);
@@ -59,9 +53,6 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
       this.body.set(this.gridTemplate);
       return;
     };
-
-    const template = this.templates?.find(temp => temp.name === this.layout());
-    if(template) this.body.set(template.template);
   });
   
   filteredValues = model<HlmDataTableRecord[]>([]);
@@ -74,7 +65,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
 
   // query
   page = model(1);
-  size = model(10);
+  size = model(50);
   sort = model<"ASC" | "DESC">("ASC");
   query = model<string>("");
 

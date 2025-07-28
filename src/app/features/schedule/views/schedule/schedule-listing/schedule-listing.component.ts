@@ -4,7 +4,7 @@ import { BaseRecordListingComponentDirective } from '../../../../../common/direc
 import { Schedule } from '../../../models/schedule.model';
 import { GetAllScheduleByFilterParams } from '../../../services/schedule.service';
 import { ScheduleFacade } from '../../../facades/schedule.facade';
-import { HlmDataTableComponent, HlmDataTableLayout } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
+import { HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 
 @Component({
   standalone: true,
@@ -14,5 +14,4 @@ import { HlmDataTableComponent, HlmDataTableLayout } from '../../../../../common
 })
 export class ScheduleListingComponent extends BaseRecordListingComponentDirective<Schedule, GetAllScheduleByFilterParams> {
   override facade = inject(ScheduleFacade);
-  layouts: HlmDataTableLayout[] = [{ template: "agenda" }];
 };

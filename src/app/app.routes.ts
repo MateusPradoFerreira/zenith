@@ -6,15 +6,17 @@ import { PayableListingComponent } from './features/financial/views/payable/paya
 import { FinancialRegistriesPanelComponent } from './features/financial/views/financial-registries-panel/financial-registries-panel.component';
 import { ScheduleListingComponent } from './features/schedule/views/schedule/schedule-listing/schedule-listing.component';
 import { ReceivableListingComponent } from './features/financial/views/receivable/receivable-listing/receivable-listing.component';
+import { ScheduleRegistriesPanelComponent } from './features/schedule/views/schedule-registries-panel/schedule-registries-panel.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: '/dashboard', pathMatch: 'full' },
   { path: "", component: MainLayoutComponent, children: [
-    { path: "dashboard", component: DashboardComponent },
-    { path: "inbox", component: InboxListingComponent },
-    { path: "payables", component: PayableListingComponent },
-    { path: "receivables", component: ReceivableListingComponent },
-    { path: "financial-registries", component: FinancialRegistriesPanelComponent },
-    { path: "schedules", component: ScheduleListingComponent },
+    { path: "dashboard", component: DashboardComponent, data: { header: "Dashboard" } },
+    { path: "inbox", component: InboxListingComponent, data: { header: "Inbox" } },
+    { path: "payables", component: PayableListingComponent, data: { header: "Despesas" } },
+    { path: "receivables", component: ReceivableListingComponent, data: { header: "Receitas" } },
+    { path: "financial-registries", component: FinancialRegistriesPanelComponent, data: { header: "Cadastros de Financeiro" } },
+    { path: "schedules", component: ScheduleListingComponent, data: { header: "Agenda" } },
+    { path: "schedule-registries", component: ScheduleRegistriesPanelComponent, data: { header: "Cadastros da Agenda" }},
   ]},
 ];

@@ -1,5 +1,5 @@
 <div [class]="_computedClass()">
-  <hlm-data-table header="Inbox" [showHeader]="showHeader()" [multiselect]="true" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
+  <hlm-data-table header="Inbox" [multiselect]="true" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="flex-1">{{ rowData.title }}</hlm-td>
       <hlm-td class="w-38 2xl:w-48">

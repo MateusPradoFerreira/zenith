@@ -1,13 +1,14 @@
 
 import { PllID } from "../../../core/lib/pollaris";
 
-export type ScheduleFrequence = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
+export type ScheduleFrequency = "NO_REPETITION" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 export type ScheduleWeekday = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
 
 export class Schedule {
   id: PllID;
+  categoryId: PllID;
   title: string;
-  frequency: ScheduleFrequence;
+  frequency: ScheduleFrequency;
   byWeekday: ScheduleWeekday[];
   byMonthDay: number[];
   byMonth: number[];
@@ -16,6 +17,8 @@ export class Schedule {
   createdAt: Date;
   startsAt: Date;
   endsAt: Date;
+  startsAtTime: string;
+  endsAtTime: string;
   exceptions: Date[];
 
   constructor(props: Partial<Schedule>) {

@@ -28,7 +28,7 @@ import type { ClassValue } from 'clsx';
 export class HlmTableComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
-		hlm('flex flex-col text-sm [&_hlm-trow:last-child]:border-0', this.userClass()),
+		hlm('flex flex-col text-sm [&_hlm-trow:last-child]:border-b-0', this.userClass()),
 	);
 
 	// we aria-labelledby to be settable from outside but use the input by default.

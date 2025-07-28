@@ -12,7 +12,7 @@ import { ClassValue } from 'clsx';
 export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord> implements OnInit {  
   public readonly userClass = input<ClassValue>("", { alias: "class" });
 	protected readonly _computedClass = computed(() =>
-		hlm("px-6 py-4", this.userClass()),
+		hlm("", this.userClass()),
 	);
 
   showHeader = input<boolean>(true);

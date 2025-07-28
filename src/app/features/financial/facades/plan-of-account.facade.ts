@@ -21,7 +21,7 @@ export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccount,
 
   override header: string = "Plano de Conta";
   override component: Type<any> = PlanOfAccountFormComponent;
-  override dialogWidth: DialogWidth = "65";
+  override dialogWidth: DialogWidth = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<PlanOfAccount> = {

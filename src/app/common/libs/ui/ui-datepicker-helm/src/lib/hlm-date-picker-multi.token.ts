@@ -1,4 +1,5 @@
 import { inject, InjectionToken, ValueProvider } from '@angular/core';
+import moment from 'moment';
 
 export interface HlmDatePickerMultiConfig<T> {
 	/**
@@ -25,7 +26,7 @@ export interface HlmDatePickerMultiConfig<T> {
 
 function getDefaultConfig<T>(): HlmDatePickerMultiConfig<T> {
 	return {
-		formatDates: (dates) => dates.map((date) => (date instanceof Date ? date.toDateString() : `${date}`)).join(', '),
+		formatDates: (dates) => dates.map((date) => (date instanceof Date ? moment(date).format("DD/MM/YYYY") : `${date}`)).join(', '),
 		transformDates: (dates) => dates,
 		autoCloseOnMaxSelection: false,
 	};

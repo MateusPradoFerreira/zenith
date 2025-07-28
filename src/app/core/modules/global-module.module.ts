@@ -54,7 +54,10 @@ const spartanUIModules = [
 ];
 
 @NgModule({
-	imports: [ ...generalModules, ...spartanUIModules ],
+	imports: [ 
+		...generalModules, 
+		...spartanUIModules,
+	],
 	exports: [ ...generalModules, ...spartanUIModules ],
 })
 export class GlobalModule {}

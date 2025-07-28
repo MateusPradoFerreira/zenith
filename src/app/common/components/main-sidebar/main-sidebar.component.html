@@ -1,7 +1,7 @@
-<aside class="absolute overflow-y-hidden hover:overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid grid-cols-1 grid-rows-[64px_1fr_auto] {{ active || hovering? 'w-64' : 'w-16' }}" (mouseover)="state.setHovering(true)" (mouseleave)="state.setHovering(false)">
+<aside class="hidden xl:grid absolute overflow-y-hidden hover:overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid-cols-1 grid-rows-[52px_1fr_auto] {{ active || hovering? 'w-64' : 'w-16' }}" (mouseover)="state.setHovering(true)" (mouseleave)="state.setHovering(false)">
   <div class="pr-3 flex items-center relative border-b border-slate-200">
     <div class="w-16 h-16 flex items-center justify-center shrink-0">
-      <i-lucide name="shrimp" size="28" [strokeWidth]="1.5"></i-lucide>
+      <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
     </div>
     <span class="text-xl transition-all w-full -ml-2 {{ active || hovering? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
     <button class="w-8 h-8 hover:bg-slate-200/70 shrink-0 flex items-center justify-center rounded-lg cursor-pointer transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}" (click)="state.setActive(!active)">
@@ -16,6 +16,7 @@
     <ms-nav-item label="Agenda" icon="calendar" to="/schedules"/>
     <ms-nav-item label="Projetos" icon="square-kanban"/>
     <ms-nav-item label="Documentos" icon="folder-open"/>
+    <ms-nav-item label="Cadastros" icon="clipboard-pen-line" to="schedule-registries"/>
     <ms-nav-separator label="Financeiro"/>
     <ms-nav-item label="Fluxo" icon="piggy-bank"/>
     <ms-nav-item label="Despesa" icon="banknote-arrow-down" to="/payables"/>

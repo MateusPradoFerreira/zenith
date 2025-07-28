@@ -24,10 +24,10 @@ export const buttonVariants = cva(
 				danger: "bg-rose-500 text-white hover:bg-rose-800",
 			},
 			size: {
-				default: "h-[38px] px-4 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
-				sm: "py-1 px-2 text-sm [&_i-lucide]:[&_svg]:w-[16px] shrink-0 [&_i-lucide]:[&_svg]:h-[16px] [&_lucide-angular]:[&_svg]:w-[16px] [&_lucide-angular]:[&_svg]:h-[16px]",
+				default: "h-[38px] text-[13px] px-4 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
+				sm: "py-0.5 px-2 text-[13px] [&_i-lucide]:[&_svg]:w-[16px] shrink-0 [&_i-lucide]:[&_svg]:h-[16px] [&_lucide-angular]:[&_svg]:w-[16px] [&_lucide-angular]:[&_svg]:h-[16px]",
 				icon: "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
-				"icon-lg": "h-[42px] w-[42px] p-0 [&_i-lucide]:[&_svg]:w-[24px] shrink-0 [&_i-lucide]:[&_svg]:h-[24px] [&_lucide-angular]:[&_svg]:w-[24px] [&_lucide-angular]:[&_svg]:h-[24px]",
+				"icon-lg": "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[24px] shrink-0 [&_i-lucide]:[&_svg]:h-[24px] [&_lucide-angular]:[&_svg]:w-[24px] [&_lucide-angular]:[&_svg]:h-[24px]",
 			},
 		},
 		defaultVariants: {
