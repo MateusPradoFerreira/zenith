@@ -1,5 +1,5 @@
 <div [class]="_computedClass()">
-  <hlm-data-table header="Planos de Conta" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+  <hlm-data-table [offsetHeight]="offsetHeight()" header="Planos de Conta" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
     </ng-template>

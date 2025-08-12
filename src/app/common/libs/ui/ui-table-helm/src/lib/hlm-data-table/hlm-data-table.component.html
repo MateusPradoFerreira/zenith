@@ -63,79 +63,98 @@
 <ng-container *ngIf="body()" [ngTemplateOutlet]="body()" />
 
 <ng-template #table>
-  <hlm-table hlm stickyHeader [class]="_computedClass()">
-    <hlm-trow class="bg-slate-50 mr-1.5">
-      <hlm-th *ngIf="multiselect()" class="!px-4">
-        <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
-      </hlm-th>
-      <hlm-th *ngFor="let column of columns()" [class]="column?.class + ' truncate'">
-        {{ column.header }}
-      </hlm-th>
-      <hlm-th *ngIf="actionFn()" class="w-16" />
-    </hlm-trow>
-    <div class="max-h-[600px] overflow-y-scroll custom-scroll">
-      <hlm-trow class="cursor-pointer overflow-hidden {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
-        <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4">
-          <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
-        </hlm-td>
-        <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
-        <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
-          <span class="flex items-center gap-2">
-            <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu"></button>
-          </span>
-          <ng-template #menu>
-            <hlm-menu class="w-48">
-              <hlm-menu-group>
-                <ng-container *ngFor="let action of actions()[rowData.id]">
-                  <ng-container *ngIf="action.separator && action.visible !== false">
-                    <hlm-menu-separator />
-                  </ng-container>
-                  <ng-container *ngIf="action.label && action.visible !== false">
-                    <button *ngIf="!action.items?.length" hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
-                      <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                      {{ action.label }}
-                      <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
-                    </button>
-
-                    <button *ngIf="action.items?.length" hlmMenuItem [disabled]="action.disabled" [brnMenuTriggerFor]="menuItems">
-                      <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                      <span class="w-full text-left">{{ action.label }}</span>
-                      <i-lucide name="chevron-down" size="16" hlmMenuIcon class="mr-0"></i-lucide>
-                    </button>
-
-                    <ng-template #menuItems>
-                      <hlm-menu class="w-48">
-                        <hlm-menu-group>
-                          <ng-container *ngFor="let action of action.items">
-                            <ng-container *ngIf="action.separator && action.visible !== false">
-                              <hlm-menu-separator />
-                            </ng-container>
-                            <ng-container *ngIf="action.label && action.visible !== false">
-                              <button hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
-                                <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                                {{ action.label }}
-                                <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
-                              </button>
-                            </ng-container>
-                          </ng-container>
-                        </hlm-menu-group>
-                      </hlm-menu>
-                    </ng-template>
-                  </ng-container>
-                </ng-container>
-              </hlm-menu-group>
-            </hlm-menu>
-          </ng-template>
-        </hlm-td>
+  <div [style]="{ height: mainHeight() }">
+    <hlm-table hlm stickyHeader [class]="_computedClass()">
+      <hlm-trow class="bg-slate-50 mr-1.5">
+        <hlm-th *ngIf="multiselect()" class="!px-4">
+          <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
+        </hlm-th>
+        <hlm-th *ngFor="let column of columns()" [class]="column?.class + ' truncate'">
+          {{ column.header }}
+        </hlm-th>
+        <hlm-th *ngIf="actionFn()" class="w-16" />
       </hlm-trow>
-    </div>
-    <hlm-trow class="hover:bg-transparent mr-1.5" *ngIf="!paginatedValues().length">
-      <hlm-td class="w-full"> Nenhum registro encontrado! </hlm-td>
-    </hlm-trow>
-    <hlm-trow class="justify-end hover:bg-transparent mr-1.5">
-      <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="filteredValues().length"/>
-    </hlm-trow>
-  </hlm-table>
+      <div class="h-full overflow-y-scroll custom-scroll">
+        <hlm-trow class="cursor-pointer overflow-hidden {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
+          <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4">
+            <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
+          </hlm-td>
+          <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
+          <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
+            <span class="flex items-center gap-2">
+              <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu"></button>
+            </span>
+            <ng-template #menu>
+              <hlm-menu class="w-48">
+                <hlm-menu-group>
+                  <ng-container *ngFor="let action of actions()[rowData.id]">
+                    <ng-container *ngIf="action.separator && action.visible !== false">
+                      <hlm-menu-separator />
+                    </ng-container>
+                    <ng-container *ngIf="action.label && action.visible !== false">
+                      <button *ngIf="!action.items?.length" hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
+                        <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
+                        {{ action.label }}
+                        <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
+                      </button>
+
+                      <button *ngIf="action.items?.length" hlmMenuItem [disabled]="action.disabled" [brnMenuTriggerFor]="menuItems">
+                        <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
+                        <span class="w-full text-left">{{ action.label }}</span>
+                        <i-lucide name="chevron-down" size="16" hlmMenuIcon class="mr-0"></i-lucide>
+                      </button>
+
+                      <ng-template #menuItems>
+                        <hlm-menu class="w-48">
+                          <hlm-menu-group>
+                            <ng-container *ngFor="let action of action.items">
+                              <ng-container *ngIf="action.separator && action.visible !== false">
+                                <hlm-menu-separator />
+                              </ng-container>
+                              <ng-container *ngIf="action.label && action.visible !== false">
+                                <button hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
+                                  <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
+                                  {{ action.label }}
+                                  <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
+                                </button>
+                              </ng-container>
+                            </ng-container>
+                          </hlm-menu-group>
+                        </hlm-menu>
+                      </ng-template>
+                    </ng-container>
+                  </ng-container>
+                </hlm-menu-group>
+              </hlm-menu>
+            </ng-template>
+          </hlm-td>
+        </hlm-trow>
+        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length">
+          <hlm-td class="w-full flex justify-center flex-col">
+            <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
+              <div class="border border-slate-200/50 p-5 rounded-4xl">
+                <div class="border border-slate-200 p-8 rounded-4xl">
+                  <i-lucide name="search"></i-lucide>
+                </div>
+              </div>
+            </div>
+            <span class="text-base font-medium">
+              OOPS! Nenhum registro encontrado!
+            </span>
+            <span class="text-sm">
+              Não tem nada para ser visualizado com os filtros selecionados! 
+            </span>
+            <span class="mt-2">
+              <ng-container [ngTemplateOutlet]="emptyActionsTemplate" />
+            </span>
+          </hlm-td>
+        </hlm-trow>
+      </div>
+      <hlm-trow class="justify-end hover:bg-transparent mr-1.5 border-t border-b-0">
+        <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="filteredValues().length"/>
+      </hlm-trow>
+    </hlm-table>
+  </div>
 </ng-template>
 
 <ng-template #grid>

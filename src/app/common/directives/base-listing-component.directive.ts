@@ -16,6 +16,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
 	);
 
   showHeader = input<boolean>(true);
+  offsetHeight = input<number>(0);
   
   abstract facade: PllFacade<any, any, TRecordQueryModel, TRecordQueryParams>;
 

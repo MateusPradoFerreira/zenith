@@ -1,8 +1,8 @@
 <app-main-sidebar />
 <div class="overflow-hidden w-screen h-screen grid grid-cols-1 grid-rows-[52px_1fr_36px] transition-all text-zinc-900 {{ active? 'xl:pl-64' : 'xl:pl-16' }}">
   <app-main-header />
-  <main class="overflow-x-hidden overflow-y-auto">
+  <main class="overflow-x-hidden overflow-y-auto custom-scroll" id="main-container">
     <router-outlet />
   </main>
-  <footer class="border-t border-slate-200"></footer>
+  <footer class="border-t border-slate-200 bg-white"></footer>
 </div>

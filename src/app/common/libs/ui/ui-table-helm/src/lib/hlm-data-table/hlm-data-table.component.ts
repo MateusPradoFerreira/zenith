@@ -20,7 +20,7 @@ export type HlmDataTableSelectionActionFc<TModel> = (data: TModel[]) => HlmDataT
 })
 export class HlmDataTableComponent implements OnInit, AfterContentInit {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
-  protected readonly _computedClass = computed(() => hlm("border-y border-slate-200 max-h-[700px]", this.userClass()));
+  protected readonly _computedClass = computed(() => hlm("border-t border-slate-200 h-full", this.userClass()));
 
   header = input<string>();
 
@@ -88,6 +88,11 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   onSelect = output<any>();
   onPaginate = output<any>();
 
+  offsetHeight = input<number>();
+  mainHeight = computed(() => {
+    return (document.getElementById("main-container")?.offsetHeight - 54 - this.offsetHeight()) + "px";
+  });
+
   @ContentChildren(HlmTemplateDirective) templates!: QueryList<HlmTemplateDirective>;
   
   @ContentChild("row", { static: true }) rowTemplate: TemplateRef<any>;
@@ -95,6 +100,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ContentChild("action", { static: true }) actionTemplate: TemplateRef<any>;
   @ContentChild("filter", { static: true }) filterTemplate: TemplateRef<any>;
   @ContentChild("selection", { static: true }) selectionTemplate: TemplateRef<any>;
+  @ContentChild("empty-actions", { static: true }) emptyActionsTemplate: TemplateRef<any>;
 
   @ViewChild("table", { static: true }) tableTemplate: TemplateRef<any>;
   @ViewChild("grid", { static: true }) gridTemplate: TemplateRef<any>;
@@ -109,6 +115,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
       if (ngTemplate.name === "action") this.actionTemplate = ngTemplate.template;
       if (ngTemplate.name === "filter") this.filterTemplate = ngTemplate.template;
       if (ngTemplate.name === "selection") this.selectionTemplate = ngTemplate.template;
+      if (ngTemplate.name === "empty-actions") this.emptyActionsTemplate = ngTemplate.template;
     };
   };
 

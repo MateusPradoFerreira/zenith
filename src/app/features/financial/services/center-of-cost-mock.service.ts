@@ -15,6 +15,10 @@ export function createMokedCenterOfCost(data: Partial<CenterOfCost>): CenterOfCo
 
 export const INITIAL_CENTER_OF_COST_MOCKED_DATA: CenterOfCost[] = [
   createMokedCenterOfCost({ name: "Geral" }),
+  createMokedCenterOfCost({ name: "Marketing" }),
+  createMokedCenterOfCost({ name: "Vendas" }),
+  createMokedCenterOfCost({ name: "Operações" }),
+  createMokedCenterOfCost({ name: "RH" }),
 ];
 
 export class CenterOfCostMockedService extends PllMockedRestService<CenterOfCost> implements CenterOfCostService {

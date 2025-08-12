@@ -1,0 +1,16 @@
+<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
+    <input hlmInput formControlName="name"/>
+    <label>Nome</label>
+  </div>
+
+  <div class="col-span-12 xl:col-span-8 flex items-center">
+    <hlm-checkbox id="active-field" class="mr-2" formControlName="active" />
+    <label for="active-field">Ativo</label>
+  </div>
+
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form>

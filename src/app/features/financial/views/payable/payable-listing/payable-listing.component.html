@@ -1,5 +1,5 @@
 <div [class]="_computedClass()">
-  <hlm-data-table header="Despesas" [values]="values()" [columns]="columns()" [multiselect]="true" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
+  <hlm-data-table [offsetHeight]="offsetHeight()" header="Despesas" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="truncate w-44">{{ rowData.docNumber }}-{{ formatSequence(rowData.sequence) }}</hlm-td>
       <hlm-td class="truncate flex-1">{{ rowData.name }}</hlm-td>

@@ -1,18 +1,24 @@
-<div class="py-3 xl:px-6 px-2 xl:py-4">
-  <hlm-tabs tab="secrecy" class="w-full">
-    <hlm-tabs-list>
-      <button hlmTabsTrigger="secrecy">Títulos</button>
-      <button hlmTabsTrigger="plan-of-account">Planos de Conta</button>
-      <button hlmTabsTrigger="center-of-cost">Centros de Custo</button>
-    </hlm-tabs-list>
-    <div hlmTabsContent="secrecy" class="p-0">
-      <app-secrecy-listing class="p-0 xl:p-0" [showHeader]="false" />
-    </div>
-    <div hlmTabsContent="plan-of-account" class="">
-      <app-plan-of-account-listing class="p-0 xl:p-0" [showHeader]="false" />
-    </div>
-    <div hlmTabsContent="center-of-cost" class="">
-      <app-center-of-cost-listing class="p-0 xl:p-0" [showHeader]="false" />
-    </div>
-  </hlm-tabs>
-</div>
+<hlm-tabs tab="secrecy" class="w-full">
+  <hlm-tabs-list>
+    <button hlmTabsTrigger="bank-account">Contas Bancária</button>
+    <button hlmTabsTrigger="secrecy">Títulos</button>
+    <button hlmTabsTrigger="plan-of-account">Planos de Conta</button>
+    <button hlmTabsTrigger="center-of-cost">Centros de Custo</button>
+    <button hlmTabsTrigger="schedule-category-listing">Categorias de Agendamento</button>
+  </hlm-tabs-list>
+  <div hlmTabsContent="bank-account" class="p-0">
+    <app-bank-account-listing class="p-0 xl:p-0" [showHeader]="false" [offsetHeight]="36" />
+  </div>
+  <div hlmTabsContent="secrecy" class="p-0">
+    <app-secrecy-listing class="p-0 xl:p-0" [showHeader]="false" [offsetHeight]="36" />
+  </div>
+  <div hlmTabsContent="plan-of-account" class="">
+    <app-plan-of-account-listing class="p-0 xl:p-0" [showHeader]="false" [offsetHeight]="36" />
+  </div>
+  <div hlmTabsContent="center-of-cost" class="">
+    <app-center-of-cost-listing class="p-0 xl:p-0" [showHeader]="false" [offsetHeight]="36" />
+  </div>
+  <div hlmTabsContent="schedule-category-listing" class="">
+    <app-schedule-category-listing class="p-0 xl:p-0" [showHeader]="false" [offsetHeight]="36" />
+  </div>
+</hlm-tabs>

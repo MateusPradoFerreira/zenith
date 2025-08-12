@@ -15,6 +15,10 @@ export function createMokedPlanOfAccount(data: Partial<PlanOfAccount>): PlanOfAc
 
 export const INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA: PlanOfAccount[] = [
   createMokedPlanOfAccount({ name: "Geral" }),
+  createMokedPlanOfAccount({ name: "Vendas" }),
+  createMokedPlanOfAccount({ name: "Compras" }),
+  createMokedPlanOfAccount({ name: "Serviços" }),
+  createMokedPlanOfAccount({ name: "Financeiro" }),
 ];
 
 export class PlanOfAccountMockedService extends PllMockedRestService<PlanOfAccount> implements PlanOfAccountService {
