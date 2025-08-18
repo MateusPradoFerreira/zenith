@@ -10,11 +10,13 @@ export type GetAllPayableByFilterParams = {
   centerOfCostId?: PllID | null;
   planOfAccountId?: PllID | null;
   secrecyId?: PllID | null;
+  bankAccountId?: PllID | null;
   startsAt: Date;
   endsAt: Date;
 };
 
 export type GetAllPayableByFilterResponse = Payable & {
+  bankAccount: string;
   centerOfCost: string;
   planOfAccount: string;
   secrecy: string;

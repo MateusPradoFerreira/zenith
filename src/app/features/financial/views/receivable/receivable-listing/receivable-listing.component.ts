@@ -5,7 +5,7 @@ import { Receivable } from '../../../models/receivable.model';
 import { GetAllReceivableByFilterParams } from '../../../services/receivable.service';
 import { ReceivableFacade, ReceivableStatusOptions } from '../../../facades/receivable.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { switchMap, tap } from 'rxjs';
+import { forkJoin, switchMap, tap } from 'rxjs';
 import { event } from '../../../../../common/directives/base-form-component.directive';
 import { Secrecy } from '../../../models/secrecy.model';
 import { CenterOfCost } from '../../../models/center-of-cost.model';
@@ -14,6 +14,8 @@ import { SecrecyFacade } from '../../../facades/secrecy.facade';
 import { CenterOfCostFacade } from '../../../facades/center-of-cost.facade';
 import { PlanOfAccountFacade } from '../../../facades/plan-of-account.facade';
 import { PllID } from '../../../../../core/lib/pollaris';
+import { BankAccount } from '../../../models/bank-account.model';
+import { BankAccountFacade } from '../../../facades/bank-account.facade';
 
 @Component({
   standalone: true,
@@ -26,6 +28,7 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "N° Doc.", class: "w-44" },
     { header: "Title", class: "flex-1" },
+    { header: "Conta Bancária", class: "w-36" },
     { header: "Centro de Custo", class: "w-36" },
     { header: "Plano de Conta", class: "w-36" },
     { header: "Valor", class: "w-36 justify-end" },
@@ -45,21 +48,24 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
   secrecyFacade = inject(SecrecyFacade);
   centerOfCostFacade = inject(CenterOfCostFacade);
   planOfAccountFacade = inject(PlanOfAccountFacade);
+  bankAccountFacade = inject(BankAccountFacade);
 
   secrecyOptions: Secrecy[] = [];
   centerOfCostOptions: CenterOfCost[] = [];
   planOfAccountOptions: PlanOfAccount[] = [];
+  bankAccountOptions: BankAccount[] = [];
   statusOptions = [
     { label: "Todos", value: "ALL" },
     { label: "A Receber", value: "TOPAY" },
     ...ReceivableStatusOptions,
   ];
 
-  override onNgOnInit = event(
-    switchMap(() => this.handleGetSecrecyOptions()),
-    switchMap(() => this.handleGetCenterOfCostOptions()),
-    switchMap(() => this.handleGetPlanOfAccountOptions()),
-  );
+  override onNgOnInit = event(switchMap(() => forkJoin({
+    handleGetSecrecyOptions: this.handleGetSecrecyOptions(),
+    handleGetCenterOfCostOptions: this.handleGetCenterOfCostOptions(),
+    handleGetPlanOfAccountOptions: this.handleGetPlanOfAccountOptions(),
+    handleGetBankAccountOptions: this.handleGetBankAccountOptions(),
+  })));
   
   handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.secrecyOptions = response;
@@ -74,6 +80,11 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
   handleGetPlanOfAccountOptions = () => this.planOfAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => { 
     this.planOfAccountOptions = response;
     this.planOfAccountOptions.unshift(new PlanOfAccount({ name: "Todos", id: null }));
+  }));
+
+  handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => { 
+    this.bankAccountOptions = response;
+    this.bankAccountOptions.unshift(new PlanOfAccount({ name: "Todas", id: null }));
   }));
 
   formatSequence(number: number): string {

@@ -7,8 +7,9 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllBankAccountByFilterParams, BankAccountService } from "../services/bank-account.service";
 import { BankAccountState } from "../states/bank-account.state";
 import { BankAccountMapper } from "../mappers/bank-account.mapper";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
+
 import { BankAccountFormComponent } from "../views/bank-account/bank-account-form/bank-account-form.component";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type BankAccountUseQueryParams = GetAllBankAccountByFilterParams;
 
@@ -21,7 +22,7 @@ export class BankAccountFacade extends PllFacade<BankAccount, BankAccount, BankA
 
   override header: string = "Conta Bancária";
   override component: Type<any> = BankAccountFormComponent;
-  override dialogWidth: DialogWidth = "sm";
+  override dialogWidth: DialogContentVariants["width"] = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<BankAccount> = {

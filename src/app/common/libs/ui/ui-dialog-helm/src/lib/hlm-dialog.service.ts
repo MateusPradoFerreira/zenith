@@ -6,12 +6,16 @@ import {
 	DEFAULT_BRN_DIALOG_OPTIONS,
 	cssClassesToArray,
 } from '@spartan-ng/brain/dialog';
-import { HlmDialogContentComponent } from './hlm-dialog-content.component';
+import { DialogContentVariants, HlmDialogContentComponent } from './hlm-dialog-content.component';
 import { hlmDialogOverlayClass } from './hlm-dialog-overlay.directive';
 
-export type HlmDialogOptions<DialogContext = unknown> = BrnDialogOptions & {
+export type HlmDialogOptions<DialogContext = unknown> = Partial<BrnDialogOptions> & {
 	contentClass?: string;
 	context?: DialogContext;
+	header?: string;
+  width?: DialogContentVariants["width"];
+	severity?: DialogContentVariants["severity"];
+  scroll?: DialogContentVariants["scroll"];
 };
 
 @Injectable({
@@ -25,7 +29,15 @@ export class HlmDialogService {
 			...DEFAULT_BRN_DIALOG_OPTIONS,
 			...(options ?? {}),
 			backdropClass: cssClassesToArray(`${hlmDialogOverlayClass} ${options?.backdropClass ?? ''}`),
-			context: { ...(options?.context as Object ?? {}), $component: component, $dynamicComponentClass: options?.contentClass },
+			context: { 
+				...(options?.context as Object ?? {}), 
+				$component: component, 
+				$dynamicComponentClass: options?.contentClass,
+				$header: options?.header,
+				$severity: options?.severity || "primary",
+				$scroll: options?.scroll || true,
+				$width: options?.width || "fit",
+			},
 		};
 
 		return this._brnDialogService.open(HlmDialogContentComponent, undefined, mergedOptions.context, mergedOptions);

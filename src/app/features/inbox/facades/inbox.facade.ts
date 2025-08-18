@@ -8,10 +8,10 @@ import { GetAllInboxByFilterParams, InboxService } from "../services/inbox.servi
 import { InboxState } from "../states/inbox.state";
 import { InboxMapper } from "../mappers/inbox.mapper";
 import { InboxFormComponent } from "../views/inbox/inbox-form/inbox-form.component";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
 import moment from "moment";
 import { Observable, Subject } from "rxjs";
 import { SelectItem } from "../../../common/types/select-item.type";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type InboxUseQueryParams = GetAllInboxByFilterParams;
 
@@ -24,7 +24,7 @@ export class InboxFacade extends PllFacade<Inbox, Inbox, Inbox, InboxUseQueryPar
 
   override header: string = "Inbox";
   override component: Type<any> = InboxFormComponent;
-  override dialogWidth: DialogWidth = "lg";
+  override dialogWidth: DialogContentVariants["width"] = "lg";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Inbox> = {

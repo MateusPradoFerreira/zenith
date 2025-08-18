@@ -7,6 +7,7 @@ export class Receivable {
   centerOfCostId: PllID;
   planOfAccountId: PllID;
   secrecyId: PllID;
+  bankAccountId: PllID;
   docNumber: string;
   sequence: number;
   name: string;

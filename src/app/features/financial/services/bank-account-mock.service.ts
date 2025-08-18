@@ -13,7 +13,7 @@ export function createMokedBankAccount(data: Partial<BankAccount>): BankAccount 
   });
 };
 
-export const INITIAL_SECRECY_MOCKED_DATA: BankAccount[] = [
+export const INITIAL_BANK_ACCOUNT_MOCKED_DATA: BankAccount[] = [
   createMokedBankAccount({ name: "Sicoob" }),
   createMokedBankAccount({ name: "Banco do Brasil" }),
 ];
@@ -21,7 +21,7 @@ export const INITIAL_SECRECY_MOCKED_DATA: BankAccount[] = [
 export class BankAccountMockedService extends PllMockedRestService<BankAccount> implements BankAccountService {
 
   constructor () {
-    super(INITIAL_SECRECY_MOCKED_DATA);
+    super(INITIAL_BANK_ACCOUNT_MOCKED_DATA);
   };
 
   override createRecord = (data: Partial<BankAccount>) => createMokedBankAccount(data);

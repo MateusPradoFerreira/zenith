@@ -10,11 +10,13 @@ export type GetAllReceivableByFilterParams = {
   centerOfCostId?: PllID | null;
   planOfAccountId?: PllID | null;
   secrecyId?: PllID | null;
+  bankAccountId?: PllID | null;
   startsAt: Date;
   endsAt: Date;
 };
 
 export type GetAllReceivableByFilterResponse = Receivable & {
+  bankAccount: string;
   centerOfCost: string;
   planOfAccount: string;
   secrecy: string;

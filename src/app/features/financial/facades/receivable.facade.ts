@@ -7,11 +7,11 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "../services/receivable.service";
 import { ReceivableState } from "../states/receivable.state";
 import { ReceivableMapper } from "../mappers/receivable.mapper";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
-import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
 import { Observable, Subject } from "rxjs";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
+import moment from "moment";
 
 export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
 export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
@@ -25,7 +25,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
 
   override header: string = "Receita";
   override component: Type<any> = ReceivableFormComponent;
-  override dialogWidth: DialogWidth = "lg";
+  override dialogWidth: DialogContentVariants["width"] = "lg";
   override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Receivable> = {
@@ -52,6 +52,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
       centerOfCostId: { value: null, validators: [Validators.required] },
       planOfAccountId: { value: null, validators: [Validators.required] },
       secrecyId: { value: null, validators: [Validators.required] },
+      bankAccountId: { value: null, validators: [Validators.required] },
       description: { value: null },
       docNumber: { value: "0000000000-000", validators: [Validators.required, Validators.min(0)], disabled: true },
       sequence: { value: 0, validators: [Validators.required, Validators.min(0)], disabled: true },
@@ -64,6 +65,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
       status: { value: "TOPAY" },
       centerOfCostId: { value: null },
       planOfAccountId: { value: null },
+      bankAccountId: { value: null },
       secrecyId: { value: null },
       startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
@@ -75,17 +77,19 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
     this.dialogFacade.confirm({ 
       header: "Confirmar Recebimento?",
       severity: "success",
-      onConfirm: () => {
-        this.service.pay(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+      events: {
+        onConfirm: () => {
+          this.service.pay(id).subscribe({
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });
@@ -97,17 +101,19 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
     this.dialogFacade.confirm({ 
       header: "Cancelar Receita?",
       severity: "danger",
-      onConfirm: () => {
-        this.service.cancel(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+      events: {
+        onConfirm: () => {
+          this.service.cancel(id).subscribe({
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });
@@ -118,17 +124,19 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
     const sub$ = new Subject<Receivable>();
     this.dialogFacade.confirm({ 
       header: "Reabrir Receita?",
-      onConfirm: () => {
-        this.service.reopen(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+      events: {
+        onConfirm: () => {
+          this.service.reopen(id).subscribe({
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });

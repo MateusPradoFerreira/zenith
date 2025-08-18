@@ -7,8 +7,8 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllSecrecyByFilterParams, SecrecyService } from "../services/secrecy.service";
 import { SecrecyState } from "../states/secrecy.state";
 import { SecrecyMapper } from "../mappers/secrecy.mapper";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
 import { SecrecyFormComponent } from "../views/secrecy/secrecy-form/secrecy-form.component";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type SecrecyUseQueryParams = GetAllSecrecyByFilterParams;
 
@@ -21,7 +21,7 @@ export class SecrecyFacade extends PllFacade<Secrecy, Secrecy, Secrecy, SecrecyU
 
   override header: string = "Título";
   override component: Type<any> = SecrecyFormComponent;
-  override dialogWidth: DialogWidth = "sm";
+  override dialogWidth: DialogContentVariants["width"] = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Secrecy> = {

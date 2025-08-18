@@ -12,6 +12,8 @@ import { INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA } from "./plan-of-account-mock.serv
 import { PlanOfAccountService } from "./plan-of-account.service";
 import { INITIAL_CENTER_OF_COST_MOCKED_DATA } from "./center-of-cost-mock.service";
 import { CenterOfCostService } from "./center-of-cost.service";
+import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
+import { BankAccountService } from "./bank-account.service";
 
 export function createMokedPayable(data: Partial<Payable>): Payable {
   const status = fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
@@ -32,6 +34,7 @@ export function createMokedPayable(data: Partial<Payable>): Payable {
     secrecyId: fakerJs.helpers.arrayElement(INITIAL_SECRECY_MOCKED_DATA).id,
     centerOfCostId: fakerJs.helpers.arrayElement(INITIAL_CENTER_OF_COST_MOCKED_DATA).id,
     planOfAccountId: fakerJs.helpers.arrayElement(INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA).id,
+    bankAccountId: fakerJs.helpers.arrayElement(INITIAL_BANK_ACCOUNT_MOCKED_DATA).id,
     docNumber: "0000000000",
     ...data,
     id: data.id || uuid(),
@@ -42,6 +45,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
   secrecyService = inject(SecrecyService);
   centerOfCostService = inject(CenterOfCostService);
   planOfAccountService = inject(PlanOfAccountService);
+  bankAccountService = inject(BankAccountService);
 
   constructor () {
     super([
@@ -73,6 +77,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
           centerOfCost: this.centerOfCostService.records().find(centerOfCost => centerOfCost.id === record.centerOfCostId).name,
           planOfAccount: this.planOfAccountService.records().find(planOfAccount => planOfAccount.id === record.planOfAccountId).name,
           secrecy: this.secrecyService.records().find(secrecy => secrecy.id === record.secrecyId).name,
+          bankAccount: this.bankAccountService.records().find(bankAccount => bankAccount.id === record.bankAccountId).name,
         };
         return newRecord;
       })),
@@ -84,6 +89,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
     records = records.filter(record => !params.centerOfCostId? true : record.centerOfCostId === params.centerOfCostId);
     records = records.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
     records = records.filter(record => !params.secrecyId? true : record.secrecyId === params.secrecyId);
+    records = records.filter(record => !params.bankAccountId? true : record.bankAccountId === params.bankAccountId);
     return records.filter(record => moment(record.status === "PAID"? record.paidAt : record.status === "OVERDUE"? record.dueAt : record.status === "CANCELLED"? record.cancelledAt : record.createdAt).isBetween(params.startsAt, params.endsAt));
   };
 

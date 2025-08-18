@@ -1,5 +1,5 @@
-import { NgComponentOutlet, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation, computed, inject, input } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideX } from '@ng-icons/lucide';
 import { hlm } from '@spartan-ng/brain/core';
@@ -42,7 +42,7 @@ export type DialogContentVariants = VariantProps<typeof dialogContentVariants>;
 
 @Component({
 	selector: 'hlm-dialog-content',
-	imports: [NgIf, NgComponentOutlet, BrnDialogCloseDirective, HlmDialogCloseDirective, NgIcon, HlmIconDirective],
+	imports: [NgIf, BrnDialogCloseDirective, HlmDialogCloseDirective, NgIcon, HlmIconDirective],
 	providers: [provideIcons({ lucideX })],
 	host: {
 		'[class]': '_computedClass()',
@@ -54,11 +54,7 @@ export type DialogContentVariants = VariantProps<typeof dialogContentVariants>;
 		</header>
 
 		<main>
-			@if (component) {
-				<ng-container [ngComponentOutlet]="component" />
-			} @else {
-				<ng-content />
-			}
+			<ng-template #container></ng-template>
 		</main>
 
 		<button brnDialogClose hlm class="cursor-pointer">
@@ -69,7 +65,7 @@ export type DialogContentVariants = VariantProps<typeof dialogContentVariants>;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
 })
-export class HlmDialogContentComponent {
+export class HlmDialogContentComponent implements OnInit {
 	private readonly _dialogRef = inject(BrnDialogRef);
 	private readonly _dialogContext = injectBrnDialogContext({ optional: true });
 
@@ -77,10 +73,14 @@ export class HlmDialogContentComponent {
 
 	public readonly component = this._dialogContext?.$component;
 	private readonly _dynamicComponentClass = this._dialogContext?.$dynamicComponentClass;
-	public readonly header = this._dialogContext?.header;
-	public readonly severity: DialogContentVariants["severity"] = this._dialogContext?.severity || "primary";
-	public readonly scroll: DialogContentVariants["scroll"] = this._dialogContext?.scroll || true;
-	public readonly width: DialogContentVariants["width"] = this._dialogContext?.width || "fit";
+	
+	public readonly header = this._dialogContext?.$header;
+	public readonly severity: DialogContentVariants["severity"] = this._dialogContext?.$severity;
+	public readonly scroll: DialogContentVariants["scroll"] = this._dialogContext?.$scroll;
+	public readonly width: DialogContentVariants["width"] = this._dialogContext?.$width;
+
+	public readonly inputs = this._dialogContext?.inputs || {};
+  public readonly events = this._dialogContext?.events || {};
 
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
@@ -91,4 +91,16 @@ export class HlmDialogContentComponent {
 			this._dynamicComponentClass,
 		),
 	);
+
+  @ViewChild("container", { read: ViewContainerRef, static: true }) viewRef!: ViewContainerRef;
+
+	ngOnInit(): void {
+		const componentRef: any = this.viewRef.createComponent(this.component);
+    Object.entries(this.inputs).forEach(([prop, value]) => {
+      componentRef.setInput(prop, value);
+    });
+    Object.entries(this.events).forEach(([prop, value]) => {
+      componentRef.instance[prop].subscribe(value);
+    });
+	};
 }

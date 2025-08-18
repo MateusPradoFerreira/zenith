@@ -7,11 +7,11 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "../services/payable.service";
 import { PayableState } from "../states/payable.state";
 import { PayableMapper } from "../mappers/payable.mapper";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
-import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { PayableFormComponent } from "../views/payable/payable-form/payable-form.component";
 import { Observable, Subject } from "rxjs";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
+import moment from "moment";
 
 export type PayableUseQueryParams = GetAllPayableByFilterParams;
 export type PayableUseQueryResponse = GetAllPayableByFilterResponse;
@@ -25,7 +25,7 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
 
   override header: string = "Despesa";
   override component: Type<any> = PayableFormComponent;
-  override dialogWidth: DialogWidth = "lg";
+  override dialogWidth: DialogContentVariants["width"] = "lg";
   override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Payable> = {
@@ -52,6 +52,7 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
       centerOfCostId: { value: null, validators: [Validators.required] },
       planOfAccountId: { value: null, validators: [Validators.required] },
       secrecyId: { value: null, validators: [Validators.required] },
+      bankAccountId: { value: null, validators: [Validators.required] },
       description: { value: null },
       docNumber: { value: "0000000000-000", validators: [Validators.required, Validators.min(0)], disabled: true },
       sequence: { value: 0, validators: [Validators.required, Validators.min(0)], disabled: true },
@@ -64,6 +65,7 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
       status: { value: "TOPAY" },
       centerOfCostId: { value: null },
       planOfAccountId: { value: null },
+      bankAccountId: { value: null },
       secrecyId: { value: null },
       startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
@@ -75,17 +77,19 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
     this.dialogFacade.confirm({ 
       header: "Confirmar Pagamento?",
       severity: "success",
-      onConfirm: () => {
-        this.service.pay(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+      events: {
+        onConfirm: () => {
+          this.service.pay(id).subscribe({
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });
@@ -97,17 +101,19 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
     this.dialogFacade.confirm({ 
       header: "Cancelar Despesa?",
       severity: "danger",
-      onConfirm: () => {
+      events: {
+        onConfirm: () => {
         this.service.cancel(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });
@@ -118,17 +124,19 @@ export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryRe
     const sub$ = new Subject<Payable>();
     this.dialogFacade.confirm({ 
       header: "Reabrir Despesa?",
-      onConfirm: () => {
-        this.service.reopen(id).subscribe({
-          next: response => {
-            this.state.remove(response.id);
-            sub$.next(response);
-            sub$.complete();
-          },
-          error: error => sub$.error(error),
-        })
+      events: {
+        onConfirm: () => {
+          this.service.reopen(id).subscribe({
+            next: response => {
+              this.state.remove(response.id);
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => sub$.error(error),
+          })
+        },
+        onCancel: () => sub$.complete(),
       },
-      onCancel: () => sub$.complete(),
     }).closed$.subscribe(res => {
       if(!res?.status) sub$.complete();
     });

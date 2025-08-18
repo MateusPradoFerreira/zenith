@@ -7,8 +7,8 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllCenterOfCostByFilterParams, CenterOfCostService } from "../services/center-of-cost.service";
 import { CenterOfCostState } from "../states/center-of-cost.state";
 import { CenterOfCostMapper } from "../mappers/center-of-cost.mapper";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
 import { CenterOfCostFormComponent } from "../views/center-of-cost/center-of-cost-form/center-of-cost-form.component";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type CenterOfCostUseQueryParams = GetAllCenterOfCostByFilterParams;
 
@@ -21,7 +21,7 @@ export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, Ce
 
   override header: string = "Centro de Custo";
   override component: Type<any> = CenterOfCostFormComponent;
-  override dialogWidth: DialogWidth = "sm";
+  override dialogWidth: DialogContentVariants["width"] = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<CenterOfCost> = {

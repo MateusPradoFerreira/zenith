@@ -8,7 +8,7 @@ import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from ".
 import { ScheduleCategoryState } from "../states/schedule-category.state";
 import { ScheduleCategoryMapper } from "../mappers/schedule-category.mapper";
 import { ScheduleCategoryFormComponent } from "../views/schedule-category/schedule-category-form/schedule-category-form.component";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type ScheduleCategoryUseQueryParams = GetAllScheduleCategoryByFilterParams;
 
@@ -21,7 +21,7 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
 
   override header: string = "Categoria";
   override component: Type<any> = ScheduleCategoryFormComponent;
-  override dialogWidth: DialogWidth = "sm";
+  override dialogWidth: DialogContentVariants["width"] = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<ScheduleCategory> = {

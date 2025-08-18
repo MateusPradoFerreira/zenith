@@ -3,10 +3,10 @@ import { computed, inject, signal, Type } from "@angular/core";
 import { catchError, concatMap, delay, from, map, Observable, of, reduce, Subject, switchMap, tap, throwError, toArray } from "rxjs";
 import { PllFormSchemaConfig } from "./forms";
 import { faker } from "@faker-js/faker";
-import { DialogFacade, DialogWidth, Inputkeys } from "../../../common/facades/dialog.facade";
+import { DialogFacade, Inputkeys } from "../../../common/facades/dialog.facade";
 import { BaseFormComponentDirective } from "../../../common/directives/base-form-component.directive";
 import moment from "moment";
-
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 export type PllID = string;
 export type PllRecord = Record<any, any>;
 export type PllRecordId = PllRecord & { id: PllID };
@@ -177,7 +177,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
 
   abstract header: string;
   abstract component: Type<any>;
-  abstract dialogWidth: DialogWidth;
+  abstract dialogWidth: DialogContentVariants["width"];
   abstract closeOnSave: boolean;
 
   private readonly _data = signal<TRecordQueryModel[]>([]);
@@ -300,17 +300,19 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     this.dialogFacade.confirm({
       header: "Excluir registro?",
       severity: "danger",
-      onConfirm: () => this.deleteRecord(id).subscribe({
-        next: response => {
-          obs$.next(response);
-          obs$.complete();
-        },
-        error: error => {
-          obs$.error(error);
-          obs$.complete();
-        },
-      }),
-      onCancel: () => obs$.complete(),
+      events: {
+        onConfirm: () => this.deleteRecord(id).subscribe({
+          next: response => {
+            obs$.next(response);
+            obs$.complete();
+          },
+          error: error => {
+            obs$.error(error);
+            obs$.complete();
+          },
+        }),
+        onCancel: () => obs$.complete(),
+      },
     });
     return obs$.asObservable();
   };
@@ -320,17 +322,19 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     this.dialogFacade.confirm({
       header: "Excluir registros?",
       severity: "danger",
-      onConfirm: () => this.deleteManyRecords(ids).subscribe({
-        next: response => {
-          obs$.next(response);
-          obs$.complete();
-        },
-        error: error => {
-          obs$.error(error);
-          obs$.complete();
-        },
-      }),
-      onCancel: () => obs$.complete(),
+      events: {
+        onConfirm: () => this.deleteManyRecords(ids).subscribe({
+          next: response => {
+            obs$.next(response);
+            obs$.complete();
+          },
+          error: error => {
+            obs$.error(error);
+            obs$.complete();
+          },
+        }),
+        onCancel: () => obs$.complete(),
+      },
     });
     return obs$.asObservable();
   };

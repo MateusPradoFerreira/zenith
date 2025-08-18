@@ -8,9 +8,9 @@ import { GetAllScheduleByFilterParams, ScheduleService } from "../services/sched
 import { ScheduleState } from "../states/schedule.state";
 import { ScheduleMapper } from "../mappers/schedule.mapper";
 import { ScheduleFormComponent } from "../views/schedule/schedule-form/schedule-form.component";
-import { DialogWidth } from "../../../common/facades/dialog.facade";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type ScheduleUseQueryParams = GetAllScheduleByFilterParams;
 
@@ -23,7 +23,7 @@ export class ScheduleFacade extends PllFacade<Schedule, Schedule, Schedule, Sche
 
   override header: string = "Agendamento";
   override component: Type<any> = ScheduleFormComponent;
-  override dialogWidth: DialogWidth = "lg";
+  override dialogWidth: DialogContentVariants["width"] = "lg";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {

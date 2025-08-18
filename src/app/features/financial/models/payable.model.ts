@@ -7,6 +7,7 @@ export class Payable {
   centerOfCostId: PllID;
   planOfAccountId: PllID;
   secrecyId: PllID;
+  bankAccountId: PllID;
   sequence: number;
   docNumber: string;
   name: string;
