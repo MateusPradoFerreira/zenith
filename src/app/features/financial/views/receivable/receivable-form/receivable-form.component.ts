@@ -50,10 +50,10 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
     if(this.bankAccountOptions.length) this.form.controls.bankAccountId.setValue(this.bankAccountOptions[0].id);
   }));
 
-  handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.secrecyOptions = response));
-  handleGetCenterOfCostOptions = () => this.centerOfCostFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.centerOfCostOptions = response));
-  handleGetPlanOfAccountOptions = () => this.planOfAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.planOfAccountOptions = response));
-  handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.bankAccountOptions = response));
+  handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.secrecyOptions = response.data));
+  handleGetCenterOfCostOptions = () => this.centerOfCostFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.centerOfCostOptions = response.data));
+  handleGetPlanOfAccountOptions = () => this.planOfAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.planOfAccountOptions = response.data));
+  handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.bankAccountOptions = response.data));
 
   formatSequence(number: number): string {
     return number.toString().padStart(4, '0');

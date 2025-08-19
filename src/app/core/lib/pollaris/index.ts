@@ -7,10 +7,16 @@ import { DialogFacade, Inputkeys } from "../../../common/facades/dialog.facade";
 import { BaseFormComponentDirective } from "../../../common/directives/base-form-component.directive";
 import moment from "moment";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
+
 export type PllID = string;
 export type PllRecord = Record<any, any>;
 export type PllRecordId = PllRecord & { id: PllID };
-
+export type PllPaginatedResponse<TRecordModel extends PllRecordId> = {
+  data: TRecordModel[];
+  pagination: {
+    page: number;
+  };
+};
 export abstract class PllRecordState<TRecordModel extends PllRecordId> {
   private _records = signal<Map<PllID, { data: TRecordModel, date: Date }>>(new Map());
   records = computed(() => Array.from(this._records().values()).map(record => record.data));
@@ -170,7 +176,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
   abstract state: PllRecordState<TExternalModel>;
   abstract service: PllRestService<TExternalModel>;
   abstract mapper: PllRecordMapper<TRecordModel, TExternalModel>;
-  abstract queryFn: (params: TRecordQueryParams) => Observable<TRecordQueryModel[]>;
+  abstract queryFn: (params: TRecordQueryParams) => Observable<PllPaginatedResponse<TRecordQueryModel>>;
 
   abstract recordSchema: PllFormSchemaConfig<TRecordModel>;
   abstract filterSchema: PllFormSchemaConfig<TRecordQueryParams>;
@@ -180,18 +186,22 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
   abstract dialogWidth: DialogContentVariants["width"];
   abstract closeOnSave: boolean;
 
-  private readonly _data = signal<TRecordQueryModel[]>([]);
-  public readonly data = computed(() => this._data());
+  public readonly data = signal<PllPaginatedResponse<TRecordQueryModel>>({
+    data: [],
+    pagination: {
+      page: 1,
+    },
+  });
 
   dialogFacade = inject(DialogFacade);
 
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
-  useQuery(params: TRecordQueryParams): Observable<TRecordQueryModel[]> {
+  useQuery(params: TRecordQueryParams): Observable<PllPaginatedResponse<TRecordQueryModel>> {
     this.loading.set(true);
     return this.queryFn(params).pipe(
-      tap(response => this._data.set(response)),
+      tap(response => this.data.set(response)),
       tap(() => this.loading.set(false)),
       catchError(error => {
         this.loading.set(false);

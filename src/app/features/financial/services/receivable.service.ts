@@ -1,4 +1,4 @@
-import { PllID, PllRestService } from "@pollaris";
+import { PllID, PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Receivable, ReceivableStatus } from "../models/receivable.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -27,8 +27,8 @@ export class ReceivableService extends PllRestService<Receivable> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "receivable";
 
-  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllReceivableByFilterParams): Observable<GetAllReceivableByFilterResponse[]> {
-    return this.http.get<GetAllReceivableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllReceivableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
       centerOfCostId,
       planOfAccountId,

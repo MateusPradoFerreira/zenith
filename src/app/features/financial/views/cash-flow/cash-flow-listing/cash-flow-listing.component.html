@@ -1,0 +1,28 @@
+<div [class]="_computedClass()">
+  <hlm-data-table [offsetHeight]="offsetHeight()" header="Fluxo de Caixa" [values]="values()" [columns]="columns()" [filter]="false" [pagination]="false">
+    <ng-template hlmTemplate="table-body" let-rowData>
+      <ng-container *ngFor="let rowData of values()">
+        <hlm-trow class="{{ rowData.type === 'MARK'? 'bg-slate-50' : 'hover:bg-white' }}">
+          <hlm-td class="truncate flex-1">{{ rowData.name }}</hlm-td>
+          <hlm-td class="truncate w-29 justify-end {{ rowData.type === 'RECEIVABLE'? 'text-emerald-500' : rowData.type === 'PAYABLE'? 'text-red-500' : '' }}" *ngFor="let value of rowData.values">{{ value | currency: "BRL" }}</hlm-td>
+        </hlm-trow>
+        <ng-container *ngIf="rowData.children?.length">
+          <hlm-trow *ngFor="let children of rowData.children" class="hover:bg-white">
+            <hlm-td class="truncate flex-1">{{ children.name }}</hlm-td>
+            <hlm-td class="truncate w-29 justify-end text-slate-500" *ngFor="let value of children.values">{{ value | currency: "BRL" }}</hlm-td>
+          </hlm-trow>
+        </ng-container>
+      </ng-container>
+    </ng-template>
+    <ng-template hlmTemplate="action">
+      <ng-container [formGroup]="filter.form" *ngIf="filter">
+        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
+        
+        <div class="hlm-float-label col-span-12 xl:col-span-12">
+          <input hlmInput type="number" formControlName="year" (change)="updateUI()"/>
+          <label>Ano</label>
+        </div>
+      </ng-container>
+    </ng-template>
+  </hlm-data-table>
+</div>

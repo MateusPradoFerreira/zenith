@@ -65,17 +65,18 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
 
   // query
   page = model(1);
-  size = model(50);
+  size = model(25);
   sort = model<"ASC" | "DESC">("ASC");
   query = model<string>("");
+  totalItems = input<string>();
 
   queryEffect = effect(() => {
     const normalize = (value: any) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
     const filteredValues = this.values().filter(i => Object.values(i).some(v => normalize(v).includes(normalize(this.query()))));
     const sortedValues = this.sort() === "ASC"? filteredValues : filteredValues.reverse();
     const paginatedValues = sortedValues.slice((this.page() - 1) * this.size(), this.page() * this.size());
-    this.filteredValues.set(sortedValues);
-    this.paginatedValues.set(paginatedValues);
+    this.filteredValues.set(this.pagination()? sortedValues : filteredValues);
+    this.paginatedValues.set(this.pagination()? paginatedValues : filteredValues);
     this.selection.set([]);
   });
 
@@ -86,7 +87,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
 
   // outputs
   onSelect = output<any>();
-  onPaginate = output<any>();
+  onPaginate = output<{ page: number, size: number }>();
 
   offsetHeight = input<number>();
   mainHeight = computed(() => {
@@ -101,6 +102,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ContentChild("filter", { static: true }) filterTemplate: TemplateRef<any>;
   @ContentChild("selection", { static: true }) selectionTemplate: TemplateRef<any>;
   @ContentChild("empty-actions", { static: true }) emptyActionsTemplate: TemplateRef<any>;
+  @ContentChild("body", { static: true }) bodyTemplate: TemplateRef<any>;
+  @ContentChild("table-body", { static: true }) tableBodyTemplate: TemplateRef<any>;
 
   @ViewChild("table", { static: true }) tableTemplate: TemplateRef<any>;
   @ViewChild("grid", { static: true }) gridTemplate: TemplateRef<any>;
@@ -116,6 +119,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
       if (ngTemplate.name === "filter") this.filterTemplate = ngTemplate.template;
       if (ngTemplate.name === "selection") this.selectionTemplate = ngTemplate.template;
       if (ngTemplate.name === "empty-actions") this.emptyActionsTemplate = ngTemplate.template;
+      if (ngTemplate.name === "body") this.bodyTemplate = ngTemplate.template;
+      if (ngTemplate.name === "table-body") this.tableBodyTemplate = ngTemplate.template;
     };
   };
 

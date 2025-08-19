@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Inbox, InboxPriority, InboxStatus } from "../models/inbox.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -17,8 +17,8 @@ export class InboxService extends PllRestService<Inbox> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "inbox";
 
-  getAllByFilter({ status, priority, startsAt, endsAt }: GetAllInboxByFilterParams): Observable<Inbox[]> {
-    return this.http.get<Inbox[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status, priority, startsAt, endsAt }: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
+    return this.http.get<PllPaginatedResponse<Inbox>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
       priority,
       startsAt: moment(startsAt).format("YYYY-MM-DD"),

@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input, OnInit, signal, Signal } from '@angular/core';
-import { PllFacade, PllRecord, PllRecordId } from '@pollaris';
+import { PllFacade, PllPaginatedResponse, PllRecord, PllRecordId } from '@pollaris';
 import { PllFormSchema } from '@pollaris/forms';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
@@ -24,7 +24,8 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   dialogInputs: Signal<Inputkeys<any>> = computed(() => ({}));
 
   filter: PllFormSchema<TRecordQueryParams>;
-  values = computed(() => this.facade.data());
+  values = computed(() => this.facade.data().data);
+  pagination = computed(() => this.facade.data().pagination);
 
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
@@ -34,7 +35,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   selectionActionFn: HlmDataTableSelectionActionFc<TRecordQueryModel>;
 
   onNgOnInit: EventObs<void> = event();
-  onUpdateUI: EventObs<TRecordQueryModel[]> = event();
+  onUpdateUI: EventObs<PllPaginatedResponse<TRecordQueryModel>> = event();
 
   ngOnInit() {
     this.loading = this.facade.loading;
@@ -57,11 +58,12 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
     });
   };
 
-  handleUpdateUI(): Observable<TRecordQueryModel[]> {
+  handleUpdateUI(): Observable<PllPaginatedResponse<TRecordQueryModel>> {
     return this.filter.handleSubmit().pipe(
       tap(response => console.log("FILTERS", response)),
       switchMap(params => this.facade.useQuery(params)),
       tap(response => console.log("UPDATE-UI", response)),
+      switchMap(response => this.onUpdateUI(response)),
     );
   };
 

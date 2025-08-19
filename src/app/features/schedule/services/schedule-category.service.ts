@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { ScheduleCategory, ScheduleCategoryType } from "../models/schedule-category.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -14,8 +14,8 @@ export class ScheduleCategoryService extends PllRestService<ScheduleCategory> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "schedule-category";
 
-  getAllByFilter({ status = "ALL", type }: GetAllScheduleCategoryByFilterParams): Observable<ScheduleCategory[]> {
-    return this.http.get<ScheduleCategory[]>(`${this.baseRoute}/${this.pathRoute}/type/${type}`, { params: {
+  getAllByFilter({ status = "ALL", type }: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
+    return this.http.get<PllPaginatedResponse<ScheduleCategory>>(`${this.baseRoute}/${this.pathRoute}/type/${type}`, { params: {
       status,
     }});
   };

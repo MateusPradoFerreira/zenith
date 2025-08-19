@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { BankAccount } from "../models/bank-account.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -15,8 +15,8 @@ export class BankAccountService extends PllRestService<BankAccount> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "bank-account";
 
-  getAllByFilter({ status }: GetAllBankAccountByFilterParams): Observable<GetAllBankAccountByFilterResponse[]> {
-    return this.http.get<GetAllBankAccountByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status }: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<GetAllBankAccountByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllBankAccountByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
     }});
   };

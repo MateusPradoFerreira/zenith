@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { PlanOfAccount } from "../models/plan-of-account.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -15,8 +15,8 @@ export class PlanOfAccountService extends PllRestService<PlanOfAccount> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "secrecy";
 
-  getAllByFilter({ status }: GetAllPlanOfAccountByFilterParams): Observable<GetAllPlanOfAccountByFilterResponse[]> {
-    return this.http.get<GetAllPlanOfAccountByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status }: GetAllPlanOfAccountByFilterParams): Observable<PllPaginatedResponse<GetAllPlanOfAccountByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllPlanOfAccountByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
     }});
   };

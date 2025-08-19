@@ -68,27 +68,27 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
   })));
   
   handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
-    this.secrecyOptions = response;
+    this.secrecyOptions = response.data;
     this.secrecyOptions.unshift(new Secrecy({ name: "Todos", id: null }));
   }));
 
   handleGetCenterOfCostOptions = () => this.centerOfCostFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => { 
-    this.centerOfCostOptions = response;
+    this.centerOfCostOptions = response.data;
     this.centerOfCostOptions.unshift(new CenterOfCost({ name: "Todos", id: null }));
   }));
 
   handleGetPlanOfAccountOptions = () => this.planOfAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => { 
-    this.planOfAccountOptions = response;
+    this.planOfAccountOptions = response.data;
     this.planOfAccountOptions.unshift(new PlanOfAccount({ name: "Todos", id: null }));
   }));
 
   handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => { 
-    this.bankAccountOptions = response;
+    this.bankAccountOptions = response.data;
     this.bankAccountOptions.unshift(new PlanOfAccount({ name: "Todas", id: null }));
   }));
 
   formatSequence(number: number): string {
-    return number.toString().padStart(4, '0');
+    return number.toString().padStart(4, "0");
   };
 
   handlePay(id: PllID) {

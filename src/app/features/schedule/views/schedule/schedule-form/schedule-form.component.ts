@@ -47,5 +47,5 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
     if(this.scheduleCategoryOptions.length) this.form.controls.categoryId.setValue(this.scheduleCategoryOptions[0].id);
   }));
 
-  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response));
+  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
 };

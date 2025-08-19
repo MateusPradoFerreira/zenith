@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { CenterOfCost } from "../models/center-of-cost.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -15,8 +15,8 @@ export class CenterOfCostService extends PllRestService<CenterOfCost> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "secrecy";
 
-  getAllByFilter({ status }: GetAllCenterOfCostByFilterParams): Observable<GetAllCenterOfCostByFilterResponse[]> {
-    return this.http.get<GetAllCenterOfCostByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status }: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
     }});
   };

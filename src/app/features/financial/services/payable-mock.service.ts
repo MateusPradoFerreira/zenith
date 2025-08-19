@@ -1,4 +1,4 @@
-import { PllID, PllMockedRestService } from "@pollaris";
+import { PllID, PllMockedRestService, PllPaginatedResponse } from "@pollaris";
 import { Payable } from "../models/payable.model";
 import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "./payable.service";
 import { delay, map, Observable, of, switchMap } from "rxjs";
@@ -17,9 +17,9 @@ import { BankAccountService } from "./bank-account.service";
 
 export function createMokedPayable(data: Partial<Payable>): Payable {
   const status = fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
-  const createdAt = fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
-  const paidAt = status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
-  const cancelledAt = status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
+  const createdAt = fakerJs.date.between({ from: moment().startOf("year").toDate(), to: moment().endOf("year").toDate() });
+  const paidAt = status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
+  const cancelledAt = status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
 
   return new Payable({
     name: "New Payable",
@@ -28,7 +28,7 @@ export function createMokedPayable(data: Partial<Payable>): Payable {
     paidAt,
     createdAt,
     cancelledAt,
-    value: fakerJs.number.float({ min: 200, max: 300, fractionDigits: 2 }),
+    value: fakerJs.number.float({ min: 10, max: 200, fractionDigits: 2 }),
     description: fakerJs.finance.transactionDescription(),
     active: true,
     secrecyId: fakerJs.helpers.arrayElement(INITIAL_SECRECY_MOCKED_DATA).id,
@@ -48,6 +48,9 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
   bankAccountService = inject(BankAccountService);
 
   constructor () {
+    const interable: Payable[] = [];
+    for(let i = 11; i <= 200; i++) interable.push(createMokedPayable({ name: `Payable ${i}`, docNumber: i.toString().padStart(10, "0"), sequence: i }));
+
     super([
       createMokedPayable({ name: "Conta de Luz", docNumber: "0000000001", sequence: 1 }),
       createMokedPayable({ name: "Conta de Água", docNumber: "0000000002", sequence: 2 }),
@@ -59,6 +62,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
       createMokedPayable({ name: "Serviço de Streaming", docNumber: "0000000008", sequence: 8 }),
       createMokedPayable({ name: "Manutenção Veículo", docNumber: "0000000009", sequence: 9 }),
       createMokedPayable({ name: "Compras Escritório", docNumber: "0000000010", sequence: 10 }),
+      ...interable,
     ]);
   };
 
@@ -68,7 +72,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
     return createMokedPayable({ ...data, sequence, docNumber });
   };
 
-  getAllByFilter(params: GetAllPayableByFilterParams): Observable<GetAllPayableByFilterResponse[]> {
+  getAllByFilter(params: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
     return of(this._filtering(this.records(), params)).pipe(
       delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
       map(records => records.map(record => {
@@ -81,7 +85,12 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
         };
         return newRecord;
       })),
-    );
+    ).pipe(map(response => ({
+      data: response,
+      pagination: {
+        page: 1,
+      },
+    })));
   };
 
   private _filtering(records: Payable[], params: GetAllPayableByFilterParams): Payable[] {

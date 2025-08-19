@@ -1,4 +1,4 @@
-import { PllRestService } from "@pollaris";
+import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -15,8 +15,8 @@ export class SecrecyService extends PllRestService<Secrecy> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "secrecy";
 
-  getAllByFilter({ status }: GetAllSecrecyByFilterParams): Observable<GetAllSecrecyByFilterResponse[]> {
-    return this.http.get<GetAllSecrecyByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status }: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<GetAllSecrecyByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllSecrecyByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
     }});
   };
