@@ -14,12 +14,13 @@ import { INITIAL_CENTER_OF_COST_MOCKED_DATA } from "./center-of-cost-mock.servic
 import { CenterOfCostService } from "./center-of-cost.service";
 import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
 import { BankAccountService } from "./bank-account.service";
+import { Util } from "../../../common/util/util";
 
 export function createMokedReceivable(data: Partial<Receivable>): Receivable {
   const status = data?.status || fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
-  const createdAt = fakerJs.date.between({ from: moment().startOf("year").toDate(), to: moment().endOf("year").toDate() });
-  const paidAt = status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
-  const cancelledAt = status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
+  const createdAt = data?.createdAt || fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
+  const paidAt = data?.paidAt || status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
+  const cancelledAt = data?.cancelledAt || status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
 
   return new Receivable({
     name: "New Receivable",
@@ -36,6 +37,7 @@ export function createMokedReceivable(data: Partial<Receivable>): Receivable {
     planOfAccountId: fakerJs.helpers.arrayElement(INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA).id,
     bankAccountId: fakerJs.helpers.arrayElement(INITIAL_BANK_ACCOUNT_MOCKED_DATA).id,
     docNumber: "0000000000",
+    sequence: 0,
     ...data,
     id: data.id || uuid(),
   });
@@ -48,17 +50,11 @@ export class ReceivableMockedService extends PllMockedRestService<Receivable> im
   bankAccountService = inject(BankAccountService);
 
   constructor () {
-    const interable: Receivable[] = [];
-    for(let i = 11; i <= 200; i++) interable.push(createMokedReceivable({ name: `Receivable ${i}`, docNumber: i.toString().padStart(10, "0"), sequence: i }));
-
     super([
-      createMokedReceivable({ name: "Salário", docNumber: "0000000001", value: 3500, sequence: 1, status: "PAID" }),
-      createMokedReceivable({ name: "Freelance - Projeto Web", docNumber: "0000000002", sequence: 2 }),
-      createMokedReceivable({ name: "Aluguel Recebido", docNumber: "0000000004", sequence: 4 }),
-      createMokedReceivable({ name: "Reembolso de Despesas", docNumber: "0000000007", sequence: 7 }),
-      createMokedReceivable({ name: "Licenciamento de Software", docNumber: "0000000008", sequence: 8 }),
-      createMokedReceivable({ name: "Pagamento de Parceria", docNumber: "0000000010", sequence: 10 }),
-      ...interable,
+      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Salário", createdAt: date, value: 3500, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Freelance - Projeto Web", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Aluguel Recebido", createdAt: date, value: 400, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map((date, index) => createMokedReceivable({ name: "Juros de Investimento", createdAt: date, value: 40 + (!index? 0 : index * 0.6), status: moment(date).isBefore()? "PAID" : "PENDING" })),
     ]);
   };
 

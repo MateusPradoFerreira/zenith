@@ -16,6 +16,7 @@ export function createMokedBankAccount(data: Partial<BankAccount>): BankAccount 
 export const INITIAL_BANK_ACCOUNT_MOCKED_DATA: BankAccount[] = [
   createMokedBankAccount({ name: "Sicoob" }),
   createMokedBankAccount({ name: "Banco do Brasil" }),
+  createMokedBankAccount({ name: "Nubank" }),
 ];
 
 export class BankAccountMockedService extends PllMockedRestService<BankAccount> implements BankAccountService {

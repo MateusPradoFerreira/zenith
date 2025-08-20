@@ -14,12 +14,13 @@ import { INITIAL_CENTER_OF_COST_MOCKED_DATA } from "./center-of-cost-mock.servic
 import { CenterOfCostService } from "./center-of-cost.service";
 import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
 import { BankAccountService } from "./bank-account.service";
+import { Util } from "../../../common/util/util";
 
 export function createMokedPayable(data: Partial<Payable>): Payable {
-  const status = fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
-  const createdAt = fakerJs.date.between({ from: moment().startOf("year").toDate(), to: moment().endOf("year").toDate() });
-  const paidAt = status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
-  const cancelledAt = status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "year").toDate() });
+  const status = data?.status || fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
+  const createdAt = data?.createdAt || fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
+  const paidAt = data?.paidAt || status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
+  const cancelledAt = data?.cancelledAt || status !== "CANCELLED"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
 
   return new Payable({
     name: "New Payable",
@@ -36,6 +37,7 @@ export function createMokedPayable(data: Partial<Payable>): Payable {
     planOfAccountId: fakerJs.helpers.arrayElement(INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA).id,
     bankAccountId: fakerJs.helpers.arrayElement(INITIAL_BANK_ACCOUNT_MOCKED_DATA).id,
     docNumber: "0000000000",
+    sequence: 0,
     ...data,
     id: data.id || uuid(),
   });
@@ -48,21 +50,16 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
   bankAccountService = inject(BankAccountService);
 
   constructor () {
-    const interable: Payable[] = [];
-    for(let i = 11; i <= 200; i++) interable.push(createMokedPayable({ name: `Payable ${i}`, docNumber: i.toString().padStart(10, "0"), sequence: i }));
-
     super([
-      createMokedPayable({ name: "Conta de Luz", docNumber: "0000000001", sequence: 1 }),
-      createMokedPayable({ name: "Conta de Água", docNumber: "0000000002", sequence: 2 }),
-      createMokedPayable({ name: "Internet", docNumber: "0000000003", sequence: 3 }),
-      createMokedPayable({ name: "Aluguel", docNumber: "0000000004", sequence: 4 }),
-      createMokedPayable({ name: "Telefone", docNumber: "0000000005", sequence: 5 }),
-      createMokedPayable({ name: "Mensalidade Academia", docNumber: "0000000006", sequence: 6 }),
-      createMokedPayable({ name: "Plano de Saúde", docNumber: "0000000007", sequence: 7 }),
-      createMokedPayable({ name: "Serviço de Streaming", docNumber: "0000000008", sequence: 8 }),
-      createMokedPayable({ name: "Manutenção Veículo", docNumber: "0000000009", sequence: 9 }),
-      createMokedPayable({ name: "Compras Escritório", docNumber: "0000000010", sequence: 10 }),
-      ...interable,
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Conta de Luz", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Conta de Água", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Internet", value: 139, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Aluguel", value: 600, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Mensalidade Academia", value: 160, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Plano de Saúde", value: 200, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Serviço de Streaming", value: 20, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Mercado", value: 700, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMokedPayable({ name: "Financiamento", value: 1000, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
     ]);
   };
 

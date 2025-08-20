@@ -5,23 +5,19 @@ import { CashFlow } from '../../../models/cash-flow.model';
 import { GetAllCashFlowByFilterParams } from '../../../services/cash-flow.service';
 import { CashFlowFacade } from '../../../facades/cash-flow.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { PayableFacade } from '../../../../financial/facades/payable.facade';
-import { ReceivableFacade } from '../../../../financial/facades/receivable.facade';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
 import { tap } from 'rxjs';
 import moment from 'moment';
 import { PllPaginatedResponse } from '@pollaris';
+import { CashFlowTreeTrowComponent } from '../../../components/cash-flow-tree-trow.component';
 
 @Component({
   standalone: true,
   selector: 'app-cash-flow-listing',
-  imports: [GlobalModule, HlmDataTableComponent],
+  imports: [GlobalModule, HlmDataTableComponent, CashFlowTreeTrowComponent],
   templateUrl: './cash-flow-listing.component.html',
 })
 export class CashFlowListingComponent extends BaseRecordListingComponentDirective<CashFlow, GetAllCashFlowByFilterParams> {
-  payableFacade = inject(PayableFacade);
-  receivableFacade = inject(ReceivableFacade);
-
   override facade = inject(CashFlowFacade);
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([]);
 
@@ -33,4 +29,9 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
       ...periods.values.map(period => ({ header: moment(period).format("MMM YY"), class: "w-29 justify-end" })),
     ]);
   }));
+
+  onInputSearch(query: string) {
+    this.filter.controls.query.setValue(query);
+    this.updateUI();
+  };
 };

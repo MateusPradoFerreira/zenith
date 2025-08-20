@@ -80,6 +80,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
     this.selection.set([]);
   });
 
+  queryTimeout: NodeJS.Timeout;
+
   // multiselect
   selection = model<PllID[]>([]);
   hasSelection = computed<boolean>(() => !!this.selection().length);
@@ -88,6 +90,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   // outputs
   onSelect = output<any>();
   onPaginate = output<{ page: number, size: number }>();
+  onInputSearch= output<string>();
 
   offsetHeight = input<number>();
   mainHeight = computed(() => {
@@ -152,4 +155,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
     this.selection.set(this.paginatedValues().map(val => val.id));
   };
 
+  handleEmitOnInputSearch() {
+    clearTimeout(this.queryTimeout);
+    this.queryTimeout = setTimeout(() => this.onInputSearch.emit(this.query()), 500);
+  };
 };

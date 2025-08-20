@@ -38,6 +38,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
 
     const start = moment().set("year", 1990).startOf("year");
     const periodStart = moment().set("year", params.year).startOf("year");
+    const periodEnd = moment().set("year", params.year).endOf("year");
     const periods: { startsAt: Date, endsAt: Date }[] = [];
     const periodRange = 11;
 
@@ -46,14 +47,15 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       endsAt: moment(periodStart).add(i, "months").endOf("month").toDate(),
     });
 
-    const payables = this.payableService.records().filter(record => record.status === "PAID");
-    const receivables = this.receivableService.records().filter(record => record.status === "PAID");
+    const normalize = (value: any) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const payables = this.payableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+    const receivables = this.receivableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
 
     const formatedPeriods: CashFlow = {
       id: null,
       name: "",
       values: periods.map(period => period.startsAt),
-      children: [],
+      children: null,
       type: "MARK",
     };
 
@@ -65,7 +67,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
         const receivableTotal = receivables.filter(receivable => moment(receivable.paidAt).isBetween(start, moment(period.endsAt).subtract(1, "month"))).reduce((prev, crr) => prev + crr.value, 0);
         return receivableTotal - payableTotal;
       }),
-      children: [],
+      children: null,
       type: "MARK",
     };
 
@@ -77,7 +79,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
         const receivableTotal = receivables.filter(receivable => moment(receivable.paidAt).isBetween(start, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0);
         return receivableTotal - payableTotal;
       }),
-      children: [],
+      children: null,
       type: "MARK",
     };
 
@@ -85,9 +87,15 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => payables.filter(payable => payable.bankAccountId === bank.id && moment(payable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0) * -1),
-      children: [] as any[],
-      type: "PAYABLE",
-    }));
+      children: payables.sort((a, b) => new Date(a.paidAt).getTime() - new Date(b.paidAt).getTime()).filter(payable => payable.bankAccountId === bank.id && moment(payable.paidAt).isBetween(periodStart, periodEnd)).map(payable => ({
+        id: payable.id,
+        name: `----- ${payable.name}`,
+        values: periods.map(period => moment(payable.paidAt).isBetween(period.startsAt, period.endsAt)? payable.value : 0),
+        children: null,
+        type: "PAYABLE",
+      } as CashFlow)),
+      type: "MARK",
+    } as CashFlow));
 
     const payableBalance: CashFlow = {
       id: null,
@@ -101,8 +109,14 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => receivables.filter(receivable => receivable.bankAccountId === bank.id && moment(receivable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0)),
-      children: [] as any[],
-      type: "RECEIVABLE",
+      children: receivables.sort((a, b) => new Date(a.paidAt).getTime() - new Date(b.paidAt).getTime()).filter(receivable => receivable.bankAccountId === bank.id && moment(receivable.paidAt).isBetween(periodStart, periodEnd)).map(receivable => ({
+        id: receivable.id,
+        name: `----- ${receivable.name}`,
+        values: periods.map(period => moment(receivable.paidAt).isBetween(period.startsAt, period.endsAt)? receivable.value : 0),
+        children: null,
+        type: "RECEIVABLE",
+      } as CashFlow)),
+      type: "MARK",
     }));
 
     const receivableBalance: CashFlow = {

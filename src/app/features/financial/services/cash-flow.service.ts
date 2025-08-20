@@ -6,6 +6,7 @@ import { Injectable } from "@angular/core";
 
 export type GetAllCashFlowByFilterParams = {
   year: number;
+  query?: string;
 };
 
 export type GetAllCashFlowByFilterResponse = CashFlow;
@@ -15,9 +16,7 @@ export class CashFlowService extends PllRestService<CashFlow> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "cash-flow";
 
-  getAllByFilter({ year }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
-      year,
-    }});
+  getAllByFilter(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params });
   };
 };
