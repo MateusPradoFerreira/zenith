@@ -5,7 +5,7 @@ import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 
-export function createMokedCenterOfCost(data: Partial<CenterOfCost>): CenterOfCost {
+export function createMockedCenterOfCost(data: Partial<CenterOfCost>): CenterOfCost {
   return new CenterOfCost({
     active: true,
     ...data,
@@ -14,11 +14,11 @@ export function createMokedCenterOfCost(data: Partial<CenterOfCost>): CenterOfCo
 };
 
 export const INITIAL_CENTER_OF_COST_MOCKED_DATA: CenterOfCost[] = [
-  createMokedCenterOfCost({ name: "Geral" }),
-  createMokedCenterOfCost({ name: "Marketing" }),
-  createMokedCenterOfCost({ name: "Vendas" }),
-  createMokedCenterOfCost({ name: "Operações" }),
-  createMokedCenterOfCost({ name: "RH" }),
+  createMockedCenterOfCost({ name: "Geral" }),
+  createMockedCenterOfCost({ name: "Marketing" }),
+  createMockedCenterOfCost({ name: "Vendas" }),
+  createMockedCenterOfCost({ name: "Operações" }),
+  createMockedCenterOfCost({ name: "RH" }),
 ];
 
 export class CenterOfCostMockedService extends PllMockedRestService<CenterOfCost> implements CenterOfCostService {
@@ -27,7 +27,7 @@ export class CenterOfCostMockedService extends PllMockedRestService<CenterOfCost
     super(INITIAL_CENTER_OF_COST_MOCKED_DATA);
   };
 
-  override createRecord = (data: Partial<CenterOfCost>) => createMokedCenterOfCost(data);
+  override createRecord = (data: Partial<CenterOfCost>) => createMockedCenterOfCost(data);
 
   getAllByFilter(params: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

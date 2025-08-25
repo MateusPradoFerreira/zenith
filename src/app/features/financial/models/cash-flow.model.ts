@@ -1,6 +1,6 @@
 import { PllID } from "../../../core/lib/pollaris";
 
-export type CashFlowType = "PAYABLE" | "RECEIVABLE" | "MARK";
+export type CashFlowType = "PAYABLE" | "PAYABLE_MARK" | "RECEIVABLE" | "RECEIVABLE_MARK" | "MARK" | "BANK";
 
 export class CashFlow {
   id: PllID;

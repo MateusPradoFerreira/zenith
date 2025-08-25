@@ -5,7 +5,7 @@ import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 
-export function createMokedBankAccount(data: Partial<BankAccount>): BankAccount {
+export function createMockedBankAccount(data: Partial<BankAccount>): BankAccount {
   return new BankAccount({
     active: true,
     ...data,
@@ -14,9 +14,9 @@ export function createMokedBankAccount(data: Partial<BankAccount>): BankAccount 
 };
 
 export const INITIAL_BANK_ACCOUNT_MOCKED_DATA: BankAccount[] = [
-  createMokedBankAccount({ name: "Sicoob" }),
-  createMokedBankAccount({ name: "Banco do Brasil" }),
-  createMokedBankAccount({ name: "Nubank" }),
+  createMockedBankAccount({ name: "Sicoob" }),
+  createMockedBankAccount({ name: "Banco do Brasil" }),
+  createMockedBankAccount({ name: "Nubank" }),
 ];
 
 export class BankAccountMockedService extends PllMockedRestService<BankAccount> implements BankAccountService {
@@ -25,7 +25,7 @@ export class BankAccountMockedService extends PllMockedRestService<BankAccount> 
     super(INITIAL_BANK_ACCOUNT_MOCKED_DATA);
   };
 
-  override createRecord = (data: Partial<BankAccount>) => createMokedBankAccount(data);
+  override createRecord = (data: Partial<BankAccount>) => createMockedBankAccount(data);
 
   getAllByFilter(params: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<GetAllBankAccountByFilterResponse>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

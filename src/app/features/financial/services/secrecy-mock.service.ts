@@ -5,7 +5,7 @@ import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 
-export function createMokedSecrecy(data: Partial<Secrecy>): Secrecy {
+export function createMockedSecrecy(data: Partial<Secrecy>): Secrecy {
   return new Secrecy({
     active: true,
     ...data,
@@ -14,10 +14,10 @@ export function createMokedSecrecy(data: Partial<Secrecy>): Secrecy {
 };
 
 export const INITIAL_SECRECY_MOCKED_DATA: Secrecy[] = [
-  createMokedSecrecy({ name: "Dinheiro" }),
-  createMokedSecrecy({ name: "PIX" }),
-  createMokedSecrecy({ name: "Débito" }),
-  createMokedSecrecy({ name: "Crédito" }),
+  createMockedSecrecy({ name: "Dinheiro" }),
+  createMockedSecrecy({ name: "PIX" }),
+  createMockedSecrecy({ name: "Débito" }),
+  createMockedSecrecy({ name: "Crédito" }),
 ];
 
 export class SecrecyMockedService extends PllMockedRestService<Secrecy> implements SecrecyService {
@@ -26,7 +26,7 @@ export class SecrecyMockedService extends PllMockedRestService<Secrecy> implemen
     super(INITIAL_SECRECY_MOCKED_DATA);
   };
 
-  override createRecord = (data: Partial<Secrecy>) => createMokedSecrecy(data);
+  override createRecord = (data: Partial<Secrecy>) => createMockedSecrecy(data);
 
   getAllByFilter(params: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<GetAllSecrecyByFilterResponse>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

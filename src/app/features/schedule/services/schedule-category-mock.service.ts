@@ -6,7 +6,7 @@ import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 import { Injectable } from "@angular/core";
 
-export function createMokedScheduleCategory(data: Partial<ScheduleCategory>): ScheduleCategory {
+export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): ScheduleCategory {
   return new ScheduleCategory({
     name: "New Schedule Category",
     type: "SCHEDULE",
@@ -17,10 +17,10 @@ export function createMokedScheduleCategory(data: Partial<ScheduleCategory>): Sc
 };
 
 export const INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA: ScheduleCategory[] = [
-  createMokedScheduleCategory({ name: "Evento", color: "#615fff" }),
-  createMokedScheduleCategory({ name: "Tarefa", color: "#2b7fff" }),
-  createMokedScheduleCategory({ name: "Despesa", type: "PAYABLE", color: "#ff2056" }),
-  createMokedScheduleCategory({ name: "Receita", type: "RECEIVABLE", color: "#00bc7d" }),
+  createMockedScheduleCategory({ name: "Evento", color: "#615fff" }),
+  createMockedScheduleCategory({ name: "Tarefa", color: "#2b7fff" }),
+  createMockedScheduleCategory({ name: "Despesa", type: "PAYABLE", color: "#ff2056" }),
+  createMockedScheduleCategory({ name: "Receita", type: "RECEIVABLE", color: "#00bc7d" }),
 ];
 
 @Injectable({ providedIn: "root" })
@@ -30,7 +30,7 @@ export class ScheduleCategoryMockedService extends PllMockedRestService<Schedule
     super(INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA);
   };
 
-  override createRecord = (data: Partial<ScheduleCategory>) => createMokedScheduleCategory(data);
+  override createRecord = (data: Partial<ScheduleCategory>) => createMockedScheduleCategory(data);
 
   getAllByFilter(params: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

@@ -10,7 +10,7 @@ import { ReceivableService } from "./receivable.service";
 import moment from "moment";
 import { BankAccountService } from "./bank-account.service";
 
-export function createMokedCashFlow(data: Partial<CashFlow>): CashFlow {
+export function createMockedCashFlow(data: Partial<CashFlow>): CashFlow {
   return new CashFlow({
     ...data,
     id: data.id || uuid(),
@@ -22,7 +22,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
   receivableService = inject(ReceivableService);
   bankAccountService = inject(BankAccountService);
 
-  override createRecord = (data: Partial<CashFlow>) => createMokedCashFlow(data);
+  override createRecord = (data: Partial<CashFlow>) => createMockedCashFlow(data);
 
   getAllByFilter(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
     return of(this._filtering(params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
@@ -94,7 +94,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
         children: null,
         type: "PAYABLE",
       } as CashFlow)),
-      type: "MARK",
+      type: "BANK",
     } as CashFlow));
 
     const payableBalance: CashFlow = {
@@ -102,7 +102,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       name: "Despesas",
       values: periods.map(period => payables.filter(payable => moment(payable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0) * -1),
       children: payableBankAccountsBalance,
-      type: "PAYABLE",
+      type: "PAYABLE_MARK",
     };
 
     const receivableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().map(bank => ({
@@ -116,7 +116,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
         children: null,
         type: "RECEIVABLE",
       } as CashFlow)),
-      type: "MARK",
+      type: "BANK",
     }));
 
     const receivableBalance: CashFlow = {
@@ -124,7 +124,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       name: "Receitas",
       values: periods.map(period => receivables.filter(receivable => moment(receivable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0)),
       children: receivableBankAccountsBalance,
-      type: "RECEIVABLE",
+      type: "RECEIVABLE_MARK",
     };
 
     flow.push(formatedPeriods);

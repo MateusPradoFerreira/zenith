@@ -7,8 +7,9 @@ import moment from "moment";
 import { v4 as uuid } from 'uuid';
 import { Injectable } from "@angular/core";
 
-export function createMokedInbox(data: Partial<Inbox>): Inbox {
+export function createMockedInbox(data: Partial<Inbox>): Inbox {
   return new Inbox({
+    title: "Inbox",
     status: fakerJs.helpers.arrayElement(["PENDING", "PROCESSED", "OVERDUE", "CANCELLED"]),
     priority: fakerJs.helpers.arrayElement(["LOW", "MEDIUM", "HIGH"]),
     createdAt: fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() }),
@@ -23,18 +24,18 @@ export class InboxMockedService extends PllMockedRestService<Inbox> implements I
 
   constructor () {
     super([
-      createMokedInbox({ title: "Reunião com equipe de vendas" }),
-      createMokedInbox({ title: "Atualização do projeto Alpha" }),
-      createMokedInbox({ title: "Relatório financeiro mensal" }),
-      createMokedInbox({ title: "Solicitação de orçamento" }),
-      createMokedInbox({ title: "Feedback do cliente XYZ" }),
-      createMokedInbox({ title: "Convite para webinar de tecnologia" }),
-      createMokedInbox({ title: "Entrega do material de marketing" }),
-      createMokedInbox({ title: "Análise de desempenho trimestral" }),
+      createMockedInbox({ title: "Reunião com equipe de vendas" }),
+      createMockedInbox({ title: "Atualização do projeto Alpha" }),
+      createMockedInbox({ title: "Relatório financeiro mensal" }),
+      createMockedInbox({ title: "Solicitação de orçamento" }),
+      createMockedInbox({ title: "Feedback do cliente XYZ" }),
+      createMockedInbox({ title: "Convite para webinar de tecnologia" }),
+      createMockedInbox({ title: "Entrega do material de marketing" }),
+      createMockedInbox({ title: "Análise de desempenho trimestral" }),
     ]);
   };
 
-  override createRecord = (data: Partial<Inbox>) => createMokedInbox(data);
+  override createRecord = (data: Partial<Inbox>) => createMockedInbox(data);
 
   getAllByFilter(params: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

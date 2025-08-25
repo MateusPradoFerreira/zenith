@@ -16,7 +16,7 @@ import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
 import { BankAccountService } from "./bank-account.service";
 import { Util } from "../../../common/util/util";
 
-export function createMokedPayable(data: Partial<Payable>): Payable {
+export function createMockedPayable(data: Partial<Payable>): Payable {
   const status = data?.status || fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
   const createdAt = data?.createdAt || fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
   const paidAt = data?.paidAt || status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
@@ -51,22 +51,22 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
 
   constructor () {
     super([
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Conta de Luz", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Conta de Água", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Internet", value: 139, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Aluguel", value: 600, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Mensalidade Academia", value: 160, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Plano de Saúde", value: 200, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Serviço de Streaming", value: 20, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Mercado", value: 700, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedPayable({ name: "Financiamento", value: 1000, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Conta de Luz", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Conta de Água", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Internet", value: 139, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Aluguel", value: 600, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Mensalidade Academia", value: 160, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Plano de Saúde", value: 200, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Serviço de Streaming", value: 20, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Mercado", value: 700, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedPayable({ name: "Financiamento", value: 1000, createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
     ]);
   };
 
   override createRecord = (data: Partial<Payable>) => {
     const sequence = this.records().length + 1;
     const docNumber = (this.records().length + 1).toString().padStart(10, "0");
-    return createMokedPayable({ ...data, sequence, docNumber });
+    return createMockedPayable({ ...data, sequence, docNumber });
   };
 
   getAllByFilter(params: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {

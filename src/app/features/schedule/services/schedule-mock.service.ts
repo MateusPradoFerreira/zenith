@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 import { INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA } from "./schedule-category-mock.service";
 import { RRule, Options, RRuleSet, Weekday } from 'rrule';
 
-export function createMokedSchedule(data: Partial<Schedule>): Schedule {
+export function createMockedSchedule(data: Partial<Schedule>): Schedule {
   const frequency = fakerJs.helpers.arrayElement(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]);
   const startsAt = fakerJs.date.past();
   const endsAt = fakerJs.date.future({ refDate: startsAt });
@@ -39,12 +39,12 @@ export class ScheduleMockedService extends PllMockedRestService<Schedule> implem
 
   constructor() {
     super([
-      createMokedSchedule({ title: "Bha 1" }),
-      createMokedSchedule({ title: "Bha 2" }),
+      createMockedSchedule({ title: "Bha 1" }),
+      createMockedSchedule({ title: "Bha 2" }),
     ]);
   };
 
-  override createRecord = (data: Partial<Schedule>) => createMokedSchedule(data);
+  override createRecord = (data: Partial<Schedule>) => createMockedSchedule(data);
 
   getAllByFilter(params: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<Schedule>> {
     return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({

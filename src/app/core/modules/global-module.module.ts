@@ -10,7 +10,7 @@ import { HlmSelectModule } from '../../common/libs/ui/ui-select-helm/src';
 import { HlmTemplateDirective } from '../../common/directives/hlm-template.directive';
 import { HlmDatePickerModule } from '../../common/libs/ui/ui-datepicker-helm/src';
 import { HlmCalendarModule } from '../../common/libs/ui/ui-calendar-helm/src';
-import { CurrencyPipe, DatePipe, NgFor, NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass, NgFor, NgForOf, NgIf, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { HlmBadgeModule } from '../../common/libs/ui/ui-badge-helm/src';
 import { HlmInputModule } from '../../common/libs/ui/ui-input-helm/src';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
@@ -30,6 +30,8 @@ const generalModules = [
 	NgIf, 
 	NgFor, 
 	NgForOf,
+	NgStyle,
+	NgClass,
 	DatePipe,
 	CurrencyPipe,
 	NgTemplateOutlet,

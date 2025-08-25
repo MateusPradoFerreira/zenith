@@ -16,7 +16,7 @@ import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
 import { BankAccountService } from "./bank-account.service";
 import { Util } from "../../../common/util/util";
 
-export function createMokedReceivable(data: Partial<Receivable>): Receivable {
+export function createMockedReceivable(data: Partial<Receivable>): Receivable {
   const status = data?.status || fakerJs.helpers.arrayElement(["PENDING", "PAID", "OVERDUE", "CANCELLED"]);
   const createdAt = data?.createdAt || fakerJs.date.between({ from: moment().startOf("month").toDate(), to: moment().endOf("month").toDate() });
   const paidAt = data?.paidAt || status !== "PAID"? null : fakerJs.date.between({ from: createdAt, to: moment(createdAt).add(1, "month").toDate() });
@@ -51,17 +51,17 @@ export class ReceivableMockedService extends PllMockedRestService<Receivable> im
 
   constructor () {
     super([
-      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Salário", createdAt: date, value: 3500, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Freelance - Projeto Web", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMokedReceivable({ name: "Aluguel Recebido", createdAt: date, value: 400, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map((date, index) => createMokedReceivable({ name: "Juros de Investimento", createdAt: date, value: 40 + (!index? 0 : index * 0.6), status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Salário", createdAt: date, value: 3500, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Freelance - Projeto Web", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Aluguel Recebido", createdAt: date, value: 400, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths().map((date, index) => createMockedReceivable({ name: "Juros de Investimento", createdAt: date, value: 40 + (!index? 0 : index * 0.6), status: moment(date).isBefore()? "PAID" : "PENDING" })),
     ]);
   };
 
   override createRecord = (data: Partial<Receivable>) => {
     const sequence = this.records().length + 1;
     const docNumber = (this.records().length + 1).toString().padStart(10, "0");
-    return createMokedReceivable({ ...data, sequence, docNumber });
+    return createMockedReceivable({ ...data, sequence, docNumber });
   };
 
   getAllByFilter(params: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {

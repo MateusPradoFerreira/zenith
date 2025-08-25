@@ -17,6 +17,7 @@ import type { ClassValue } from 'clsx';
 })
 export class HlmTrowComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
+	public readonly ngClass = input<any>('', { alias: 'ngClass' });
 	protected _computedClass = computed(() =>
 		hlm(
 			'flex border-b border-slate-200 transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 [&_hlm-th:first-child]:border-l-0 [&_hlm-td:first-child]:border-l-0',
