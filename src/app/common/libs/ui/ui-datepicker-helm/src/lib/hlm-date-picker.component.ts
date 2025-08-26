@@ -1,5 +1,5 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { booleanAttribute, Component, computed, forwardRef, input, model, output, signal } from '@angular/core';
+import { AfterViewInit, booleanAttribute, Component, computed, forwardRef, input, model, output, signal } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCalendar } from '@ng-icons/lucide';
@@ -12,6 +12,8 @@ import { HlmIconDirective } from '@spartan-ng/ui-icon-helm';
 import { HlmPopoverContentDirective } from '@spartan-ng/ui-popover-helm';
 import type { ClassValue } from 'clsx';
 import { injectHlmDatePickerConfig } from './hlm-date-picker.token';
+import Inputmask from 'inputmask';
+import moment from 'moment';
 
 export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 	provide: NG_VALUE_ACCESSOR,
@@ -34,7 +36,7 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 	providers: [HLM_DATE_PICKER_VALUE_ACCESSOR, provideIcons({ lucideCalendar })],
 	template: `
 		<brn-popover sideOffset="5" [state]="popoverState()" (stateChanged)="popoverState.set($event)" class="peer">
-			<button type="button" [class]="_computedClass()" [disabled]="state().disabled()" brnPopoverTrigger>
+			<!-- <button type="button" [class]="_computedClass()" [disabled]="state().disabled()" brnPopoverTrigger>
 				<ng-icon hlm size="sm" name="lucideCalendar" />
 
 				<span class="truncate">
@@ -44,12 +46,12 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 						<ng-content />
 					}
 				</span>
-			</button>
+			</button> -->
 
-			<!-- <div class="flex relative group">
-				<input [(ngModel)]="date" [class]="_computedClass()" [disabled]="state().disabled()"/>
+			<div class="flex relative group">
+				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled()" [id]="key" (blur)="_handleBlurInput()"/>
 				<button brnPopoverTrigger [disabled]="state().disabled()" class="absolute top-0 right-0 transition-colors disabled:pointer-events-none disabled:bg-slate-50 disabled:text-slate-700 border-y border-r border-slate-200 cursor-pointer bg-background rounded-r-md flex items-center justify-center w-[38px] h-[38px] shrink-0"> <ng-icon hlm size="sm" name="lucideCalendar"/> </button>
-			</div> -->
+			</div>
 
 			<div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
 				<hlm-calendar
@@ -67,7 +69,7 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 		class: 'block',
 	},
 })
-export class HlmDatePickerComponent<T> {
+export class HlmDatePickerComponent<T> implements AfterViewInit {
 	private readonly _config = injectHlmDatePickerConfig<T>();
 
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
@@ -82,6 +84,8 @@ export class HlmDatePickerComponent<T> {
 		),
 	);
 
+	public readonly key = String(Math.random());
+
 	/** The minimum date that can be selected.*/
 	public readonly min = input<T>();
 
@@ -95,6 +99,7 @@ export class HlmDatePickerComponent<T> {
 
 	/** The selected value. */
 	public readonly date = model<T>();
+	public readonly inputDate = signal<string>(null);
 
 	/** If true, the date picker will close when a date is selected. */
 	public readonly autoCloseOnSelect = input<boolean, BooleanInput>(this._config.autoCloseOnSelect, {
@@ -126,9 +131,10 @@ export class HlmDatePickerComponent<T> {
 	protected _onTouched?: TouchFn;
 
 	protected _handleChange(value: T) {
-		if (this.state().disabled()) return;
+		if (this.state().disabled() || (this.forceSelection() && !value)) return;
 		const transformedDate = this.transformDate()(value);
 
+		this.inputDate.set(!value? null : moment(value).format("DD/MM/YYYY"));
 		this.date.set(transformedDate);
 		this._onChange?.(transformedDate);
 		this.changed.emit(transformedDate);
@@ -138,11 +144,26 @@ export class HlmDatePickerComponent<T> {
 		}
 	}
 
+	protected _handleBlurInput() {
+		const validDate = this.inputDate()?.includes("_")? false : moment(this.inputDate(), "DD/MM/YYYY").isValid();
+		if(!validDate) {
+			this.inputDate.set(this.forceSelection() && this.date()? moment(this.date()).format("DD/MM/YYYY") : null);
+			return;
+		};
+
+		this._handleChange(moment(this.inputDate(), "DD/MM/YYYY").toDate() as T);
+	};
+
+	ngAfterViewInit(): void {
+		new Inputmask("99/99/9999").mask(document.getElementById(this.key));
+	};
+
 	/** CONROL VALUE ACCESSOR */
 	writeValue(value: T | null): void {
 		// optional FormControl is initialized with null value
 		if (value === null) return;
 
+		this.inputDate.set(moment(value).format("DD/MM/YYYY"));
 		this.date.set(this.transformDate()(value));
 	}
 

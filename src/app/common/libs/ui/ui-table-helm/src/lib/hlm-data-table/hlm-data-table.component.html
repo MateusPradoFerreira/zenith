@@ -32,9 +32,9 @@
 </ng-template>
 
 <ng-template #actionBarTemplate>
-  <button *ngIf="pagination()" hlmBtn [hlmBtnIcon]="this.sort() === 'ASC'? 'arrow-up-down' : 'arrow-down-up'" variant="outline" size="icon" (click)="handleToggleSort()"></button>
+  <button *ngIf="pagination()" hlmBtn [hlmBtnIcon]="this.sort() === 'ASC'? 'arrow-up-down' : 'arrow-down-up'" variant="outline" (click)="handleToggleSort()">Ordenação</button>
   <brn-popover *ngIf="filter()">
-    <button hlmBtn hlmBtnIcon="list-filter" variant="outline" brnPopoverTrigger size="icon"></button>
+    <button hlmBtn hlmBtnIcon="list-filter" variant="outline" brnPopoverTrigger>Filtros</button>
     <div hlmPopoverContent class="w-64 mt-1" *brnPopoverContent="let ctx">
       <div class="mb-3 col-span-12 xl:col-span-2 -mt-3 -mx-3 px-4 py-2 bg-slate-50 border-b border-slate-200 rounded-t-lg flex items-center justify-between">
         <span class="text-sm">Filtros</span>

@@ -97,7 +97,7 @@ export class HlmDialogContentComponent implements OnInit {
 	ngOnInit(): void {
 		const componentRef: any = this.viewRef.createComponent(this.component);
     Object.entries(this.inputs).forEach(([prop, value]) => {
-      componentRef.setInput(prop, value);
+      if(prop in componentRef.instance) componentRef.setInput(prop, value);
     });
     Object.entries(this.events).forEach(([prop, value]) => {
       componentRef.instance[prop].subscribe(value);

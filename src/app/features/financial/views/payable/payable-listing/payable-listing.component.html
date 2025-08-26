@@ -18,6 +18,20 @@
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
+        <div class="hlm-float-label col-span-2">
+          <hlm-date-picker formControlName="startsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()">
+            <span>Escolha uma Data</span>
+          </hlm-date-picker>
+          <label>Início</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <hlm-date-picker formControlName="endsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()">
+            <span>Escolha uma Data</span>
+          </hlm-date-picker>
+          <label>Fim</label>
+        </div>
+
         <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
         <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
       </ng-container>
@@ -82,20 +96,6 @@
             </hlm-select-content>
           </brn-select>
           <label>Título</label>
-        </div>
-
-        <div class="hlm-float-label col-span-2">
-          <hlm-date-picker formControlName="startsAt" [forceSelection]="true">
-            <span>Escolha uma Data</span>
-          </hlm-date-picker>
-          <label>Início</label>
-        </div>
-
-        <div class="hlm-float-label col-span-2">
-          <hlm-date-picker formControlName="endsAt" [forceSelection]="true">
-            <span>Escolha uma Data</span>
-          </hlm-date-picker>
-          <label>Fim</label>
         </div>
 
         <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
