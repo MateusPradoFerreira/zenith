@@ -22,7 +22,7 @@ export class DialogFacade {
   open<TComponent = any>(component: Type<any>, { inputs, events, ...config }: DialogConfig<TComponent>) {
     return this.service.open(component, { 
       ...config,
-      context: { ...config?.context, inputs, events },
+      context: { ...config?.context, inputs: { isDialog: true, ...inputs }, events },
     });
   };
 

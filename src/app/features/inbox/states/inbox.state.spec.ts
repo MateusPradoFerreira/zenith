@@ -34,8 +34,9 @@ describe("InboxState", () => {
   });
 
   it("must update the inbox data in the state", () => {
-    state.update({ ...inbox, title: "Updated Inbox" });
-    expect(state.get(inbox.id)?.title).toEqual("Updated Inbox");
+    const updatedInbox = { ...inbox, title: "Updated Inbox" };
+    state.update(updatedInbox);
+    expect(state.get(inbox.id)).toEqual(updatedInbox);
   });
 
   it("must get null of invalid inbox data in the state", () => {

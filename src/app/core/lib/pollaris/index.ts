@@ -289,7 +289,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  openToCreate(inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent>): Observable<any> {
+  openToCreate(inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent> = {}): Observable<any> {
     return this.dialogFacade.open<BaseFormComponentDirective<TRecordModel>>(this.component, {
       header: this.header,
       width: this.dialogWidth,
@@ -297,7 +297,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     }).closed$;
   };
 
-  openToUpdate(id: PllID, inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent>): Observable<any> {
+  openToUpdate(id: PllID, inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent> = {}): Observable<any> {
     return this.dialogFacade.open<BaseFormComponentDirective<TRecordModel>>(this.component, {
       header: this.header,
       width: this.dialogWidth,

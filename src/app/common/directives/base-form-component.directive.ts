@@ -20,6 +20,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   
   id = model<PllID>(null);
   closeOnSave = model<boolean>(true);
+  isDialog = input<boolean>(false);
 
   abstract facade: PllFacade<TRecordModel, any, any, any, any>;
   private readonly _context = injectBrnDialogCtx();

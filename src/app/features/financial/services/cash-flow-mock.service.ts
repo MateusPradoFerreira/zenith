@@ -83,6 +83,20 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       type: "MARK",
     };
 
+    const percentageBalance: CashFlow = {
+      id: null,
+      name: "Variação %",
+      values: periods.map((_, index) => {
+        const opening = openingBalance.values[index];
+        const final = finalBalance.values[index];
+        if(!opening || !final) return 0;
+        const percent = ((final - opening) / Math.abs(opening)) * 100;
+        return Math.round(percent * 100) / 100;
+      }),
+      children: null,
+      type: "PERCENT",
+    };
+
     const payableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().map(bank => ({
       id: bank.id,
       name: `--- ${bank.name}`,
@@ -130,6 +144,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
     flow.push(formatedPeriods);
     flow.push(payableBalance);
     flow.push(receivableBalance);
+    flow.push(percentageBalance);
     flow.push(openingBalance);
     flow.push(finalBalance);
 
