@@ -25,7 +25,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   dialogInputs: Signal<Inputkeys<any>> = computed(() => ({}));
 
   filter: PllFormSchema<TRecordQueryParams>;
-  values = computed(() => this.facade.data().data);
+  values = computed(() => this.facade.data()?.data || []);
   pagination = computed(() => this.facade.data().pagination);
 
   loading = signal<boolean>(false);

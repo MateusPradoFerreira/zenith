@@ -7,8 +7,8 @@
   </div>
 
   <div class="col-span-12 xl:col-span-8 flex items-center">
-    <hlm-checkbox *ngIf="form.value.type === 'SCHEDULE'" id="active-field" class="mr-2" formControlName="active" />
-    <label *ngIf="form.value.type === 'SCHEDULE'" for="active-field">Ativo</label>
+    <hlm-checkbox id="active-field" class="mr-2" formControlName="active" />
+    <label for="active-field">Ativo</label>
   </div>
 
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>

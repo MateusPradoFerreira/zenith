@@ -1,0 +1,13 @@
+<div [class]="_computedClass()">
+  <hlm-data-table [offsetHeight]="offsetHeight()" header="Contas Bancária" [values]="values()" [filter]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+    <ng-template hlmTemplate="row" let-rowData>
+      <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
+    </ng-template>
+    <ng-template hlmTemplate="action">
+      <ng-container [formGroup]="filter.form" *ngIf="filter">
+        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
+        <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
+      </ng-container>
+    </ng-template>
+  </hlm-data-table>
+</div>

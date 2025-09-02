@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective, event } from '../../../../../common/directives/base-form-component.directive';
 import { Schedule } from '../../../models/schedule.model';
-import { ScheduleFacade, ScheduleFrequencyOptions, ScheduleWeekdayOptions } from '../../../facades/schedule.facade';
+import { ScheduleFacade } from '../../../facades/schedule.facade';
 import { switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
@@ -21,18 +21,7 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
 
   scheduleCategoryFacade = inject(ScheduleCategoryFacade);
 
-  frequencyOptions = ScheduleFrequencyOptions;
-  weekdayOptions = ScheduleWeekdayOptions;
   scheduleCategoryOptions: ScheduleCategory[] = [];
-
-  get frequencySuffix() {
-    if(!this.form) return "dia";
-    if(this.form.value.frequency === "NO_REPETITION") return this.form.value.interval > 1? "dias" : "dia";
-    if(this.form.value.frequency === "DAILY") return this.form.value.interval > 1? "dias" : "dia";
-    if(this.form.value.frequency === "WEEKLY") return this.form.value.interval > 1? "semanas" : "semana";
-    if(this.form.value.frequency === "MONTHLY") return this.form.value.interval > 1? "meses" : "mês";
-    return this.form.value.interval > 1? "anos" : "ano";
-  };
   
   override onNgOnInit = event(
     switchMap(() => this.handleGetScheduleCategoryOptions()),
@@ -47,5 +36,5 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
     if(this.scheduleCategoryOptions.length) this.form.controls.categoryId.setValue(this.scheduleCategoryOptions[0].id);
   }));
 
-  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
+  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
 };

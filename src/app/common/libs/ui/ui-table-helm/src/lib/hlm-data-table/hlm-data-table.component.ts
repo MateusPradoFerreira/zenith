@@ -24,6 +24,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
 
   header = input<string>();
 
+  loading = input<boolean>(false);
   values = input<HlmDataTableRecord[]>([]);
   columns = input<HlmDataTableColumn[]>([]);
 
@@ -102,11 +103,14 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ContentChild("row", { static: true }) rowTemplate: TemplateRef<any>;
   @ContentChild("cell", { static: true }) cellTemplate: TemplateRef<any>;
   @ContentChild("action", { static: true }) actionTemplate: TemplateRef<any>;
+  @ContentChild("left-action", { static: true }) leftActionTemplate: TemplateRef<any>;
   @ContentChild("filter", { static: true }) filterTemplate: TemplateRef<any>;
   @ContentChild("selection", { static: true }) selectionTemplate: TemplateRef<any>;
   @ContentChild("empty-actions", { static: true }) emptyActionsTemplate: TemplateRef<any>;
   @ContentChild("body", { static: true }) bodyTemplate: TemplateRef<any>;
   @ContentChild("table-body", { static: true }) tableBodyTemplate: TemplateRef<any>;
+  @ContentChild("prev-body", { static: true }) prevBodyTemplate: TemplateRef<any>;
+  @ContentChild("layout-body", { static: true }) layoutBodyTemplate: TemplateRef<any>;
 
   @ViewChild("table", { static: true }) tableTemplate: TemplateRef<any>;
   @ViewChild("grid", { static: true }) gridTemplate: TemplateRef<any>;
@@ -119,11 +123,14 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
       if (ngTemplate.name === "row") this.rowTemplate = ngTemplate.template;
       if (ngTemplate.name === "cell") this.cellTemplate = ngTemplate.template;
       if (ngTemplate.name === "action") this.actionTemplate = ngTemplate.template;
+      if (ngTemplate.name === "left-action") this.leftActionTemplate = ngTemplate.template;
       if (ngTemplate.name === "filter") this.filterTemplate = ngTemplate.template;
       if (ngTemplate.name === "selection") this.selectionTemplate = ngTemplate.template;
       if (ngTemplate.name === "empty-actions") this.emptyActionsTemplate = ngTemplate.template;
       if (ngTemplate.name === "body") this.bodyTemplate = ngTemplate.template;
       if (ngTemplate.name === "table-body") this.tableBodyTemplate = ngTemplate.template;
+      if (ngTemplate.name === "prev-body") this.prevBodyTemplate = ngTemplate.template;
+      if (ngTemplate.name === "layout-body") this.layoutBodyTemplate = ngTemplate.template;
     };
   };
 

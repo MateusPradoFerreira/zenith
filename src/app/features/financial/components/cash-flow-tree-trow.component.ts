@@ -9,7 +9,7 @@ import { ReceivableFacade } from "../facades/receivable.facade";
   selector: 'app-cash-flow-tree-trow',
   imports: [GlobalModule],
   template: `
-    <hlm-trow (click)="handleClickRow()" class="{{ level() >= 2? 'hover:bg-slate-50' : data().type === 'MARK' || data().type === 'BANK'? ( level()? 'bg-slate-50' : 'bg-slate-100 hover:bg-slate-100') : 'hover:bg-white' }} {{ level()? 'cursor-pointer' : '' }}">
+    <hlm-trow *ngIf="data().type === 'BANK'? data()?.children?.length : true" (click)="handleClickRow()" class="{{ level() >= 2? 'hover:bg-slate-50' : data().type === 'MARK' || data().type === 'BANK'? ( level()? 'bg-slate-50' : 'bg-slate-100 hover:bg-slate-100') : 'hover:bg-white' }} {{ level()? 'cursor-pointer' : '' }}">
       <hlm-td class="truncate flex-1 justify-between">
         <span>{{ data().name }}</span>
         <i-lucide *ngIf="level() === 1" [name]="opened()? 'chevron-down' : 'chevron-up'" size="16" class="cursor-pointer" />

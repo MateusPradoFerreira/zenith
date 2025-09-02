@@ -50,7 +50,7 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 
 			<div class="flex relative group">
 				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled()" [id]="key" (blur)="_handleBlurInput()"/>
-				<button brnPopoverTrigger [disabled]="state().disabled()" class="absolute top-0 right-0 transition-colors disabled:pointer-events-none disabled:bg-slate-50 disabled:text-slate-700 border-y border-r border-slate-200 cursor-pointer bg-background rounded-r-md flex items-center justify-center w-[38px] h-[38px] shrink-0"> <ng-icon hlm size="sm" name="lucideCalendar"/> </button>
+				<button brnPopoverTrigger type="button" [disabled]="state().disabled()" class="absolute top-0 right-0 transition-colors disabled:pointer-events-none hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-700 border-y border-r border-slate-200 cursor-pointer bg-background rounded-r-md flex items-center justify-center w-[38px] h-[38px] shrink-0"> <ng-icon hlm size="sm" name="lucideCalendar"/> </button>
 			</div>
 
 			<div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">

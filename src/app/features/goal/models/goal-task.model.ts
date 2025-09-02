@@ -1,12 +1,12 @@
+import { Colors } from "../../../common/types/colors.type";
 import { PllID } from "../../../core/lib/pollaris";
-import { GoalColor } from "./goal.model";
 
 export class GoalTask {
   id: PllID;
   goalId: PllID;
   name: string;
   description: string;
-  color: GoalColor;
+  color: Colors;
   duration: number;
 
   constructor(props: Partial<GoalTask>) {

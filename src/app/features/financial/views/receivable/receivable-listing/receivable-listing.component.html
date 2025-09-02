@@ -3,9 +3,9 @@
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="truncate w-44">{{ rowData.docNumber }}-{{ formatSequence(rowData.sequence) }}</hlm-td>
       <hlm-td class="truncate flex-1">{{ rowData.name }}</hlm-td>
-      <hlm-td class="truncate w-36">{{ rowData.bankAccount }}</hlm-td>
-      <hlm-td class="truncate w-36">{{ rowData.centerOfCost }}</hlm-td>
-      <hlm-td class="truncate w-36">{{ rowData.planOfAccount }}</hlm-td>
+      <hlm-td class="truncate w-42">{{ rowData.bankAccount }}</hlm-td>
+      <hlm-td class="truncate w-42">{{ rowData.centerOfCost }}</hlm-td>
+      <hlm-td class="truncate w-42">{{ rowData.planOfAccount }}</hlm-td>
       <hlm-td class="truncate w-36 justify-end">{{ rowData.value | currency: "BRL" }}</hlm-td>
       <hlm-td class="truncate w-36">
         <button hlmBtn size="sm" variant="soft" severity="warn" *ngIf="rowData.status === 'PENDING'">Pendente</button>

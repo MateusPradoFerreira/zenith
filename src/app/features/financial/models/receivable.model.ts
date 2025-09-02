@@ -4,6 +4,7 @@ export type ReceivableStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
 
 export class Receivable {
   id: PllID;
+  recurrenceId: PllID;
   centerOfCostId: PllID;
   planOfAccountId: PllID;
   secrecyId: PllID;

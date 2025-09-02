@@ -37,8 +37,8 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
     const flow: CashFlow[] = [];
 
     const start = moment().set("year", 1990).startOf("year");
-    const periodStart = moment().set("year", params.year).startOf("year");
-    const periodEnd = moment().set("year", params.year).endOf("year");
+    const periodStart = moment(params.startsAt).startOf("year");
+    const periodEnd = moment(params.startsAt).endOf("year");
     const periods: { startsAt: Date, endsAt: Date }[] = [];
     const periodRange = 11;
 
@@ -48,8 +48,18 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
     });
 
     const normalize = (value: any) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-    const payables = this.payableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
-    const receivables = this.receivableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+    let payables = this.payableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+    let receivables = this.receivableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+
+    payables = payables.filter(record => !params.centerOfCostId? true : record.centerOfCostId === params.centerOfCostId);
+    payables = payables.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
+    payables = payables.filter(record => !params.secrecyId? true : record.secrecyId === params.secrecyId);
+    payables = payables.filter(record => !params.bankAccountId? true : record.bankAccountId === params.bankAccountId);
+
+    receivables = receivables.filter(record => !params.centerOfCostId? true : record.centerOfCostId === params.centerOfCostId);
+    receivables = receivables.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
+    receivables = receivables.filter(record => !params.secrecyId? true : record.secrecyId === params.secrecyId);
+    receivables = receivables.filter(record => !params.bankAccountId? true : record.bankAccountId === params.bankAccountId);
 
     const formatedPeriods: CashFlow = {
       id: null,
@@ -97,7 +107,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       type: "PERCENT",
     };
 
-    const payableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().map(bank => ({
+    const payableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => payables.filter(payable => payable.bankAccountId === bank.id && moment(payable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0) * -1),
@@ -119,7 +129,7 @@ export class CashFlowMockedService extends PllMockedRestService<CashFlow> implem
       type: "PAYABLE_MARK",
     };
 
-    const receivableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().map(bank => ({
+    const receivableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => receivables.filter(receivable => receivable.bankAccountId === bank.id && moment(receivable.paidAt).isBetween(period.startsAt, period.endsAt)).reduce((prev, crr) => prev + crr.value, 0)),

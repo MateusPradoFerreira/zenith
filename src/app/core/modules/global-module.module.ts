@@ -19,6 +19,7 @@ import { HlmCheckboxModule } from '../../common/libs/ui/ui-checkbox-helm/src';
 import { HlmTabsModule } from '../../common/libs/ui/ui-tabs-helm/src';
 import { HlmMenuModule } from '../../common/libs/ui/ui-menu-helm/src';
 import { NgxCurrencyDirective } from "ngx-currency";
+import { CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter, CalendarModule, CalendarUtils } from 'angular-calendar';
 
 const generalModules = [
 	NgxMaskDirective, 
@@ -36,6 +37,7 @@ const generalModules = [
 	CurrencyPipe,
 	NgTemplateOutlet,
 	NgxCurrencyDirective,
+	CalendarModule
 ];
 
 const spartanUIModules = [
@@ -61,5 +63,6 @@ const spartanUIModules = [
 		...spartanUIModules,
 	],
 	exports: [ ...generalModules, ...spartanUIModules ],
+  providers: [CalendarUtils, CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter],
 })
 export class GlobalModule {}

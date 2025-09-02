@@ -210,6 +210,15 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
+  clearData() {
+    this.data.set({
+      data: [],
+      pagination: {
+        page: 1,
+      },
+    });
+  };
+
   getRecord(id: PllID): Observable<TRecordModel> {
     this.loading.set(true);
     return of(this.state.get(id)).pipe(

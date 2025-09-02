@@ -4,6 +4,7 @@ export type PayableStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
 
 export class Payable {
   id: PllID;
+  recurrenceId: PllID;
   centerOfCostId: PllID;
   planOfAccountId: PllID;
   secrecyId: PllID;

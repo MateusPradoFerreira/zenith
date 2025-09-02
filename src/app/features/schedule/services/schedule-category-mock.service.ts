@@ -9,7 +9,6 @@ import { Injectable } from "@angular/core";
 export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): ScheduleCategory {
   return new ScheduleCategory({
     name: "New Schedule Category",
-    type: "SCHEDULE",
     active: true,
     ...data,
     id: data.id || uuid(),
@@ -17,10 +16,11 @@ export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): S
 };
 
 export const INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA: ScheduleCategory[] = [
-  createMockedScheduleCategory({ name: "Evento", color: "#615fff" }),
-  createMockedScheduleCategory({ name: "Tarefa", color: "#2b7fff" }),
-  createMockedScheduleCategory({ name: "Despesa", type: "PAYABLE", color: "#ff2056" }),
-  createMockedScheduleCategory({ name: "Receita", type: "RECEIVABLE", color: "#00bc7d" }),
+  createMockedScheduleCategory({ name: "Reunião", color: "TEAL" }),
+  createMockedScheduleCategory({ name: "Tarefa", color: "VIOLET" }),
+  createMockedScheduleCategory({ name: "Evento", color: "BLUE" }),
+  createMockedScheduleCategory({ name: "Despesa", color: "ROSE" }),
+  createMockedScheduleCategory({ name: "Receita", color: "EMERALD" }),
 ];
 
 @Injectable({ providedIn: "root" })
@@ -42,7 +42,6 @@ export class ScheduleCategoryMockedService extends PllMockedRestService<Schedule
   };
 
   private _filtering(records: ScheduleCategory[], params: GetAllScheduleCategoryByFilterParams): ScheduleCategory[] {
-    const filtered = records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
-    return filtered.filter(record => !params.type || params.type === "ALL"? true : params.type === record.type);
+    return records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
   };
 };

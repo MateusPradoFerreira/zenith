@@ -77,7 +77,7 @@ import type { ClassValue } from 'clsx';
 
 				<table class="w-full border-collapse space-y-1" brnCalendarGrid>
 					<thead>
-						<tr class="flex">
+						<tr class="flex mb-1 gap-0.5">
 							<th
 								*brnCalendarWeekday="let weekday"
 								scope="col"
@@ -90,7 +90,7 @@ import type { ClassValue } from 'clsx';
 					</thead>
 
 					<tbody role="rowgroup">
-						<tr *brnCalendarWeek="let week" class="mt-2 flex w-full">
+						<tr *brnCalendarWeek="let week" class="mt-1 flex w-full gap-0.5">
 							@for (date of week; track dateAdapter.getTime(date)) {
 								<td
 									brnCalendarCell
@@ -159,8 +159,8 @@ export class HlmCalendarComponent<T> {
 		buttonVariants({ variant: 'ghost' }),
 		'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
 		'data-[outside]:text-muted-foreground data-[outside]:opacity-50 data-[outside]:aria-selected:bg-accent/50 data-[outside]:aria-selected:text-muted-foreground data-[outside]:aria-selected:opacity-30',
-		'data-[today]:bg-accent data-[today]:text-accent-foreground',
-		'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground',
+		'data-[today]:bg-slate-100 data-[today]:text-accent-foreground',
+		'data-[selected]:bg-violet-100 data-[selected]:text-violet-500 data-[selected]:hover:bg-violet-100 data-[selected]:hover:text-violet-500 data-[selected]:focus:bg-violet-100 data-[selected]:focus:text-violet-500',
 		'data-[disabled]:text-muted-foreground data-[disabled]:opacity-50',
 	);
 }

@@ -1,18 +1,84 @@
 <div [class]="_computedClass()">
-  <hlm-data-table [offsetHeight]="offsetHeight()" header="Fluxo de Caixa" [values]="values()" [columns]="columns()" [filter]="false" [pagination]="false" (onInputSearch)="onInputSearch($event)">
+  <hlm-data-table [offsetHeight]="offsetHeight()" header="Fluxo de Caixa" [offsetHeight]="100" [values]="values()" [columns]="columns()" [pagination]="false" (onInputSearch)="onInputSearch($event)">
     <ng-template hlmTemplate="table-body" let-rowData>
       <ng-container *ngFor="let rowData of values()">
         <app-cash-flow-tree-trow [data]="rowData"/>
       </ng-container>
     </ng-template>
+    <ng-template hlmTemplate="prev-body" let-rowData>
+      <div class="grid grid-cols-12 gap-2 px-4 pb-2">
+        <app-cash-flow-chart-card label="Receita Total" [values]="receivableValues()" class="col-span-3" />
+        <app-cash-flow-chart-card label="Rendimento Total" [values]="rendValues()" class="col-span-3" />
+        <app-cash-flow-chart-card label="Despesa Total" [values]="payableValues()" class="col-span-3" />
+        <app-cash-flow-chart-card label="Á Pagar" [values]="toPayValues()" class="col-span-3" />
+      </div>
+    </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
-        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
-        <div class="hlm-float-label col-span-12 xl:col-span-12">
-          <input hlmInput type="number" formControlName="year" (change)="updateUI()"/>
-          <label>Ano</label>
+        <div class="hlm-float-label col-span-2">
+          <hlm-date-picker formControlName="startsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()">
+            <span>Escolha uma Data</span>
+          </hlm-date-picker>
+          <label>Data</label>
         </div>
+
+        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
+        <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
       </ng-container>
+    </ng-template>
+    <ng-template hlmTemplate="filter" let-ctx>
+      <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="bankAccountId" placeholder="Selecione um Centro de Custo">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+              <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Conta Bancária</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="centerOfCostId" placeholder="Selecione um Centro de Custo">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+              <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.id">{{ option.name }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Centro de Custo</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="planOfAccountId" placeholder="Selecione um Plano de Conta">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+              <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Plano de Conta</label>
+        </div>
+
+        <div class="hlm-float-label col-span-2">
+          <brn-select formControlName="secrecyId" placeholder="Selecione um Título">
+            <hlm-select-trigger>
+              <hlm-select-value />
+            </hlm-select-trigger>
+            <hlm-select-content>
+              <hlm-option *ngFor="let option of secrecyOptions" [value]="option.id">{{ option.name }}</hlm-option>
+            </hlm-select-content>
+          </brn-select>
+          <label>Título</label>
+        </div>
+
+        <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
+        <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
+      </div>
     </ng-template>
   </hlm-data-table>
 </div>

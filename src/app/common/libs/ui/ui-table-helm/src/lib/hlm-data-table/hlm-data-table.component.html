@@ -1,5 +1,5 @@
 <ng-template #selectionButtonTemplate>
-  <div class="hlm-button-group srink-0 mr-2" *ngIf="hasSelection()">
+  <div class="hlm-button-group shrink-0" *ngIf="hasSelection()">
     <button hlmBtn variant="outline" brnPopoverTrigger>{{ selection().length }} Selecionados</button>
     <ng-container *ngIf="selectionTemplate" [ngTemplateOutlet]="selectionTemplate" />
     <button hlmBtn size="icon" variant="outline" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="selectionMenu"></button>
@@ -47,12 +47,16 @@
 </ng-template>
 
 <div class="px-4 py-2 hidden xl:flex items-center gap-2">
+  <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
   <ng-container *ngTemplateOutlet="selectionButtonTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="actionBarTemplate"></ng-container>
 </div>
 
 <div class="px-4 py-2 flex xl:hidden flex-col gap-2">
+  <div class="flex gap-2" *ngIf="leftActionTemplate">
+    <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
+  </div>
   <ng-container *ngTemplateOutlet="selectionButtonTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
   <div class="flex gap-2">
@@ -60,8 +64,11 @@
   </div>
 </div>
 
+<ng-container *ngIf="prevBodyTemplate" [ngTemplateOutlet]="prevBodyTemplate"></ng-container>
+
 <ng-container *ngIf="bodyTemplate" [ngTemplateOutlet]="bodyTemplate"></ng-container>
-<ng-container *ngIf="body() && !bodyTemplate" [ngTemplateOutlet]="body()" />
+<ng-container *ngIf="!bodyTemplate && layoutBodyTemplate && !['table', 'grid'].includes(layout())" [ngTemplateOutlet]="layoutBodyTemplate"></ng-container>
+<ng-container *ngIf="!bodyTemplate && body() && ['table', 'grid'].includes(layout())" [ngTemplateOutlet]="body()" />
 
 <ng-template #table>
   <div [style]="{ height: mainHeight() }">
@@ -75,7 +82,7 @@
         </hlm-th>
         <hlm-th *ngIf="actionFn()" class="w-16" />
       </hlm-trow>
-      <div class="h-full overflow-y-scroll custom-scroll">
+      <div class="h-full overflow-y-scroll custom-scroll {{ !paginatedValues().length && !tableBodyTemplate? '[&_hlm-trow:last-child]:border-b-0' : '' }}">
         <ng-container *ngIf="tableBodyTemplate" [ngTemplateOutlet]="tableBodyTemplate"></ng-container>
         <ng-container *ngIf="!tableBodyTemplate">
           <hlm-trow class="cursor-pointer overflow-hidden {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
@@ -83,9 +90,9 @@
               <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
             </hlm-td>
             <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
-            <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0" (click)="$event.stopPropagation()">
+            <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" (click)="$event.stopPropagation()">
               <span class="flex items-center gap-2">
-                <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu"></button>
+                <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
               </span>
               <ng-template #menu>
                 <hlm-menu class="w-48">
@@ -162,12 +169,12 @@
 </ng-template>
 
 <ng-template #grid>
-  <div class="grid grid-cols-4 gap-2 mb-2">
+  <div class="grid grid-cols-4 gap-2 mb-2 overflow-y-auto" [style]="{ height: mainHeight() }">
     <div *ngFor="let rowData of paginatedValues()">
       <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: rowData }"></ng-container>
     </div>
   </div>
-  <div class="flex justify-end bg-white border border-slate-200 rounded-md">
+  <div class="flex justify-end bg-white border-t border-slate-200">
     <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="totalItems() || filteredValues.length"/>
   </div>
 </ng-template>

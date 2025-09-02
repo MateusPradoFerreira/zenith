@@ -8,6 +8,7 @@ import { ScheduleListingComponent } from './features/schedule/views/schedule/sch
 import { ReceivableListingComponent } from './features/financial/views/receivable/receivable-listing/receivable-listing.component';
 import { ScheduleRegistriesPanelComponent } from './features/schedule/views/schedule-registries-panel/schedule-registries-panel.component';
 import { CashFlowListingComponent } from './features/financial/views/cash-flow/cash-flow-listing/cash-flow-listing.component';
+import { GoalListingComponent } from './features/goal/views/goal/goal-listing/goal-listing.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: '/dashboard', pathMatch: 'full' },
@@ -20,5 +21,6 @@ export const routes: Routes = [
     { path: "schedules", component: ScheduleListingComponent, data: { header: "Agenda" } },
     { path: "schedule-registries", component: ScheduleRegistriesPanelComponent, data: { header: "Cadastros da Agenda" }},
     { path: "cash-flow", component: CashFlowListingComponent, data: { header: "Fluxo de Caixa" }},
+    { path: "goals", component: GoalListingComponent, data: { header: "Metas" }},
   ]},
 ];

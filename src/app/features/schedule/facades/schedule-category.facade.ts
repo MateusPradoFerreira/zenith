@@ -28,17 +28,13 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
     fields: {
       id: { value: null },
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
-      type: { value: "SCHEDULE", validators: [Validators.required], onChange: (value, form) => {
-        if(value !== "SCHEDULE") form.controls.name.disable();
-      }},
-      color: { value: "#2b7fff", validators: [Validators.required] },
+      color: { value: "VIOLET", validators: [Validators.required] },
       active: { value: true },
     },
   };
 
   override filterSchema: PllFormSchemaConfig<ScheduleCategoryUseQueryParams> = {
     fields: {
-      type: { value: "ALL" },
       status: { value: "ACTIVE" },
     },
   };

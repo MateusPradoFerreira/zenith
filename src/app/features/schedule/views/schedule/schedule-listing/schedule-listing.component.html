@@ -1,17 +1,63 @@
-<div [class]="_computedClass()">
-  <hlm-data-table [offsetHeight]="offsetHeight()" header="Títulos" layout="agenda" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
-    <ng-template hlmTemplate="action">
-      <ng-container [formGroup]="filter.form" *ngIf="filter">
-        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
-        <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
-      </ng-container>
-    </ng-template>
-    <ng-template hlmTemplate="filter" let-ctx>
-      <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
-        <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
-        <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
-      </div>
-    </ng-template>
-  </hlm-data-table>
+<div [class]="styleClass()">
+  <ng-container [ngTemplateOutlet]="sidebar" *ngIf="sidebarActive()" />
+  <div>
+    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+      <ng-template hlmTemplate="layout-body">
+        <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.mainHeight() }">
+          <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" [dayEndHour]="19" />
+          <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" [dayStartHour]="6" [dayEndHour]="19"  />
+          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" />
+        </div>
+      </ng-template>
+      <ng-template hlmTemplate="row" let-rowData>
+        <hlm-td class="flex-1">{{ rowData.title }}</hlm-td>
+      </ng-template>
+      <ng-template hlmTemplate="left-action">
+        <ng-container [formGroup]="filter.form" *ngIf="filter">
+          <div class="hlm-button-group">
+            <button hlmBtn (click)="layout.set('calendar')" hlmBtnIcon="calendar" [severity]="layout() === 'calendar'? 'help' : 'primary'" [variant]="layout() === 'calendar'? 'soft' : 'outline'" size="icon"></button>
+            <button hlmBtn (click)="layout.set('table')" hlmBtnIcon="table" [severity]="layout() === 'table'? 'help' : 'primary'" [variant]="layout() === 'table'? 'soft' : 'outline'" size="icon"></button>
+          </div>
+          <button hlmBtn (click)="sidebarActive.set(!sidebarActive())" hlmBtnIcon="panel-left-dashed" variant="outline" size="icon"></button>
+        </ng-container>
+      </ng-template>
+      <ng-template hlmTemplate="action">
+        <ng-container [formGroup]="filter.form" *ngIf="filter">
+          <div class="hlm-button-group">
+            <button hlmBtn (click)="handleChangeRange('day')" [severity]="range() === 'day'? 'help' : 'primary'" [variant]="range() === 'day'? 'soft' : 'outline'">Dia</button>
+            <button hlmBtn (click)="handleChangeRange('week')" [severity]="range() === 'week'? 'help' : 'primary'" [variant]="range() === 'week'? 'soft' : 'outline'">Semana</button>
+            <button hlmBtn (click)="handleChangeRange('month')" [severity]="range() === 'month'? 'help' : 'primary'" [variant]="range() === 'month'? 'soft' : 'outline'">Mês</button>
+          </div>
+
+          <button hlmBtn (click)="onDateChange()" [severity]="isToday()? 'help' : 'primary'" [variant]="isToday()? 'soft' : 'outline'">Hoje</button>
+
+          <div class="hlm-button-group shrink-0">
+            <button hlmBtn (click)="handleSetPrevRange()" hlmBtnIcon="chevron-left" variant="outline" size="icon"></button>
+            <brn-popover sideOffset="5" class="peer">
+              <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ date() | date : "E dd/MM/YYYY" }}</button>
+              <div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
+                <hlm-calendar calendarClass="border-0 rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
+              </div>
+            </brn-popover>
+            <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
+          </div>
+
+          <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" (click)="updateUI()"></button>
+          <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
+        </ng-container>
+      </ng-template>
+      <ng-template hlmTemplate="filter" let-ctx>
+        <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
+          <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
+          <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
+        </div>
+      </ng-template>
+    </hlm-data-table>
+  </div>
 </div>
 
+<ng-template #sidebar>
+  <div class="border-r border-slate-200 overflow-y-auto custom-scroll grid gap-2">
+    <hlm-calendar calendarClass="border-0 border-b rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
+  </div>
+</ng-template>

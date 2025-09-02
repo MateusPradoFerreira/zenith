@@ -6,4 +6,14 @@ export class Util {
     for(let index = 0; index < months; index++) dates.push(moment(refence).startOf("month").add("months", index).toDate());
     return dates;
   };
+
+  static getTimedOur(date: Date, time: string): Date {
+    if(!time) time = moment().format("HH:mm:ss");
+    const mmTime = moment(time, "HH:mm:ss");
+    return moment(date)
+      .set("hour", mmTime.get("hour"))
+      .set("minutes", mmTime.get("minutes"))
+      .set("seconds", mmTime.get("seconds"))
+      .toDate();
+  };
 };

@@ -1,5 +1,4 @@
 import { PllID } from "../../../core/lib/pollaris";
-import { GoalColor } from "./goal.model";
 
 export class GoalItem {
   id: PllID;

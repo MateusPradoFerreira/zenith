@@ -31,6 +31,7 @@ export class ReceivableFacade extends PllFacade<Receivable, Receivable, Receivab
   override recordSchema: PllFormSchemaConfig<Receivable> = {
     fields: {
       id: { value: null },
+      recurrenceId: { value: null },
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       status: { value: "PENDING", validators: [Validators.required], onChange: (value, form) => {
         if(value === "PAID" || value === "CANCELLED") {

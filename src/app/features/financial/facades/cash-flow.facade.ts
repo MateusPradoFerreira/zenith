@@ -25,8 +25,13 @@ export class CashFlowFacade extends PllFacade<CashFlow, CashFlow, CashFlow, Cash
   override recordSchema: PllFormSchemaConfig<CashFlow>;
   override filterSchema: PllFormSchemaConfig<CashFlowUseQueryParams> = {
     fields: {
-      year: { value: moment().get("year") },
+      centerOfCostId: { value: null },
+      planOfAccountId: { value: null },
+      bankAccountId: { value: null },
+      secrecyId: { value: null },
+      startsAt: { value: moment().toDate() },
       query: { value: null },
+      period: { value: "YEARLY" },
     },
   };
 };

@@ -28,9 +28,9 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "N° Doc.", class: "w-44" },
     { header: "Title", class: "flex-1" },
-    { header: "Conta Bancária", class: "w-36" },
-    { header: "Centro de Custo", class: "w-36" },
-    { header: "Plano de Conta", class: "w-36" },
+    { header: "Conta Bancária", class: "w-42" },
+    { header: "Centro de Custo", class: "w-42" },
+    { header: "Plano de Conta", class: "w-42" },
     { header: "Valor", class: "w-36 justify-end" },
     { header: "Status", class: "w-36" },
     { header: "Emissão", class: "w-36" },
