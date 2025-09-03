@@ -73,7 +73,7 @@
 <ng-template #table>
   <div [style]="{ height: mainHeight() }">
     <hlm-table hlm stickyHeader [class]="_computedClass()">
-      <hlm-trow class="bg-slate-50 mr-1.5">
+      <hlm-trow class="bg-slate-50 mr-1.5" *ngIf="colHeader() && columns()?.length">
         <hlm-th *ngIf="multiselect()" class="!px-4">
           <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
         </hlm-th>

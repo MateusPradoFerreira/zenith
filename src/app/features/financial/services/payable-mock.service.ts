@@ -96,7 +96,7 @@ export class PayableMockedService extends PllMockedRestService<Payable> implemen
     records = records.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
     records = records.filter(record => !params.secrecyId? true : record.secrecyId === params.secrecyId);
     records = records.filter(record => !params.bankAccountId? true : record.bankAccountId === params.bankAccountId);
-    return records.filter(record => moment(record.status === "PAID"? record.paidAt : record.status === "OVERDUE"? record.dueAt : record.status === "CANCELLED"? record.cancelledAt : record.createdAt).isBetween(params.startsAt, params.endsAt));
+    return records.filter(record => moment(record.status === "PAID"? record.paidAt : record.status === "OVERDUE"? record.dueAt : record.status === "CANCELLED"? record.cancelledAt : record.createdAt).isBetween(params.startsAt, params.endsAt, "day", "[]"));
   };
 
   pay(id: PllID): Observable<Payable> {

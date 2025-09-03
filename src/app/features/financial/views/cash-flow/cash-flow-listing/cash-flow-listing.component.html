@@ -15,11 +15,15 @@
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
-        <div class="hlm-float-label col-span-2">
-          <hlm-date-picker formControlName="startsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()">
-            <span>Escolha uma Data</span>
-          </hlm-date-picker>
-          <label>Data</label>
+        <div class="hlm-button-group shrink-0">
+          <button hlmBtn (click)="handleSetPrevRange()" hlmBtnIcon="chevron-left" variant="outline" size="icon"></button>
+          <brn-popover sideOffset="5" class="peer">
+            <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ filter.value.startsAt | date : "dd/MM/YYYY" }}</button>
+            <div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
+              <hlm-calendar calendarClass="border-0 rounded-none" [date]="filter.value.startsAt" (dateChange)="onDateChange($event)"/>
+            </div>
+          </brn-popover>
+          <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
         </div>
 
         <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>

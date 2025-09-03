@@ -85,4 +85,19 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     this.filter.controls.query.setValue(query);
     this.updateUI();
   };
+
+  onDateChange(date?: Date) {
+    this.filter.controls.startsAt.setValue(date || new Date());
+    this.updateUI();
+  };
+
+  handleSetNextRange() {
+    this.filter.controls.startsAt.setValue(moment(this.filter.value.startsAt).add(1, "year").toDate());
+    this.updateUI();
+  };
+
+  handleSetPrevRange() {
+    this.filter.controls.startsAt.setValue(moment(this.filter.value.startsAt).subtract(1, "year").toDate());
+    this.updateUI();
+  };
 };

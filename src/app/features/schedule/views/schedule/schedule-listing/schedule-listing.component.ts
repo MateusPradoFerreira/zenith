@@ -9,8 +9,10 @@ import { ClassValue } from 'clsx';
 import { hlm } from '@spartan-ng/brain/core';
 import { CalendarEvent } from 'angular-calendar';
 import { PllPaginatedResponse } from '@pollaris';
-import { event } from '../../../../../common/directives/base-form-component.directive';
-import { tap } from 'rxjs';
+import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
+import { forkJoin, switchMap, tap } from 'rxjs';
+import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
+import { ScheduleCategory } from '../../../models/schedule-category.model';
 
 @Component({
   standalone: true,
@@ -20,33 +22,49 @@ import { tap } from 'rxjs';
 })
 export class ScheduleListingComponent extends BaseRecordListingComponentDirective<GetAllScheduleByFilterResponse, GetAllScheduleByFilterParams> {
   override facade = inject(ScheduleFacade);
-  override columns: WritableSignal<HlmDataTableColumn[]> = signal([
-    { header: "N° Doc.", class: "w-44" },
-    { header: "Title", class: "flex-1" },
-    { header: "Conta Bancária", class: "w-42" },
-    { header: "Centro de Custo", class: "w-42" },
-    { header: "Plano de Conta", class: "w-42" },
-    { header: "Valor", class: "w-36 justify-end" },
-    { header: "Status", class: "w-36" },
-    { header: "Emissão", class: "w-36" },
-    { header: "Vencimento", class: "w-36" },
-  ]);
+
+  scheduleCategoryFacade = inject(ScheduleCategoryFacade);
+  
+  scheduleCategoryOptions: ScheduleCategory[] = [];
 
   events = model<CalendarEvent[]>([]);
   date = model<Date>(new Date());
-  range = model<"day" | "week" | "month">("week");
+  range = model<"day" | "week" | "month">("month");
   layout = model<"table" | "calendar">("calendar");
   sidebarActive = model<boolean>(true);
 
+  groupedValues = computed<{ date: Date, values: GetAllScheduleByFilterResponse[] }[]>(() => {
+    if(this.layout() === "calendar") return [];
+    const groups: Record<string, GetAllScheduleByFilterResponse[]> = {};
+    for (const item of this.values()) {
+      const day = moment(item.startsAt).startOf("day").format("YYYY-MM-DD");
+      if (!groups[day]) groups[day] = [];
+      groups[day].push(item);
+    };
+
+    return Object.entries(groups).map(([day, schedules]) => ({
+      date: moment(day, "YYYY-MM-DD").toDate(),
+      values: schedules,
+    }));
+  });
+
   styleClass = computed<ClassValue>(() => hlm(
     this._computedClass(),
-    "grid grid-rows-1 h-full grid-cols-1",
-    this.sidebarActive() && "grid-cols-[296px_1fr]",
+    "grid grid-rows-1 h-full grid-cols-1 relative",
+    /* this.sidebarActive() && "grid-cols-[296px_1fr]", */
   ));
 
   isToday = computed<boolean>(() => moment().format("DD-MM-YYYY") === moment(this.date()).format("DD-MM-YYYY"));
 
+  override onNgOnInit = event(switchMap(() => forkJoin({
+    handleGetScheduleCategoryOptions: this.handleGetScheduleCategoryOptions(),
+  })));
+
   override onUpdateUI = event<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(tap(() => this.handleRemapEvents()));
+
+  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+    this.scheduleCategoryOptions = response.data;
+  }));
 
   handleRemapEvents() {
     this.events.set(this.facade.handleRemapEvents(this.values()));

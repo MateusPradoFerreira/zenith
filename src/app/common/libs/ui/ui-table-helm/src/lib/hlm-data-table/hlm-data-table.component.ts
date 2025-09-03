@@ -63,6 +63,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   filter = input<boolean>(true);
   pagination = input<boolean>(true);
   multiselect = input<boolean>(false);
+  colHeader = input<boolean>(true);
 
   // query
   page = model(1);

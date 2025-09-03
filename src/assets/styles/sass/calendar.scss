@@ -113,6 +113,7 @@
   cursor: default;
 }
 .cal-month-view .cal-day-cell.cal-today .cal-day-number {
+  @apply text-violet-500;
 }
 .cal-month-view .cal-open-day-events {
   padding: 15px;
@@ -174,6 +175,7 @@
   @apply text-sm text-violet-500;
 }
 .cal-month-view .cal-day-cell.cal-today {
+  @apply text-violet-500;
   @apply bg-slate-100;
 }
 .cal-month-view .cal-day-cell.cal-drag-over {
@@ -492,6 +494,7 @@
   @apply border-slate-200;
 }
 .cal-week-view .cal-header.cal-today {
+  @apply text-violet-500;
   @apply bg-slate-100;
 }
 .cal-week-view .cal-header.cal-weekend span {

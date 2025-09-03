@@ -1,24 +1,61 @@
 <div [class]="styleClass()">
-  <ng-container [ngTemplateOutlet]="sidebar" *ngIf="sidebarActive()" />
-  <div>
+  <ng-container [ngTemplateOutlet]="sidebar" />
+  <div class="transition-all {{ this.sidebarActive()? 'pl-[296px]' : '' }}">
     <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
       <ng-template hlmTemplate="layout-body">
         <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.mainHeight() }">
           <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" [dayEndHour]="19" />
           <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" [dayStartHour]="6" [dayEndHour]="19"  />
-          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" />
+          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1"  />
         </div>
       </ng-template>
-      <ng-template hlmTemplate="row" let-rowData>
-        <hlm-td class="flex-1">{{ rowData.title }}</hlm-td>
+      <ng-template hlmTemplate="table-body">
+        <ng-container *ngFor="let group of groupedValues()">
+          <hlm-trow class="overflow-hidden bg-slate-50">
+            <hlm-td class="flex-1 justify-between">
+              <span>{{ group.date | date : "EEEE" }}</span>
+              <span>{{ group.date | date : "dd 'de' MMMM 'de' YYYY" }}</span>
+            </hlm-td>
+          </hlm-trow>
+          <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden" (click)="handleUpdate(rowData)">
+            <hlm-td class="flex-1">
+              <span class="w-1 mr-3 h-6 rounded" [ngClass]="{
+                'bg-slate-300': rowData.color === 'SLATE',
+                'bg-zinc-300': rowData.color === 'ZINC',
+                'bg-stone-300': rowData.color === 'STONE',
+                'bg-red-300': rowData.color === 'RED',
+                'bg-orange-300': rowData.color === 'ORANGE',
+                'bg-amber-300': rowData.color === 'AMBER',
+                'bg-yellow-300': rowData.color === 'YELLOW',
+                'bg-lime-300': rowData.color === 'LIME',
+                'bg-green-300': rowData.color === 'GREEN',
+                'bg-emerald-300': rowData.color === 'EMERALD',
+                'bg-teal-300': rowData.color === 'TEAL',
+                'bg-cyan-300': rowData.color === 'CYAN',
+                'bg-sky-300': rowData.color === 'SKY',
+                'bg-blue-300': rowData.color === 'BLUE',
+                'bg-indigo-300': rowData.color === 'INDIGO',
+                'bg-violet-300': rowData.color === 'VIOLET',
+                'bg-purple-300': rowData.color === 'PURPLE',
+                'bg-fuchsia-300': rowData.color === 'FUCHSIA',
+                'bg-pink-300': rowData.color === 'PINK',
+                'bg-rose-300': rowData.color === 'ROSE'
+              }"></span>
+              {{ rowData.title }}
+            </hlm-td>
+            <hlm-td class="flex-1" *ngIf="rowData.startsAtTime">{{ rowData.startsAtTime }} {{ rowData.endsAtTime && rowData.endsAtTime !== rowData.startsAtTime? " - " + rowData.endsAtTime : "" }}</hlm-td>
+            <hlm-td class="flex-1" *ngIf="!rowData.startsAtTime">Dia Todo</hlm-td>
+            <hlm-td class="flex-1">{{ rowData.category }}</hlm-td>
+          </hlm-trow>
+        </ng-container>
       </ng-template>
       <ng-template hlmTemplate="left-action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
+          <button hlmBtn (click)="sidebarActive.set(!sidebarActive())" [hlmBtnIcon]="sidebarActive()? 'panel-left-close' : 'panel-left-open'" variant="outline" size="icon"></button>
           <div class="hlm-button-group">
             <button hlmBtn (click)="layout.set('calendar')" hlmBtnIcon="calendar" [severity]="layout() === 'calendar'? 'help' : 'primary'" [variant]="layout() === 'calendar'? 'soft' : 'outline'" size="icon"></button>
             <button hlmBtn (click)="layout.set('table')" hlmBtnIcon="table" [severity]="layout() === 'table'? 'help' : 'primary'" [variant]="layout() === 'table'? 'soft' : 'outline'" size="icon"></button>
           </div>
-          <button hlmBtn (click)="sidebarActive.set(!sidebarActive())" hlmBtnIcon="panel-left-dashed" variant="outline" size="icon"></button>
         </ng-container>
       </ng-template>
       <ng-template hlmTemplate="action">
@@ -42,7 +79,7 @@
             <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
           </div>
 
-          <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" (click)="updateUI()"></button>
+          <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
           <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
         </ng-container>
       </ng-template>
@@ -57,7 +94,46 @@
 </div>
 
 <ng-template #sidebar>
-  <div class="border-r border-slate-200 overflow-y-auto custom-scroll grid gap-2">
-    <hlm-calendar calendarClass="border-0 border-b rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
+  <div class="w-[296px] bg-white border-r border-slate-200 overflow-y-auto custom-scroll gap-2 z-10 absolute h-full transition-all {{ sidebarActive()? 'left-0' : 'left-[-296px]' }}">
+    <hlm-calendar calendarClass="border-0 rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
+    <div>
+      <div class="px-4 py-3 flex items-center justify-between border-t">
+        <h2 class="font-medium">Categorais</h2>
+        <i-lucide name="chevron-down" size="22" class="cursor-pointer" class="text-slate-500" />
+      </div>
+      <div class="px-4 flex items-center gap-3 mb-1.5" *ngFor="let option of scheduleCategoryOptions">
+        <div class="w-2 h-2 rounded " [ngClass]="{
+          'bg-slate-300': option.color === 'SLATE',
+          'bg-zinc-300': option.color === 'ZINC',
+          'bg-stone-300': option.color === 'STONE',
+          'bg-red-300': option.color === 'RED',
+          'bg-orange-300': option.color === 'ORANGE',
+          'bg-amber-300': option.color === 'AMBER',
+          'bg-yellow-300': option.color === 'YELLOW',
+          'bg-lime-300': option.color === 'LIME',
+          'bg-green-300': option.color === 'GREEN',
+          'bg-emerald-300': option.color === 'EMERALD',
+          'bg-teal-300': option.color === 'TEAL',
+          'bg-cyan-300': option.color === 'CYAN',
+          'bg-sky-300': option.color === 'SKY',
+          'bg-blue-300': option.color === 'BLUE',
+          'bg-indigo-300': option.color === 'INDIGO',
+          'bg-violet-300': option.color === 'VIOLET',
+          'bg-purple-300': option.color === 'PURPLE',
+          'bg-fuchsia-300': option.color === 'FUCHSIA',
+          'bg-pink-300': option.color === 'PINK',
+          'bg-rose-300': option.color === 'ROSE'
+        }"></div>
+        {{ option.name }}
+      </div>
+      <div class="px-4 mt-4 py-3 flex items-center justify-between border-t">
+        <h2 class="font-medium">Favoritos</h2>
+        <i-lucide name="chevron-right" size="22" class="cursor-pointer" class="text-slate-500" />
+      </div>
+      <div class="px-4 py-3 flex items-center justify-between border-t">
+        <h2 class="font-medium">Meu Calendário</h2>
+        <i-lucide name="chevron-right" size="22" class="cursor-pointer" class="text-slate-500" />
+      </div>
+    </div>
   </div>
 </ng-template>
