@@ -6,7 +6,6 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../services/schedule.service";
 import { ScheduleState } from "../states/schedule.state";
-import { ScheduleMapper } from "../mappers/schedule.mapper";
 import { ScheduleFormComponent } from "../views/schedule/schedule-form/schedule-form.component";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
@@ -18,10 +17,9 @@ import { colors } from "../../../common/types/colors.type";
 export type ScheduleUseQueryParams = GetAllScheduleByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class ScheduleFacade extends PllFacade<Schedule, Schedule, GetAllScheduleByFilterResponse, ScheduleUseQueryParams, ScheduleFormComponent> {
+export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterResponse, ScheduleUseQueryParams, ScheduleFormComponent> {
   override state = inject(ScheduleState);
   override service = inject(ScheduleService);
-  override mapper = inject(ScheduleMapper);
   override queryFn = (params: ScheduleUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Agendamento";
@@ -46,6 +44,7 @@ export class ScheduleFacade extends PllFacade<Schedule, Schedule, GetAllSchedule
 
   override filterSchema: PllFormSchemaConfig<ScheduleUseQueryParams> = {
     fields: {
+      categoryIds: { value: [] },
       startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("week").toDate(), validators: [Validators.required] },
     },

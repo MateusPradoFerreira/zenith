@@ -19,7 +19,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   offsetHeight = input<number>(0);
   isDialog = input<boolean>(false);
   
-  abstract facade: PllFacade<any, any, TRecordQueryModel, TRecordQueryParams>;
+  abstract facade: PllFacade<any, TRecordQueryModel, TRecordQueryParams>;
 
   dialogFacade = inject(DialogFacade);
   dialogInputs: Signal<Inputkeys<any>> = computed(() => ({}));

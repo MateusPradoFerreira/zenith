@@ -6,17 +6,15 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllCenterOfCostByFilterParams, CenterOfCostService } from "../services/center-of-cost.service";
 import { CenterOfCostState } from "../states/center-of-cost.state";
-import { CenterOfCostMapper } from "../mappers/center-of-cost.mapper";
 import { CenterOfCostFormComponent } from "../views/center-of-cost/center-of-cost-form/center-of-cost-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type CenterOfCostUseQueryParams = GetAllCenterOfCostByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, CenterOfCost, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
+export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
   override state = inject(CenterOfCostState);
   override service = inject(CenterOfCostService);
-  override mapper = inject(CenterOfCostMapper);
   override queryFn = (params: CenterOfCostUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Centro de Custo";

@@ -6,17 +6,15 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "../services/schedule-category.service";
 import { ScheduleCategoryState } from "../states/schedule-category.state";
-import { ScheduleCategoryMapper } from "../mappers/schedule-category.mapper";
 import { ScheduleCategoryFormComponent } from "../views/schedule-category/schedule-category-form/schedule-category-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type ScheduleCategoryUseQueryParams = GetAllScheduleCategoryByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategory, ScheduleCategory, ScheduleCategoryUseQueryParams, ScheduleCategoryFormComponent> {
+export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategory, ScheduleCategoryUseQueryParams, ScheduleCategoryFormComponent> {
   override state = inject(ScheduleCategoryState);
   override service = inject(ScheduleCategoryService);
-  override mapper = inject(ScheduleCategoryMapper);
   override queryFn = (params: ScheduleCategoryUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Categoria";

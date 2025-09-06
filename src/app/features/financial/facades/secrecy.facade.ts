@@ -6,17 +6,15 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllSecrecyByFilterParams, SecrecyService } from "../services/secrecy.service";
 import { SecrecyState } from "../states/secrecy.state";
-import { SecrecyMapper } from "../mappers/secrecy.mapper";
 import { SecrecyFormComponent } from "../views/secrecy/secrecy-form/secrecy-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type SecrecyUseQueryParams = GetAllSecrecyByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class SecrecyFacade extends PllFacade<Secrecy, Secrecy, Secrecy, SecrecyUseQueryParams, SecrecyFormComponent> {
+export class SecrecyFacade extends PllFacade<Secrecy, Secrecy, SecrecyUseQueryParams, SecrecyFormComponent> {
   override state = inject(SecrecyState);
   override service = inject(SecrecyService);
-  override mapper = inject(SecrecyMapper);
   override queryFn = (params: SecrecyUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Título";

@@ -6,7 +6,6 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllBankAccountByFilterParams, BankAccountService } from "../services/bank-account.service";
 import { BankAccountState } from "../states/bank-account.state";
-import { BankAccountMapper } from "../mappers/bank-account.mapper";
 
 import { BankAccountFormComponent } from "../views/bank-account/bank-account-form/bank-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
@@ -14,10 +13,9 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 export type BankAccountUseQueryParams = GetAllBankAccountByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class BankAccountFacade extends PllFacade<BankAccount, BankAccount, BankAccount, BankAccountUseQueryParams, BankAccountFormComponent> {
+export class BankAccountFacade extends PllFacade<BankAccount, BankAccount, BankAccountUseQueryParams, BankAccountFormComponent> {
   override state = inject(BankAccountState);
   override service = inject(BankAccountService);
-  override mapper = inject(BankAccountMapper);
   override queryFn = (params: BankAccountUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Conta Bancária";

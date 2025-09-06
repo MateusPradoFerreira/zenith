@@ -20,6 +20,7 @@ import { HlmTabsModule } from '../../common/libs/ui/ui-tabs-helm/src';
 import { HlmMenuModule } from '../../common/libs/ui/ui-menu-helm/src';
 import { NgxCurrencyDirective } from "ngx-currency";
 import { CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter, CalendarModule, CalendarUtils } from 'angular-calendar';
+import { HlmPinComponent } from '../../common/components/pin.component';
 
 const generalModules = [
 	NgxMaskDirective, 
@@ -55,6 +56,7 @@ const spartanUIModules = [
 	BrnPopoverModule,
 	HlmPaginationModule,
 	HlmSelectModule,
+	HlmPinComponent,
 ];
 
 @NgModule({

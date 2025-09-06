@@ -10,7 +10,7 @@ export class HlmButtonIconDirective implements OnChanges {
   @Input() hlmBtnIcon: string = ""; 
   @Input() hlmBtnIconPosition: "start" | "end" = "start";
   @Input() hlmBtnLoading: boolean = false;
-  @Input() size: "default" | "sm" | "icon" | "icon-lg" = "default";
+  @Input() size: "default" | "sm" | "icon" | "icon-lg" | "icon-sm" = "default";
 
   private componentRef?: ComponentRef<LucideAngularComponent>;
 
@@ -23,7 +23,7 @@ export class HlmButtonIconDirective implements OnChanges {
   private createIcon() {
     if(!this.componentRef) this.componentRef = this.vcRef.createComponent(LucideAngularComponent, { injector: this.injector });
     this.componentRef.setInput("name", this.hlmBtnLoading? "loader-circle" : this.hlmBtnIcon);
-    this.componentRef.setInput("class", (this.size !== "icon" && this.size !== "icon-lg" && this.size !== "sm"? (this.hlmBtnIconPosition === "start"? "-ml-2 " : "-mr-2 ") : "") + (this.hlmBtnLoading? "animate-spin" : ""));
+    this.componentRef.setInput("class", (this.size !== "icon" && this.size !== "icon-lg" && this.size !== "icon-sm" && this.size !== "sm"? (this.hlmBtnIconPosition === "start"? "-ml-2 " : "-mr-2 ") : "") + (this.hlmBtnLoading? "animate-spin" : ""));
     const nativeEl = this.vcRef.element.nativeElement;
     const iconEl = this.componentRef.location.nativeElement;
     this.hlmBtnIconPosition === "start"? nativeEl.insertBefore(iconEl, nativeEl.firstChild) : nativeEl.appendChild(iconEl);

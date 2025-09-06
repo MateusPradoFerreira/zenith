@@ -6,7 +6,6 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "../services/payable.service";
 import { PayableState } from "../states/payable.state";
-import { PayableMapper } from "../mappers/payable.mapper";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { PayableFormComponent } from "../views/payable/payable-form/payable-form.component";
 import { Observable, Subject } from "rxjs";
@@ -17,10 +16,9 @@ export type PayableUseQueryParams = GetAllPayableByFilterParams;
 export type PayableUseQueryResponse = GetAllPayableByFilterResponse;
 
 @Injectable({ providedIn: "root" })
-export class PayableFacade extends PllFacade<Payable, Payable, PayableUseQueryResponse, PayableUseQueryParams, PayableFormComponent> {
+export class PayableFacade extends PllFacade<Payable, PayableUseQueryResponse, PayableUseQueryParams, PayableFormComponent> {
   override state = inject(PayableState);
   override service = inject(PayableService);
-  override mapper = inject(PayableMapper);
   override queryFn = (params: PayableUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Despesa";

@@ -140,7 +140,7 @@
             </hlm-td>
           </hlm-trow>
         </ng-container>
-        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && !tableBodyTemplate">
+        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && (emptyMessOnTbBody()? true : !tableBodyTemplate)">
           <hlm-td class="w-full flex justify-center flex-col">
             <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
               <div class="border border-slate-200/50 p-5 rounded-4xl">
@@ -152,12 +152,12 @@
             <span class="text-base font-medium">
               OOPS! Nenhum registro encontrado!
             </span>
-            <span class="text-sm">
+            <div class="text-sm">
               Não tem nada para ser visualizado com os filtros selecionados! 
-            </span>
-            <span class="mt-2">
+            </div>
+            <div class="mt-2 mb-15">
               <ng-container [ngTemplateOutlet]="emptyActionsTemplate" />
-            </span>
+            </div>
           </hlm-td>
         </hlm-trow>
       </div>

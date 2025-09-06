@@ -87,6 +87,7 @@ export class ScheduleMockedService extends PllMockedRestService<Schedule> implem
   };
 
   private _filtering(records: Schedule[], params: GetAllScheduleByFilterParams): Schedule[] {
+    records = records.filter(record => !params?.categoryIds? true : params.categoryIds.includes(record.categoryId) );
     return records.filter(record => moment(record.startsAt).isBetween(params.startsAt, params.endsAt, "day", "[]") || moment(record.endsAt).isBetween(params.startsAt, params.endsAt, "day", "[]"));
   };
 };

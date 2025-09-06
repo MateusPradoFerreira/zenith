@@ -28,6 +28,7 @@ export const buttonVariants = cva(
 				sm: "py-0.5 px-2 text-[13px] [&_i-lucide]:[&_svg]:w-[16px] shrink-0 [&_i-lucide]:[&_svg]:h-[16px] [&_lucide-angular]:[&_svg]:w-[16px] [&_lucide-angular]:[&_svg]:h-[16px]",
 				icon: "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[21px] shrink-0 [&_i-lucide]:[&_svg]:h-[21px] [&_lucide-angular]:[&_svg]:w-[21px] [&_lucide-angular]:[&_svg]:h-[21px]",
 				"icon-lg": "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[24px] shrink-0 [&_i-lucide]:[&_svg]:h-[24px] [&_lucide-angular]:[&_svg]:w-[24px] [&_lucide-angular]:[&_svg]:h-[24px]",
+				"icon-sm": "h-[28px] w-[28px] p-0 [&_i-lucide]:[&_svg]:w-[16px] shrink-0 [&_i-lucide]:[&_svg]:h-[16px] [&_lucide-angular]:[&_svg]:w-[16px] [&_lucide-angular]:[&_svg]:h-[16px]",
 			},
 		},
 		defaultVariants: {

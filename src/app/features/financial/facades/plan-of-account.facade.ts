@@ -6,17 +6,15 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllPlanOfAccountByFilterParams, PlanOfAccountService } from "../services/plan-of-account.service";
 import { PlanOfAccountState } from "../states/plan-of-account.state";
-import { PlanOfAccountMapper } from "../mappers/plan-of-account.mapper";
 import { PlanOfAccountFormComponent } from "../views/plan-of-account/plan-of-account-form/plan-of-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type PlanOfAccountUseQueryParams = GetAllPlanOfAccountByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccount, PlanOfAccount, PlanOfAccountUseQueryParams, PlanOfAccountFormComponent> {
+export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccount, PlanOfAccountUseQueryParams, PlanOfAccountFormComponent> {
   override state = inject(PlanOfAccountState);
   override service = inject(PlanOfAccountService);
-  override mapper = inject(PlanOfAccountMapper);
   override queryFn = (params: PlanOfAccountUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Plano de Conta";

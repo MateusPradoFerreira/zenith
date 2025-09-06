@@ -6,17 +6,15 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllGoalByFilterParams, GetAllGoalByFilterResponse, GoalService } from "../services/goal.service";
 import { GoalState } from "../states/goal.state";
-import { GoalMapper } from "../mappers/goal.mapper";
 import { GoalFormComponent } from "../views/goal/goal-form/goal-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type GoalUseQueryParams = GetAllGoalByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class GoalFacade extends PllFacade<Goal, Goal, GetAllGoalByFilterResponse, GoalUseQueryParams, GoalFormComponent> {
+export class GoalFacade extends PllFacade<Goal, GetAllGoalByFilterResponse, GoalUseQueryParams, GoalFormComponent> {
   override state = inject(GoalState);
   override service = inject(GoalService);
-  override mapper = inject(GoalMapper);
   override queryFn = (params: GoalUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Meta";

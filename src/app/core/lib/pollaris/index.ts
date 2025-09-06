@@ -172,10 +172,9 @@ export abstract class PllRecordMapper<TInternalModel extends PllRecordId, TExter
   abstract from(data: TExternalModel): TInternalModel;
 };
 
-export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel extends PllRecordId = TRecordModel, TRecordQueryModel extends PllRecordId = TRecordModel, TRecordQueryParams extends PllRecord = any, TComponent extends BaseFormComponentDirective<TRecordModel> = BaseFormComponentDirective<TRecordModel>> {
-  abstract state: PllRecordState<TExternalModel>;
-  abstract service: PllRestService<TExternalModel>;
-  abstract mapper: PllRecordMapper<TRecordModel, TExternalModel>;
+export abstract class PllFacade<TRecordModel extends PllRecordId, TRecordQueryModel extends PllRecordId = TRecordModel, TRecordQueryParams extends PllRecord = any, TComponent extends BaseFormComponentDirective<TRecordModel> = BaseFormComponentDirective<TRecordModel>> {
+  abstract state: PllRecordState<TRecordModel>;
+  abstract service: PllRestService<TRecordModel>;
   abstract queryFn: (params: TRecordQueryParams) => Observable<PllPaginatedResponse<TRecordQueryModel>>;
 
   abstract recordSchema: PllFormSchemaConfig<TRecordModel>;
@@ -227,7 +226,6 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
         return this.service.get(id).pipe(tap(response => this.state.insert(response)));
       }),
       tap(() => this.loading.set(false)),
-      map((response => this.mapper.from(response))),
       catchError(error => {
         this.processing.set(false);
         return throwError(error);
@@ -235,9 +233,9 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  insertRecord(data: TRecordModel): Observable<TExternalModel> {
+  insertRecord(data: TRecordModel): Observable<TRecordModel> {
     this.processing.set(true);
-    return of(this.mapper.to(data)).pipe(
+    return of(data).pipe(
       switchMap(record => this.service.post(record)),
       tap(reponse => this.state.insert(reponse)),
       tap(() => this.processing.set(false)),
@@ -248,9 +246,9 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  updateRecord(data: TRecordModel): Observable<TExternalModel> {
+  updateRecord(data: TRecordModel): Observable<TRecordModel> {
     this.processing.set(true);
-    return of(this.mapper.to(data)).pipe(
+    return of(data).pipe(
       switchMap(record => this.service.put(record)),
       tap(reponse => this.state.update(reponse)),
       tap(() => this.processing.set(false)),
@@ -261,9 +259,9 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  updateManyRecords(data: TRecordModel[]): Observable<TExternalModel[]> {
+  updateManyRecords(data: TRecordModel[]): Observable<TRecordModel[]> {
     this.processing.set(true);
-    return of(data.map(reg => this.mapper.to(reg))).pipe(
+    return of(data.map(reg => reg)).pipe(
       switchMap(records => this.service.putMany(records)),
       tap(records => records.map(record => this.state.update(record))),
       tap(() => this.processing.set(false)),
@@ -274,7 +272,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  deleteRecord(id: PllID): Observable<TExternalModel> {
+  deleteRecord(id: PllID): Observable<TRecordModel> {
     this.processing.set(true);
     return this.service.delete(id).pipe(
       tap(() => this.state.remove(id)),
@@ -286,7 +284,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TExternalModel
     );
   };
 
-  deleteManyRecords(ids: PllID[]): Observable<TExternalModel[]> {
+  deleteManyRecords(ids: PllID[]): Observable<TRecordModel[]> {
     this.processing.set(true);
     return this.service.deleteMany(ids).pipe(
       tap(() => ids.map(id => this.state.remove(id))),

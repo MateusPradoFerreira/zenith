@@ -6,7 +6,6 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllInboxByFilterParams, InboxService } from "../services/inbox.service";
 import { InboxState } from "../states/inbox.state";
-import { InboxMapper } from "../mappers/inbox.mapper";
 import { InboxFormComponent } from "../views/inbox/inbox-form/inbox-form.component";
 import moment from "moment";
 import { Observable, Subject } from "rxjs";
@@ -16,10 +15,9 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 export type InboxUseQueryParams = GetAllInboxByFilterParams;
 
 @Injectable({ providedIn: "root" })
-export class InboxFacade extends PllFacade<Inbox, Inbox, Inbox, InboxUseQueryParams, InboxFormComponent> {
+export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, InboxFormComponent> {
   override state = inject(InboxState);
   override service = inject(InboxService);
-  override mapper = inject(InboxMapper);
   override queryFn = (params: InboxUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Inbox";

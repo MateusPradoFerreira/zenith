@@ -6,7 +6,6 @@ import { Validators } from "@angular/forms";
 import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "../services/receivable.service";
 import { ReceivableState } from "../states/receivable.state";
-import { ReceivableMapper } from "../mappers/receivable.mapper";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
 import { Observable, Subject } from "rxjs";
@@ -17,10 +16,9 @@ export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
 export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
 
 @Injectable({ providedIn: "root" })
-export class ReceivableFacade extends PllFacade<Receivable, Receivable, ReceivableUseQueryResponse, ReceivableUseQueryParams, ReceivableFormComponent> {
+export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryResponse, ReceivableUseQueryParams, ReceivableFormComponent> {
   override state = inject(ReceivableState);
   override service = inject(ReceivableService);
-  override mapper = inject(ReceivableMapper);
   override queryFn = (params: ReceivableUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Receita";

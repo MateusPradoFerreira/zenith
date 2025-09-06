@@ -2,28 +2,7 @@
   <hlm-data-table [offsetHeight]="offsetHeight()" header="Contas Bancária" [offsetHeight]="156" [values]="values()" [columns]="columns()" [actionFn]="actionFn" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="w-72">
-        <span class="w-1 mr-3 h-6 rounded" [ngClass]="{
-          'bg-slate-300': rowData.color === 'SLATE',
-          'bg-zinc-300': rowData.color === 'ZINC',
-          'bg-stone-300': rowData.color === 'STONE',
-          'bg-red-300': rowData.color === 'RED',
-          'bg-orange-300': rowData.color === 'ORANGE',
-          'bg-amber-300': rowData.color === 'AMBER',
-          'bg-yellow-300': rowData.color === 'YELLOW',
-          'bg-lime-300': rowData.color === 'LIME',
-          'bg-green-300': rowData.color === 'GREEN',
-          'bg-emerald-300': rowData.color === 'EMERALD',
-          'bg-teal-300': rowData.color === 'TEAL',
-          'bg-cyan-300': rowData.color === 'CYAN',
-          'bg-sky-300': rowData.color === 'SKY',
-          'bg-blue-300': rowData.color === 'BLUE',
-          'bg-indigo-300': rowData.color === 'INDIGO',
-          'bg-violet-300': rowData.color === 'VIOLET',
-          'bg-purple-300': rowData.color === 'PURPLE',
-          'bg-fuchsia-300': rowData.color === 'FUCHSIA',
-          'bg-pink-300': rowData.color === 'PINK',
-          'bg-rose-300': rowData.color === 'ROSE'
-        }"></span>
+        <hlm-pin [color]="rowData.color" class="w-1 h-6 mr-3" />
         {{ rowData.name }}
       </hlm-td>
       <hlm-td class="w-32">{{ rowData.score }}</hlm-td>

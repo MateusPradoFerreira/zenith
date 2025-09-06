@@ -8,16 +8,17 @@ import moment from 'moment';
 import { ClassValue } from 'clsx';
 import { hlm } from '@spartan-ng/brain/core';
 import { CalendarEvent } from 'angular-calendar';
-import { PllPaginatedResponse } from '@pollaris';
+import { PllID, PllPaginatedResponse } from '@pollaris';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
 import { forkJoin, switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
+import { ScheduleSidebarSessionComponent } from '../../../components/schedule-sidebar-session.component';
 
 @Component({
   standalone: true,
   selector: 'app-schedule-listing',
-  imports: [GlobalModule, HlmDataTableComponent],
+  imports: [GlobalModule, HlmDataTableComponent, ScheduleSidebarSessionComponent],
   templateUrl: './schedule-listing.component.html',
 })
 export class ScheduleListingComponent extends BaseRecordListingComponentDirective<GetAllScheduleByFilterResponse, GetAllScheduleByFilterParams> {
@@ -32,6 +33,8 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   range = model<"day" | "week" | "month">("month");
   layout = model<"table" | "calendar">("calendar");
   sidebarActive = model<boolean>(true);
+
+  categoryTimeout: NodeJS.Timeout;
 
   groupedValues = computed<{ date: Date, values: GetAllScheduleByFilterResponse[] }[]>(() => {
     if(this.layout() === "calendar") return [];
@@ -64,6 +67,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
 
   handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.scheduleCategoryOptions = response.data;
+    this.filter.controls.categoryIds.setValue(response.data.map(record => record.id));
   }));
 
   handleRemapEvents() {
@@ -91,5 +95,19 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   onDateChange(date?: Date) {
     this.date.set(date || new Date());
     this.handleChangeRange();
+  };
+
+  scheduleCategoryIsSelected(id: PllID) {
+    return this.filter.value.categoryIds.includes(id);
+  };
+
+  toggleScheduleCategorySelection(id: PllID) {
+    clearTimeout(this.categoryTimeout);
+    if( this.filter.value.categoryIds.includes(id)) {
+      this.filter.controls.categoryIds.setValue( this.filter.value.categoryIds.filter(cId => cId !== id));
+    } else {
+      this.filter.controls.categoryIds.setValue([... this.filter.value.categoryIds, id]);
+    };
+    this.categoryTimeout = setTimeout(() => this.updateUI(), 500);
   };
 };
