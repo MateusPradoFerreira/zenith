@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { ScheduleCategory } from "../models/schedule-category.model";
 import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "./schedule-category.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -10,6 +10,8 @@ export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): S
   return new ScheduleCategory({
     name: "New Schedule Category",
     active: true,
+    type: "SCHEDULE",
+    color: "VIOLET",
     ...data,
     id: data.id || uuid(),
   });
@@ -19,12 +21,13 @@ export const INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA: ScheduleCategory[] = [
   createMockedScheduleCategory({ name: "Reunião", color: "TEAL" }),
   createMockedScheduleCategory({ name: "Tarefa", color: "VIOLET" }),
   createMockedScheduleCategory({ name: "Evento", color: "BLUE" }),
-  createMockedScheduleCategory({ name: "Despesa", color: "ROSE" }),
-  createMockedScheduleCategory({ name: "Receita", color: "EMERALD" }),
+  createMockedScheduleCategory({ name: "Estudo", color: "ORANGE" }),
+  createMockedScheduleCategory({ name: "Despesa", color: "ROSE", type: "PAYABLE" }),
+  createMockedScheduleCategory({ name: "Receita", color: "EMERALD", type: "RECEIVABLE" }),
 ];
 
 @Injectable({ providedIn: "root" })
-export class ScheduleCategoryMockedService extends PllMockedRestService<ScheduleCategory> implements ScheduleCategoryService {
+export class ScheduleCategoryMockService extends PllMockRestService<ScheduleCategory> implements ScheduleCategoryService {
 
   constructor () {
     super(INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA);

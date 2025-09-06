@@ -1,13 +1,16 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllID, PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { Schedule } from "../models/schedule.model";
 import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "./schedule.service";
-import { delay, map, Observable, of } from "rxjs";
+import { delay, lastValueFrom, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 import { inject, Injectable } from "@angular/core";
 import { INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA } from "./schedule-category-mock.service";
 import moment from "moment";
 import { ScheduleCategoryService } from "./schedule-category.service";
+import { ReceivableService } from "../../financial/services/receivable.service";
+import { PayableService } from "../../financial/services/payable.service";
+import { CurrencyPipe } from "@angular/common";
 
 export function createMockedSchedule(data: Partial<Schedule>): Schedule {
   return new Schedule({
@@ -15,9 +18,9 @@ export function createMockedSchedule(data: Partial<Schedule>): Schedule {
     scheduleId: null,
     recurrenceId: null,
     categoryId: fakerJs.helpers.arrayElement(INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA).id,
-    createdAt: moment().toDate(),
-    startsAt: moment().toDate(),
-    endsAt: moment().toDate(),
+    createdAt: data.startsAt || moment().toDate(),
+    startsAt: data.startsAt || moment().toDate(),
+    endsAt: data.startsAt || moment().toDate(),
     startsAtTime: "08:00:00",
     endsAtTime: "09:00:00",
     ...data,
@@ -25,46 +28,32 @@ export function createMockedSchedule(data: Partial<Schedule>): Schedule {
   });
 };
 
+function buildMockedSchedules(title: string, startsAtTime: string, endsAtTime: string, categoryId: PllID, exeptions: number[] = [], only: boolean = false): Schedule[] {
+  const schedules: Schedule[] = [];
+  let date = moment().startOf("month");
+  while (date.isBefore(moment().endOf("month"))) {
+    if(only? exeptions.includes(date.day()) : !exeptions.includes(date.day())) schedules.push(createMockedSchedule({ title, startsAt: date.toDate(), endsAt: date.toDate(), startsAtTime, endsAtTime, categoryId }));
+    date = date.add(1, "day");
+  };
+  return schedules;
+};
+
 @Injectable({ providedIn: "root" })
-export class ScheduleMockedService extends PllMockedRestService<Schedule> implements ScheduleService {
+export class ScheduleMockService extends PllMockRestService<Schedule> implements ScheduleService {
   scheduleCategoryService = inject(ScheduleCategoryService);
+  payableService = inject(PayableService);
+  receivableService = inject(ReceivableService);
+  currencyPipe = inject(CurrencyPipe);
 
   constructor() {
     super([
-      createMockedSchedule({ title: "OnDoctor - Daily", startsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-      createMockedSchedule({ title: "OnDoctor - Daily", startsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-      createMockedSchedule({ title: "OnDoctor - Daily", startsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-      createMockedSchedule({ title: "OnDoctor - Daily", startsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-      createMockedSchedule({ title: "OnDoctor - Daily", startsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-      createMockedSchedule({ title: "OnDoctor - Treinamento", startsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("09:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("10:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id }),
-
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Caminhada", startsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("06:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("06:45:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Curso de DSA", startsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("07:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("08:00:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-
-      createMockedSchedule({ title: "PJ - Zenith", startsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Estudo Avulso", startsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "PJ - Zenith", startsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Estudo Avulso", startsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "PJ - Zenith", startsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-      createMockedSchedule({ title: "Estudo Avulso", startsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: moment("17:00:00", "HH:mm:ss").format("HH:mm:ss"), endsAtTime: moment("18:30:00", "HH:mm:ss").format("HH:mm:ss"), categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id }),
-
-      createMockedSchedule({ title: "Leitura", startsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("01/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
-      createMockedSchedule({ title: "Leitura", startsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("02/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
-      createMockedSchedule({ title: "Leitura", startsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("03/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
-      createMockedSchedule({ title: "Leitura", startsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("04/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
-      createMockedSchedule({ title: "Leitura", startsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("05/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
-      createMockedSchedule({ title: "Leitura", startsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), endsAt: moment("06/09/2025", "DD/MM/YYYY").toDate(), startsAtTime: null, endsAtTime: null, categoryId: INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id }),
+      ...buildMockedSchedules("OnDoctor - Daily", "08:45:00", "08:45:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [0,6]),
+      ...buildMockedSchedules("OnDoctor - Treinamento", "09:00:00", "10:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [6], true),
+      ...buildMockedSchedules("Caminhada", "06:30:00", "07:20:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id, [0]),
+      ...buildMockedSchedules("Curso de DSA", "07:30:00", "08:00:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [0]),
+      ...buildMockedSchedules("PJ - Zenith", "17:00:00", "18:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [1,3,5], true),
+      ...buildMockedSchedules("Estudo Avulso", "17:00:00", "18:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [2,4,6], true),
+      ...buildMockedSchedules("Leitura", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id, [0]),
     ]);
   };
 
@@ -76,9 +65,10 @@ export class ScheduleMockedService extends PllMockedRestService<Schedule> implem
         ...record,
         category: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.name || "",
         color: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.color || "VIOLET",
+        type: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.type || "SCHEDULE",
       };
       return newRecord;
-    })).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
+    })).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 200 }))).pipe(map(response => ({
       data: response,
       pagination: {
         page: 1,
@@ -87,7 +77,22 @@ export class ScheduleMockedService extends PllMockedRestService<Schedule> implem
   };
 
   private _filtering(records: Schedule[], params: GetAllScheduleByFilterParams): Schedule[] {
-    records = records.filter(record => !params?.categoryIds? true : params.categoryIds.includes(record.categoryId) );
-    return records.filter(record => moment(record.startsAt).isBetween(params.startsAt, params.endsAt, "day", "[]") || moment(record.endsAt).isBetween(params.startsAt, params.endsAt, "day", "[]"));
+    let newRecords = [...records];
+
+    const payableCategory = this.scheduleCategoryService.records().find(record => record.type === "PAYABLE");
+    const receivableCategory = this.scheduleCategoryService.records().find(record => record.type === "RECEIVABLE");
+
+    if(payableCategory && (!params || params.categoryIds.includes(payableCategory.id))) {
+      const payables = this.payableService.records().filter(record => moment(record.dueAt).isBetween(params.startsAt, params.endsAt, "day", "[]") && (record.status === "PENDING" || record.status === "OVERDUE"));
+      for(let payable of payables) newRecords.push(createMockedSchedule({ id: payable.id, title: payable.name + " - " + this.currencyPipe.transform(payable.value, "BRL"), startsAt: payable.dueAt, endsAt: payable.dueAt, categoryId: payableCategory.id, startsAtTime: null, endsAtTime: null }));
+    };
+
+    if(receivableCategory && (!params || params.categoryIds.includes(receivableCategory.id))) {
+      const receivables = this.receivableService.records().filter(record => moment(record.dueAt).isBetween(params.startsAt, params.endsAt, "day", "[]") && (record.status === "PENDING" || record.status === "OVERDUE"));
+      for(let receivable of receivables) newRecords.push(createMockedSchedule({ id: receivable.id, title: receivable.name + " - " + this.currencyPipe.transform(receivable.value, "BRL"), startsAt: receivable.dueAt, endsAt: receivable.dueAt, categoryId: receivableCategory.id, startsAtTime: null, endsAtTime: null }));
+    };
+
+    newRecords = newRecords.filter(record => !params?.categoryIds? true : params.categoryIds.includes(record.categoryId) );
+    return newRecords.filter(record => moment(record.startsAt).isBetween(params.startsAt, params.endsAt, "day", "[]") || moment(record.endsAt).isBetween(params.startsAt, params.endsAt, "day", "[]"));
   };
 };

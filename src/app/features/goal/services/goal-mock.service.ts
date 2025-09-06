@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { Goal } from "../models/goal.model";
 import { GetAllGoalByFilterParams, GetAllGoalByFilterResponse, GoalService } from "./goal.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -21,7 +21,7 @@ export const INITIAL_SECRECY_MOCKED_DATA: Goal[] = [
   createMockedGoal({ name: "Curso", color: "ORANGE" }),
 ];
 
-export class GoalMockedService extends PllMockedRestService<Goal> implements GoalService {
+export class GoalMockService extends PllMockRestService<Goal> implements GoalService {
 
   constructor () {
     super(INITIAL_SECRECY_MOCKED_DATA);

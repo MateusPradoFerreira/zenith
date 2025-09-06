@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { CenterOfCost } from "../models/center-of-cost.model";
 import { GetAllCenterOfCostByFilterParams, GetAllCenterOfCostByFilterResponse, CenterOfCostService } from "./center-of-cost.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -21,7 +21,7 @@ export const INITIAL_CENTER_OF_COST_MOCKED_DATA: CenterOfCost[] = [
   createMockedCenterOfCost({ name: "RH" }),
 ];
 
-export class CenterOfCostMockedService extends PllMockedRestService<CenterOfCost> implements CenterOfCostService {
+export class CenterOfCostMockService extends PllMockRestService<CenterOfCost> implements CenterOfCostService {
 
   constructor () {
     super(INITIAL_CENTER_OF_COST_MOCKED_DATA);

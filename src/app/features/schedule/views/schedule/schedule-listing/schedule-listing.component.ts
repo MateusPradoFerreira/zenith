@@ -10,10 +10,12 @@ import { hlm } from '@spartan-ng/brain/core';
 import { CalendarEvent } from 'angular-calendar';
 import { PllID, PllPaginatedResponse } from '@pollaris';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { forkJoin, switchMap, tap } from 'rxjs';
+import { forkJoin, switchMap, tap, timeout } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { ScheduleSidebarSessionComponent } from '../../../components/schedule-sidebar-session.component';
+import { PayableFacade } from '../../../../financial/facades/payable.facade';
+import { ReceivableFacade } from '../../../../financial/facades/receivable.facade';
 
 @Component({
   standalone: true,
@@ -25,15 +27,20 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   override facade = inject(ScheduleFacade);
 
   scheduleCategoryFacade = inject(ScheduleCategoryFacade);
+  payableFacade = inject(PayableFacade);
+  receivableFacade = inject(ReceivableFacade);
   
   scheduleCategoryOptions: ScheduleCategory[] = [];
 
   events = model<CalendarEvent[]>([]);
   date = model<Date>(new Date());
-  range = model<"day" | "week" | "month">("month");
+  range = model<"day" | "week" | "month">("week");
   layout = model<"table" | "calendar">("calendar");
   sidebarActive = model<boolean>(true);
+  monthDayOpen = model<boolean>(true);
 
+  dayIsClicked: boolean = false;
+  dayClickTimeout: NodeJS.Timeout;
   categoryTimeout: NodeJS.Timeout;
 
   groupedValues = computed<{ date: Date, values: GetAllScheduleByFilterResponse[] }[]>(() => {
@@ -77,8 +84,8 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   handleChangeRange(range?: "day" | "week" | "month") {
     if(range) this.range.set(range);
     if(!this.date()) this.date.set(new Date());
-    this.filter.controls.startsAt.setValue(moment(this.date()).startOf(this.range()).toDate());
-    this.filter.controls.endsAt.setValue(moment(this.date()).endOf(this.range()).toDate());
+    this.filter.controls.startsAt.setValue(moment(this.date()).startOf(this.range()).add(1, "day").toDate());
+    this.filter.controls.endsAt.setValue(moment(this.date()).endOf(this.range()).add(1, "day").toDate());
     this.updateUI();
   };
 
@@ -108,6 +115,36 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     } else {
       this.filter.controls.categoryIds.setValue([... this.filter.value.categoryIds, id]);
     };
-    this.categoryTimeout = setTimeout(() => this.updateUI(), 500);
+    this.categoryTimeout = setTimeout(() => this.updateUI(), 300);
+  };
+
+  handleUpdateRecord(rowData: GetAllScheduleByFilterResponse) {
+    console.log(rowData)
+    switch (rowData.type) {
+      case "PAYABLE": 
+        this.payableFacade.openToUpdate(rowData.id).subscribe(() => this.updateUI()); 
+        break;
+      case "RECEIVABLE": 
+        this.receivableFacade.openToUpdate(rowData.id).subscribe(() => this.updateUI()); 
+        break;
+      default: 
+        this.handleUpdate(rowData);
+    };
+  };
+
+  dayClicked(date: Date, inMonth: boolean) {
+    if(!inMonth) return;
+    if(this.dayIsClicked) {
+      clearTimeout(this.dayClickTimeout);
+      this.dayIsClicked = false;
+      this.facade.openToCreate({ date });
+      return;
+    };
+
+    this.dayIsClicked = true;
+    this.dayClickTimeout = setTimeout(() => {
+      this.dayIsClicked = false;
+      this.date.set(date);
+    }, 200);
   };
 };

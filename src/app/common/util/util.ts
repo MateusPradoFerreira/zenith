@@ -1,9 +1,9 @@
 import moment from "moment";
 
 export class Util {
-  static buildMonths(refence: Date = moment().startOf("year").subtract("months", 6).toDate(), months: number = 24): Date[] {
+  static buildMonths(monthDay: number = 1, refence: Date = moment().startOf("year").subtract(6, "months").toDate(), months: number = 24): Date[] {
     const dates: Date[] = [];
-    for(let index = 0; index < months; index++) dates.push(moment(refence).startOf("month").add("months", index).toDate());
+    for(let index = 0; index < months; index++) dates.push(moment(refence).startOf("month").add(index, "months").date(monthDay).toDate());
     return dates;
   };
 

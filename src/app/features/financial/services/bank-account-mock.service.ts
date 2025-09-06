@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { BankAccount } from "../models/bank-account.model";
 import { GetAllBankAccountByFilterParams, GetAllBankAccountByFilterResponse, BankAccountService } from "./bank-account.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -19,7 +19,7 @@ export const INITIAL_BANK_ACCOUNT_MOCKED_DATA: BankAccount[] = [
   createMockedBankAccount({ name: "Nubank" }),
 ];
 
-export class BankAccountMockedService extends PllMockedRestService<BankAccount> implements BankAccountService {
+export class BankAccountMockService extends PllMockRestService<BankAccount> implements BankAccountService {
 
   constructor () {
     super(INITIAL_BANK_ACCOUNT_MOCKED_DATA);

@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { CashFlow } from "../models/cash-flow.model";
 import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "./cash-flow.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -17,7 +17,7 @@ export function createMockedCashFlow(data: Partial<CashFlow>): CashFlow {
   });
 };
 
-export class CashFlowMockedService extends PllMockedRestService<CashFlow> implements CashFlowService {
+export class CashFlowMockService extends PllMockRestService<CashFlow> implements CashFlowService {
   payableService = inject(PayableService);
   receivableService = inject(ReceivableService);
   bankAccountService = inject(BankAccountService);

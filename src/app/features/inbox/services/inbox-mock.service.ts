@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { Inbox } from "../models/inbox.model";
 import { GetAllInboxByFilterParams, InboxService } from "./inbox.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -20,7 +20,7 @@ export function createMockedInbox(data: Partial<Inbox>): Inbox {
 };
 
 @Injectable({ providedIn: "root" })
-export class InboxMockedService extends PllMockedRestService<Inbox> implements InboxService {
+export class InboxMockService extends PllMockRestService<Inbox> implements InboxService {
 
   constructor () {
     super([

@@ -45,8 +45,8 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
   override filterSchema: PllFormSchemaConfig<ScheduleUseQueryParams> = {
     fields: {
       categoryIds: { value: [] },
-      startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("week").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("week").add(1, "day").toDate(), validators: [Validators.required] },
+      endsAt: { value: moment().endOf("week").add(1, "day").toDate(), validators: [Validators.required] },
     },
   };
 

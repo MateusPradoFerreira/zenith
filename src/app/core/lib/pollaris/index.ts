@@ -106,7 +106,7 @@ export abstract class PllRestService<TRecordModel extends PllRecordId> {
   };
 };
 
-export abstract class PllMockedRestService<TRecordModel extends PllRecordId> extends PllRestService<TRecordModel> {
+export abstract class PllMockRestService<TRecordModel extends PllRecordId> extends PllRestService<TRecordModel> {
   override baseRoute: string = "";
   override pathRoute: string = "";
 

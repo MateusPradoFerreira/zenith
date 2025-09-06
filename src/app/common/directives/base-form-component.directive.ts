@@ -48,7 +48,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
     await this.onNgOnInit().pipe(
       switchMap(() => this.handleUpdateUI()),
     ).subscribe({
-      error: error => console.error(error),
+      error: error => this.handlePopulateForm().subscribe(),
     });
   };
 

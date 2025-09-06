@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { PlanOfAccount } from "../models/plan-of-account.model";
 import { GetAllPlanOfAccountByFilterParams, GetAllPlanOfAccountByFilterResponse, PlanOfAccountService } from "./plan-of-account.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -21,7 +21,7 @@ export const INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA: PlanOfAccount[] = [
   createMockedPlanOfAccount({ name: "Financeiro" }),
 ];
 
-export class PlanOfAccountMockedService extends PllMockedRestService<PlanOfAccount> implements PlanOfAccountService {
+export class PlanOfAccountMockService extends PllMockRestService<PlanOfAccount> implements PlanOfAccountService {
 
   constructor () {
     super(INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA);

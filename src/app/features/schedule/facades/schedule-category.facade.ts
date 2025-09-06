@@ -28,6 +28,9 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       color: { value: "VIOLET", validators: [Validators.required] },
       active: { value: true },
+      type: { value: "SCHEDULE", onChange: (value, form) => {
+        if(value !== "SCHEDULE") form.controls.name.disable();
+      }},
     },
   };
 

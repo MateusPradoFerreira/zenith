@@ -5,6 +5,7 @@ import { environment } from "../../../../environments/environment";
 import moment from "moment";
 import { Injectable } from "@angular/core";
 import { Colors } from "../../../common/types/colors.type";
+import { ScheduleCategoryType } from "../models/schedule-category.model";
 
 export type GetAllScheduleByFilterParams = {
   categoryIds?: PllID[];
@@ -14,6 +15,7 @@ export type GetAllScheduleByFilterParams = {
 
 export type GetAllScheduleByFilterResponse = Schedule & {
   category: string;
+  type: ScheduleCategoryType;
   color: Colors;
 };
 

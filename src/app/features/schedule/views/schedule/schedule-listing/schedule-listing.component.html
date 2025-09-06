@@ -1,12 +1,12 @@
 <div [class]="styleClass()">
   <ng-container [ngTemplateOutlet]="sidebar" />
   <div class="transition-all {{ this.sidebarActive()? 'pl-[296px]' : '' }}">
-    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [emptyMessOnTbBody]="true" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [emptyMessOnTbBody]="true" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
       <ng-template hlmTemplate="layout-body">
         <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.mainHeight() }">
-          <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" [dayEndHour]="19" />
-          <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" [dayStartHour]="6" [dayEndHour]="19"  />
-          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1"  />
+          <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" />
+          <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" />
+          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" (eventClicked)="handleUpdateRecord($event.event.meta)" (dayClicked)="dayClicked($event.day.date, $event.day.inMonth)" [activeDayIsOpen]="monthDayOpen()" />
         </div>
       </ng-template>
       <ng-template hlmTemplate="table-body">
@@ -17,30 +17,9 @@
               <span>{{ group.date | date : "dd 'de' MMMM 'de' YYYY" }}</span>
             </hlm-td>
           </hlm-trow>
-          <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden" (click)="handleUpdate(rowData)">
+          <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden" (click)="handleUpdateRecord(rowData)">
             <hlm-td class="flex-1">
-              <span class="w-1 mr-3 h-6 rounded" [ngClass]="{
-                'bg-slate-300': rowData.color === 'SLATE',
-                'bg-zinc-300': rowData.color === 'ZINC',
-                'bg-stone-300': rowData.color === 'STONE',
-                'bg-red-300': rowData.color === 'RED',
-                'bg-orange-300': rowData.color === 'ORANGE',
-                'bg-amber-300': rowData.color === 'AMBER',
-                'bg-yellow-300': rowData.color === 'YELLOW',
-                'bg-lime-300': rowData.color === 'LIME',
-                'bg-green-300': rowData.color === 'GREEN',
-                'bg-emerald-300': rowData.color === 'EMERALD',
-                'bg-teal-300': rowData.color === 'TEAL',
-                'bg-cyan-300': rowData.color === 'CYAN',
-                'bg-sky-300': rowData.color === 'SKY',
-                'bg-blue-300': rowData.color === 'BLUE',
-                'bg-indigo-300': rowData.color === 'INDIGO',
-                'bg-violet-300': rowData.color === 'VIOLET',
-                'bg-purple-300': rowData.color === 'PURPLE',
-                'bg-fuchsia-300': rowData.color === 'FUCHSIA',
-                'bg-pink-300': rowData.color === 'PINK',
-                'bg-rose-300': rowData.color === 'ROSE'
-              }"></span>
+              <hlm-pin [color]="rowData.color" class="w-1 h-6 mr-3" />
               {{ rowData.title }}
             </hlm-td>
             <hlm-td class="flex-1" *ngIf="rowData.startsAtTime">{{ rowData.startsAtTime }} {{ rowData.endsAtTime && rowData.endsAtTime !== rowData.startsAtTime? " - " + rowData.endsAtTime : "" }}</hlm-td>
@@ -60,6 +39,7 @@
       </ng-template>
       <ng-template hlmTemplate="action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
+          <button hlmBtn (click)="monthDayOpen.set(!monthDayOpen())" [hlmBtnIcon]="monthDayOpen()? 'calendar-arrow-up' : 'calendar-arrow-down'" variant="outline" size="icon"></button>
           <div class="hlm-button-group">
             <button hlmBtn (click)="handleChangeRange('day')" [severity]="range() === 'day'? 'help' : 'primary'" [variant]="range() === 'day'? 'soft' : 'outline'">Dia</button>
             <button hlmBtn (click)="handleChangeRange('week')" [severity]="range() === 'week'? 'help' : 'primary'" [variant]="range() === 'week'? 'soft' : 'outline'">Semana</button>

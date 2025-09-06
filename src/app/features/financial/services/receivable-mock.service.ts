@@ -1,4 +1,4 @@
-import { PllID, PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllID, PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { Receivable } from "../models/receivable.model";
 import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "./receivable.service";
 import { delay, map, Observable, of, switchMap } from "rxjs";
@@ -43,7 +43,7 @@ export function createMockedReceivable(data: Partial<Receivable>): Receivable {
   });
 };
 
-export class ReceivableMockedService extends PllMockedRestService<Receivable> implements ReceivableService {
+export class ReceivableMockService extends PllMockRestService<Receivable> implements ReceivableService {
   secrecyService = inject(SecrecyService);
   centerOfCostService = inject(CenterOfCostService);
   planOfAccountService = inject(PlanOfAccountService);
@@ -51,10 +51,10 @@ export class ReceivableMockedService extends PllMockedRestService<Receivable> im
 
   constructor () {
     super([
-      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Salário", createdAt: date, value: 3500, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Freelance - Projeto Web", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map(date => createMockedReceivable({ name: "Aluguel Recebido", createdAt: date, value: 400, status: moment(date).isBefore()? "PAID" : "PENDING" })),
-      ...Util.buildMonths().map((date, index) => createMockedReceivable({ name: "Juros de Investimento", createdAt: date, value: 40 + (!index? 0 : index * 0.6), status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths(1).map(date => createMockedReceivable({ name: "Salário", createdAt: date, value: 3557, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths(8).map(date => createMockedReceivable({ name: "Freelance - Projeto Web", createdAt: date, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths(9).map(date => createMockedReceivable({ name: "Aluguel Recebido", createdAt: date, value: 400, status: moment(date).isBefore()? "PAID" : "PENDING" })),
+      ...Util.buildMonths(2).map((date, index) => createMockedReceivable({ name: "Juros de Investimento", createdAt: date, value: 40 + (!index? 0 : index * 0.6), status: moment(date).isBefore()? "PAID" : "PENDING" })),
     ]);
   };
 

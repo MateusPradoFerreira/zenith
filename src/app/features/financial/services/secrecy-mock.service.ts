@@ -1,4 +1,4 @@
-import { PllMockedRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
 import { GetAllSecrecyByFilterParams, GetAllSecrecyByFilterResponse, SecrecyService } from "./secrecy.service";
 import { delay, map, Observable, of } from "rxjs";
@@ -20,7 +20,7 @@ export const INITIAL_SECRECY_MOCKED_DATA: Secrecy[] = [
   createMockedSecrecy({ name: "Crédito" }),
 ];
 
-export class SecrecyMockedService extends PllMockedRestService<Secrecy> implements SecrecyService {
+export class SecrecyMockService extends PllMockRestService<Secrecy> implements SecrecyService {
 
   constructor () {
     super(INITIAL_SECRECY_MOCKED_DATA);
