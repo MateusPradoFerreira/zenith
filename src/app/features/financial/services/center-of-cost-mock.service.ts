@@ -4,6 +4,7 @@ import { GetAllCenterOfCostByFilterParams, GetAllCenterOfCostByFilterResponse, C
 import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
+import { Util } from "../../../common/util/util";
 
 export function createMockedCenterOfCost(data: Partial<CenterOfCost>): CenterOfCost {
   return new CenterOfCost({
@@ -30,12 +31,10 @@ export class CenterOfCostMockService extends PllMockRestService<CenterOfCost> im
   override createRecord = (data: Partial<CenterOfCost>) => createMockedCenterOfCost(data);
 
   getAllByFilter(params: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: CenterOfCost[], params: GetAllCenterOfCostByFilterParams): CenterOfCost[] {

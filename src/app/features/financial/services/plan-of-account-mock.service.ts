@@ -4,6 +4,7 @@ import { GetAllPlanOfAccountByFilterParams, GetAllPlanOfAccountByFilterResponse,
 import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
+import { Util } from "../../../common/util/util";
 
 export function createMockedPlanOfAccount(data: Partial<PlanOfAccount>): PlanOfAccount {
   return new PlanOfAccount({
@@ -30,12 +31,10 @@ export class PlanOfAccountMockService extends PllMockRestService<PlanOfAccount> 
   override createRecord = (data: Partial<PlanOfAccount>) => createMockedPlanOfAccount(data);
 
   getAllByFilter(params: GetAllPlanOfAccountByFilterParams): Observable<PllPaginatedResponse<GetAllPlanOfAccountByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: PlanOfAccount[], params: GetAllPlanOfAccountByFilterParams): PlanOfAccount[] {

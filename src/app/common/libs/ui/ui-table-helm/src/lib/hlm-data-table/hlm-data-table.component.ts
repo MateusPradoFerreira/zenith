@@ -22,6 +22,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   protected readonly _computedClass = computed(() => hlm("border-t border-slate-200 h-full", this.userClass()));
 
   header = input<string>();
+  showHeader = input<boolean>(true);
 
   loading = input<boolean>(false);
   values = input<HlmDataTableRecord[]>([]);

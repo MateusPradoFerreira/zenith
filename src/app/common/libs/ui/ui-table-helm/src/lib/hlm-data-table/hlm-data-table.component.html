@@ -46,14 +46,14 @@
   <ng-container *ngTemplateOutlet="actionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
 </ng-template>
 
-<div class="px-4 py-2 hidden xl:flex items-center gap-2">
+<div class="px-4 py-2 hidden xl:flex items-center gap-2" *ngIf="showHeader()">
   <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
   <ng-container *ngTemplateOutlet="selectionButtonTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="actionBarTemplate"></ng-container>
 </div>
 
-<div class="px-4 py-2 flex xl:hidden flex-col gap-2">
+<div class="px-4 py-2 flex xl:hidden flex-col gap-2" *ngIf="showHeader()">
   <div class="flex gap-2" *ngIf="leftActionTemplate">
     <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
   </div>

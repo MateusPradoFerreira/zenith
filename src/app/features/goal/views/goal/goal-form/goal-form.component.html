@@ -1,9 +1,31 @@
 <form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
 
-  <div class="hlm-float-label col-span-12 xl:col-span-12">
-    <input hlmInput formControlName="name"/>
-    <label>Nome</label>
+  <div class="col-span-12">
+
+    <div class="col-span-12 flex gap-2">
+      <span class="hlm-float-label w-full">
+        <input hlmInput formControlName="name"/>
+        <label>Nome</label>
+      </span>
+      <brn-popover sideOffset="5" class="peer">
+        <button brnPopoverTrigger type="button" hlmBtn variant="outline" size="icon" [disabled]="processing()">
+          <hlm-pin [color]="form.value.color" class="w-4 h-4 rounded-full" />
+        </button>
+        <div hlmPopoverContent class="w-fit grid grid-cols-4 p-1 gap-1" *brnPopoverContent="let ctx">
+          <button type="button" hlmBtn (click)="onChangeColor(color.key)" [variant]="form.value.color === color.key? 'text' : 'ghost'" size="icon" [disabled]="processing()" *ngFor="let color of colors" class="hover:bg-slate-100 h-[32px] w-[32px]">
+            <hlm-pin [color]="color.key" class="w-4 h-4 rounded-full" />
+          </button>
+        </div>
+      </brn-popover>
+    </div>
+
   </div>
+
+  <div class="col-span-12" *ngIf="id()">
+    <app-goal-item-listing [goalId]="id()" />
+  </div>
+
+  <div class="col-span-12 xl:col-span-8"></div>
 
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>

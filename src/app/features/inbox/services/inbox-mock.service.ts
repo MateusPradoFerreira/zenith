@@ -6,6 +6,7 @@ import { fakerJs } from "../../../core/config/faker.config";
 import moment from "moment";
 import { v4 as uuid } from 'uuid';
 import { Injectable } from "@angular/core";
+import { Util } from "../../../common/util/util";
 
 export function createMockedInbox(data: Partial<Inbox>): Inbox {
   return new Inbox({
@@ -38,12 +39,10 @@ export class InboxMockService extends PllMockRestService<Inbox> implements Inbox
   override createRecord = (data: Partial<Inbox>) => createMockedInbox(data);
 
   getAllByFilter(params: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
-    return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: Inbox[], params: GetAllInboxByFilterParams): Inbox[] {

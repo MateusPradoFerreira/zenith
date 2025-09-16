@@ -4,6 +4,7 @@ import { GetAllGoalByFilterParams, GetAllGoalByFilterResponse, GoalService } fro
 import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
+import { Util } from "../../../common/util/util";
 
 export function createMockedGoal(data: Partial<Goal>): Goal {
   return new Goal({
@@ -14,7 +15,7 @@ export function createMockedGoal(data: Partial<Goal>): Goal {
   });
 };
 
-export const INITIAL_SECRECY_MOCKED_DATA: Goal[] = [
+export const INITIAL_GOAL_MOCKED_DATA: Goal[] = [
   createMockedGoal({ name: "Caminhada", color: "ROSE" }),
   createMockedGoal({ name: "Estudo Diário", color: "VIOLET" }),
   createMockedGoal({ name: "Leitura", color: "TEAL" }),
@@ -24,7 +25,7 @@ export const INITIAL_SECRECY_MOCKED_DATA: Goal[] = [
 export class GoalMockService extends PllMockRestService<Goal> implements GoalService {
 
   constructor () {
-    super(INITIAL_SECRECY_MOCKED_DATA);
+    super(INITIAL_GOAL_MOCKED_DATA);
   };
 
   override createRecord = (data: Partial<Goal>) => createMockedGoal(data);
@@ -40,12 +41,8 @@ export class GoalMockService extends PllMockRestService<Goal> implements GoalSer
         };
         return newRecord;
       })),
-    ).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: Goal[], params: GetAllGoalByFilterParams): Goal[] {

@@ -77,12 +77,8 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
         };
         return newRecord;
       })),
-    ).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: Receivable[], params: GetAllReceivableByFilterParams): Receivable[] {

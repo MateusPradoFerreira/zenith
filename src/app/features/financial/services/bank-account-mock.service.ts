@@ -4,6 +4,7 @@ import { GetAllBankAccountByFilterParams, GetAllBankAccountByFilterResponse, Ban
 import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
+import { Util } from "../../../common/util/util";
 
 export function createMockedBankAccount(data: Partial<BankAccount>): BankAccount {
   return new BankAccount({
@@ -28,12 +29,10 @@ export class BankAccountMockService extends PllMockRestService<BankAccount> impl
   override createRecord = (data: Partial<BankAccount>) => createMockedBankAccount(data);
 
   getAllByFilter(params: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<GetAllBankAccountByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: BankAccount[], params: GetAllBankAccountByFilterParams): BankAccount[] {

@@ -19,6 +19,7 @@ export class GoalItemFacade extends PllFacade<GoalItem, GoalItem, GoalItemUseQue
   override header: string = "Meta";
   override component: Type<any> = GoalItemFormComponent;
   override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogAlign: "center" | "left" | "right" = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<GoalItem> = {

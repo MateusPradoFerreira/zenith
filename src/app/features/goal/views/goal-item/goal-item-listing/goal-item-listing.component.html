@@ -1,7 +1,9 @@
 <div [class]="_computedClass()">
-  <hlm-data-table [offsetHeight]="offsetHeight()" header="Contas Bancária" [values]="values()" [filter]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+  <hlm-data-table [offsetHeight]="offsetHeight()" [showHeader]="false" [offsetHeight]="300" [pagination]="false" [values]="values()" [filter]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
-      <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
+      <hlm-td class="flex-1">{{ rowData.startsAt | date : "dd:MM:YYYY" }}</hlm-td>
+      <hlm-td class="flex-1">{{ rowData.duration }} min</hlm-td>
+      <hlm-td class="flex-1 justify-end">{{ rowData.startsAt | date : "hh:mm:ss" }} - {{ getEndsAtTime(rowData) | date : "hh:mm:ss" }}</hlm-td>
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">

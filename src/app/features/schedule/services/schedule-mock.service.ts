@@ -11,6 +11,7 @@ import { ScheduleCategoryService } from "./schedule-category.service";
 import { ReceivableService } from "../../financial/services/receivable.service";
 import { PayableService } from "../../financial/services/payable.service";
 import { CurrencyPipe } from "@angular/common";
+import { Util } from "../../../common/util/util";
 
 export function createMockedSchedule(data: Partial<Schedule>): Schedule {
   return new Schedule({
@@ -63,20 +64,19 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   override createRecord = (data: Partial<Schedule>) => createMockedSchedule(data);
 
   getAllByFilter(params: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<GetAllScheduleByFilterResponse>> {
-    return of(this._filtering(this.records(), params).map(record => {
-      const newRecord: GetAllScheduleByFilterResponse = {
-        ...record,
-        category: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.name || "",
-        color: record.color || this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.color || "VIOLET",
-        type: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.type || "SCHEDULE",
-      };
-      return newRecord;
-    })).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 200 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => response.map(record => {
+        const newRecord: GetAllScheduleByFilterResponse = {
+          ...record,
+          category: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.name || "",
+          color: record.color || this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.color || "VIOLET",
+          type: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.type || "SCHEDULE",
+        };
+        return newRecord;
+      })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: Schedule[], params: GetAllScheduleByFilterParams): Schedule[] {

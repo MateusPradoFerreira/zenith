@@ -1,3 +1,4 @@
+import { PllPaginatedResponse, PllRecordId } from "@pollaris";
 import moment from "moment";
 
 export class Util {
@@ -15,5 +16,14 @@ export class Util {
       .set("minutes", mmTime.get("minutes"))
       .set("seconds", mmTime.get("seconds"))
       .toDate();
+  };
+
+  static paginatedValueFrom<T extends PllRecordId>(data: T[] = []): PllPaginatedResponse<T> {
+    return {
+      data: data || [],
+      pagination: {
+        page: 1,
+      },
+    }
   };
 };

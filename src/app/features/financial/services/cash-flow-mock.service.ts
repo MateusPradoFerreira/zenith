@@ -9,6 +9,7 @@ import { PayableService } from "./payable.service";
 import { ReceivableService } from "./receivable.service";
 import moment from "moment";
 import { BankAccountService } from "./bank-account.service";
+import { Util } from "../../../common/util/util";
 
 export function createMockedCashFlow(data: Partial<CashFlow>): CashFlow {
   return new CashFlow({
@@ -25,12 +26,10 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
   override createRecord = (data: Partial<CashFlow>) => createMockedCashFlow(data);
 
   getAllByFilter(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return of(this._filtering(params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(params: GetAllCashFlowByFilterParams): CashFlow[] {

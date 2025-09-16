@@ -4,6 +4,7 @@ import { GetAllSecrecyByFilterParams, GetAllSecrecyByFilterResponse, SecrecyServ
 import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
+import { Util } from "../../../common/util/util";
 
 export function createMockedSecrecy(data: Partial<Secrecy>): Secrecy {
   return new Secrecy({
@@ -29,12 +30,10 @@ export class SecrecyMockService extends PllMockRestService<Secrecy> implements S
   override createRecord = (data: Partial<Secrecy>) => createMockedSecrecy(data);
 
   getAllByFilter(params: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<GetAllSecrecyByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 }))).pipe(map(response => ({
-      data: response,
-      pagination: {
-        page: 1,
-      },
-    })));
+    return of(this._filtering(this.records(), params)).pipe(
+      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
+      map(response => Util.paginatedValueFrom(response)),
+    );
   };
 
   private _filtering(records: Secrecy[], params: GetAllSecrecyByFilterParams): Secrecy[] {
