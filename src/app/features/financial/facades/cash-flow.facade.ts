@@ -17,7 +17,8 @@ export class CashFlowFacade extends PllFacade<CashFlow, CashFlow, CashFlowUseQue
 
   override header: string;
   override component: Type<any>;
-  override dialogWidth: DialogContentVariants["width"];
+  override dialogSize: DialogContentVariants["size"];
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean;
 
   override recordSchema: PllFormSchemaConfig<CashFlow>;

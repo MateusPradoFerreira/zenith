@@ -20,7 +20,8 @@ export class BankAccountFacade extends PllFacade<BankAccount, BankAccount, BankA
 
   override header: string = "Conta Bancária";
   override component: Type<any> = BankAccountFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<BankAccount> = {

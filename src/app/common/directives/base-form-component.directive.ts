@@ -2,7 +2,7 @@ import { computed, Directive, input, model, OnInit, signal } from "@angular/core
 import { PllFacade, PllID, PllRecordId } from "../../core/lib/pollaris";
 import { PllFormSchema } from "../../core/lib/pollaris/forms";
 import { map, Observable, of, OperatorFunction, switchMap, tap } from "rxjs";
-import { injectBrnDialogCtx } from "@spartan-ng/brain/dialog";
+import { injectBrnDialogContext, injectBrnDialogCtx } from "@spartan-ng/brain/dialog";
 import { ClassValue } from "clsx";
 import { hlm } from "@spartan-ng/brain/core";
 
@@ -15,7 +15,7 @@ export const event = <T = void>(...operators: OperatorFunction<T, any>[]) => {
 export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordId> implements OnInit {
   public readonly userClass = input<ClassValue>("", { alias: "class" });
 	protected readonly _computedClass = computed(() =>
-		hlm("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3 gap-x-2", this.userClass()),
+		hlm("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3.5 gap-x-2", this.userClass()),
 	);
   
   id = model<PllID>(null);
@@ -23,7 +23,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   isDialog = input<boolean>(false);
 
   abstract facade: PllFacade<TRecordModel, any, any, any>;
-  private readonly _context = injectBrnDialogCtx();
+  private readonly _context = injectBrnDialogContext();
 
   orgRecord: TRecordModel;
   crrRecord: TRecordModel;
@@ -36,6 +36,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
 
   onNgOnInit: EventObs<void> = event();
   onUpdateUI: EventObs<TRecordModel> = event();
+  onInitRecord: EventObs<void> = event();
   onInitCreateRecord: EventObs<void> = event();
   onInitUpdateRecord: EventObs<void> = event();
   onInitSumit: EventObs<void> = event();
@@ -84,6 +85,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
         this.configureFormSchema();
         return this.onInitCreateRecord();
       }),
+      switchMap(() => this.onInitRecord()),
       tap(() => this.formReady.set(true)),
       map(() => this.form.value),
     );

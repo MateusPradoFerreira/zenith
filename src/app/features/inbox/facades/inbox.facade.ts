@@ -22,7 +22,8 @@ export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, In
 
   override header: string = "Inbox";
   override component: Type<any> = InboxFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "lg";
+  override dialogSize: DialogContentVariants["size"] = "lg";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Inbox> = {

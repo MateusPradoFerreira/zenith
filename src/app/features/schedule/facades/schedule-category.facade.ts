@@ -19,7 +19,8 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
 
   override header: string = "Categoria";
   override component: Type<any> = ScheduleCategoryFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<ScheduleCategory> = {

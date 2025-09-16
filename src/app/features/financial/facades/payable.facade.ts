@@ -23,7 +23,8 @@ export class PayableFacade extends PllFacade<Payable, PayableUseQueryResponse, P
 
   override header: string = "Despesa";
   override component: Type<any> = PayableFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "lg";
+  override dialogSize: DialogContentVariants["size"] = "lg";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Payable> = {

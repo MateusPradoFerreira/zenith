@@ -3,6 +3,7 @@ import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective } from '../../../../../common/directives/base-form-component.directive';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
+import { Colors, colors } from '../../../../../common/types/colors.type';
 
 @Component({
   standalone: true,
@@ -12,4 +13,10 @@ import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facad
 })
 export class ScheduleCategoryFormComponent extends BaseFormComponentDirective<ScheduleCategory> {
   override facade = inject(ScheduleCategoryFacade);
+  
+  colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
+
+  onChangeColor(color: Colors) {
+    this.form.controls.color.setValue(color);
+  };
 };

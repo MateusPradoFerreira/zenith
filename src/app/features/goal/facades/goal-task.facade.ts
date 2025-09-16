@@ -20,7 +20,7 @@ export class GoalTaskFacade extends PllFacade<GoalTask, GoalTask, GoalTaskUseQue
 
   override header: string = "Meta";
   override component: Type<any> = GoalTaskFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "sm";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<GoalTask> = {

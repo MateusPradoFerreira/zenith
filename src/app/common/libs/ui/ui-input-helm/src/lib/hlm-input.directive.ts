@@ -12,7 +12,7 @@ export const inputVariants = cva(
 	{
 		variants: {
 			size: {
-				default: 'h-[38px] px-4 file:max-md:py-0',
+				default: 'py-2 px-4 file:max-md:py-0',
 				sm: 'h-9 px-3 file:md:py-2 file:max-md:py-1.5',
 			},
 			error: {

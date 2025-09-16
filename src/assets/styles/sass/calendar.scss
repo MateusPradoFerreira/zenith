@@ -254,8 +254,9 @@
 }
 .cal-week-view .cal-event {
   font-size: 12px;
-  border: 1px solid;
+  border-width: 0px 0px 0px 3px;
   direction: ltr;
+  @apply shadow-md shadow-slate-300/25;
 }
 .cal-week-view .cal-time-label-column {
   width: 70px;
@@ -302,31 +303,31 @@
   pointer-events: none;
 }
 .cal-week-view .cal-all-day-events .cal-event {
-  padding: 0 5px;
-  margin-left: 2px;
-  margin-right: 1px;
+  padding: 0 8px;
+  margin-left: 3px;
+  margin-right: 2px;
   height: 28px;
   line-height: 28px;
 }
 .cal-week-view .cal-all-day-events .cal-starts-within-week .cal-event {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 [dir=rtl] .cal-week-view .cal-all-day-events .cal-starts-within-week .cal-event {
   border-top-left-radius: initial;
   border-bottom-left-radius: initial;
-  border-top-right-radius: 5px !important;
-  border-bottom-right-radius: 5px !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
 }
 .cal-week-view .cal-all-day-events .cal-ends-within-week .cal-event {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 [dir=rtl] .cal-week-view .cal-all-day-events .cal-ends-within-week .cal-event {
   border-top-right-radius: initial;
   border-bottom-right-radius: initial;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 .cal-week-view .cal-all-day-events .cal-time-label-column {
   display: -webkit-box;
@@ -394,10 +395,10 @@
   z-index: 1;
 }
 .cal-week-view .cal-time-events .cal-event {
-  width: calc(100% - 2px);
-  height: calc(100% - 2px);
-  margin: 1px;
-  padding: 0 5px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  margin: 2px;
+  padding: 0 8px;
   line-height: 25px;
 }
 .cal-week-view .cal-time-events .cal-resize-handle {
@@ -439,12 +440,12 @@
   display: none;
 }
 .cal-week-view .cal-starts-within-day .cal-event {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 4px;
 }
 .cal-week-view .cal-ends-within-day .cal-event {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 4px;
 }
 
 .cal-week-view {
@@ -492,7 +493,7 @@
 }
 .cal-week-view .cal-header.cal-today {
   @apply text-violet-500;
-  @apply bg-slate-100;
+  @apply bg-violet-50;
 }
 .cal-week-view .cal-header.cal-weekend span {
   @apply text-violet-500;

@@ -19,7 +19,8 @@ export class SecrecyFacade extends PllFacade<Secrecy, Secrecy, SecrecyUseQueryPa
 
   override header: string = "Título";
   override component: Type<any> = SecrecyFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Secrecy> = {

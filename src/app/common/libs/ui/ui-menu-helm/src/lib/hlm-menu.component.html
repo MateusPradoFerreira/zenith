@@ -1,0 +1,27 @@
+<ng-content />
+
+<ng-container *ngIf="items()?.length" #menu>
+	<hlm-menu-group>
+		<ng-container *ngFor="let item of items()">
+			<hlm-menu-separator *ngIf="item.separator && item.visible !== false" />
+			<ng-container *ngIf="!item.separator && item.visible !== false">
+
+				<button *ngIf="!item.children?.length" hlmMenuItem [disabled]="item.disabled" (click)="item.command && item.command()">
+					<i-lucide [name]="item.icon" size="16" hlmMenuIcon></i-lucide>
+					{{ item.label }}
+					<hlm-menu-shortcut *ngIf="item.shortcut">{{ item.shortcut }}</hlm-menu-shortcut>
+				</button>
+
+				<button *ngIf="item.children?.length" hlmMenuItem [disabled]="item.disabled" [brnMenuTriggerFor]="menuItems">
+					<i-lucide [name]="item.icon" size="16" hlmMenuIcon></i-lucide>
+					{{ item.label }}
+					<hlm-menu-shortcut *ngIf="item.shortcut">{{ item.shortcut }}</hlm-menu-shortcut>
+				</button>
+
+				<ng-template #menuItems>
+					<hlm-menu [class]="_computedClass()" [items]="item.children" />
+				</ng-template>
+			</ng-container>
+		</ng-container>
+	</hlm-menu-group>
+</ng-container>

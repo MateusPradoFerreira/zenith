@@ -24,7 +24,8 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
 
   override header: string = "Agendamento";
   override component: Type<any> = ScheduleFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "lg";
+  override dialogSize: DialogContentVariants["size"] = "xs";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {
@@ -39,14 +40,15 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
       endsAt: { value: moment().toDate() },
       startsAtTime: { value: "08:00:00" },
       endsAtTime: { value: "08:00:00" },
+      color: { value: "VIOLET" },
     },
   };
 
   override filterSchema: PllFormSchemaConfig<ScheduleUseQueryParams> = {
     fields: {
       categoryIds: { value: [] },
-      startsAt: { value: moment().startOf("week").add(1, "day").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("week").add(1, "day").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required] },
+      endsAt: { value: moment().endOf("week").toDate(), validators: [Validators.required] },
     },
   };
 
@@ -58,7 +60,8 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
       end: Util.getTimedOur(schedule.endsAt, schedule.endsAtTime),
       color: colors[schedule.color],
       meta: schedule,
-      allDay: schedule.startsAtTime? false : true,
+      allDay: Boolean(!schedule.startsAtTime || (moment(schedule.startsAt).format("DD/MM/YYY") !== moment(schedule.endsAt).format("DD/MM/YYY"))),
+      draggable: schedule.type === "SCHEDULE",
     }));
     return events;
   };

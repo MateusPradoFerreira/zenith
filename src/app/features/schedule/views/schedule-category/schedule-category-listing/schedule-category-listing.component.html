@@ -1,7 +1,10 @@
 <div [class]="_computedClass()">
   <hlm-data-table [offsetHeight]="offsetHeight()" header="Categorias de Agendamento" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
-      <hlm-td class="flex-1">{{ rowData.name }}</hlm-td>
+      <hlm-td class="flex-1">
+        <hlm-pin [color]="rowData.color" class="w-1 h-6 mr-3" />
+        {{ rowData.name }}
+      </hlm-td>
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">

@@ -7,10 +7,10 @@ import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common
 import moment from 'moment';
 import { ClassValue } from 'clsx';
 import { hlm } from '@spartan-ng/brain/core';
-import { CalendarEvent } from 'angular-calendar';
+import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { PllID, PllPaginatedResponse } from '@pollaris';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { forkJoin, switchMap, tap, timeout } from 'rxjs';
+import { forkJoin, Subject, switchMap, tap, timeout } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { ScheduleSidebarSessionComponent } from '../../../components/schedule-sidebar-session.component';
@@ -30,18 +30,21 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   payableFacade = inject(PayableFacade);
   receivableFacade = inject(ReceivableFacade);
   
-  scheduleCategoryOptions: ScheduleCategory[] = [];
+  categoryOptions: ScheduleCategory[] = [];
+  otherCategoryOptions: ScheduleCategory[] = [];
 
   events = model<CalendarEvent[]>([]);
   date = model<Date>(new Date());
   range = model<"day" | "week" | "month">("week");
   layout = model<"table" | "calendar">("calendar");
   sidebarActive = model<boolean>(true);
-  monthDayOpen = model<boolean>(true);
+  monthDayOpen = model<boolean>(false);
 
   dayIsClicked: boolean = false;
   dayClickTimeout: NodeJS.Timeout;
   categoryTimeout: NodeJS.Timeout;
+
+  calendarRefresh = new Subject<void>();
 
   groupedValues = computed<{ date: Date, values: GetAllScheduleByFilterResponse[] }[]>(() => {
     if(this.layout() === "calendar") return [];
@@ -73,19 +76,21 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   override onUpdateUI = event<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(tap(() => this.handleRemapEvents()));
 
   handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
-    this.scheduleCategoryOptions = response.data;
+    this.categoryOptions = response.data.filter(record => record.type === "SCHEDULE");
+    this.otherCategoryOptions = response.data.filter(record => record.type !== "SCHEDULE");
     this.filter.controls.categoryIds.setValue(response.data.map(record => record.id));
   }));
 
   handleRemapEvents() {
     this.events.set(this.facade.handleRemapEvents(this.values()));
+    console.log("EVENTS", this.events());
   };
 
   handleChangeRange(range?: "day" | "week" | "month") {
     if(range) this.range.set(range);
     if(!this.date()) this.date.set(new Date());
-    this.filter.controls.startsAt.setValue(moment(this.date()).startOf(this.range()).add(1, "day").toDate());
-    this.filter.controls.endsAt.setValue(moment(this.date()).endOf(this.range()).add(1, "day").toDate());
+    this.filter.controls.startsAt.setValue(moment(this.date()).startOf(this.range()).toDate());
+    this.filter.controls.endsAt.setValue(moment(this.date()).endOf(this.range()).toDate());
     this.updateUI();
   };
 
@@ -132,12 +137,26 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     };
   };
 
-  dayClicked(date: Date, inMonth: boolean) {
+  eventTimesChanged({ event, newStart, newEnd, allDay }: CalendarEventTimesChangedEvent) {
+    event.start = newStart;
+    event.end = newEnd;
+
+    this.calendarRefresh.next();
+
+    const startsAtTime = allDay? null : moment(newStart).format("HH:mm:ss");
+    const endsAtTime = allDay? null : moment(newEnd).format("HH:mm:ss");
+
+    this.facade.getRecord(event.meta.id).pipe(switchMap(response => this.facade.updateRecord({ ...response, startsAt: newStart, endsAt: newEnd, startsAtTime, endsAtTime }))).subscribe({
+      error: (error) => console.log(error),
+    });
+  };
+
+  dayClicked(date: Date, inMonth: boolean, setDateHour: boolean = false) {
     if(!inMonth) return;
     if(this.dayIsClicked) {
       clearTimeout(this.dayClickTimeout);
       this.dayIsClicked = false;
-      this.facade.openToCreate({ date });
+      this.facade.openToCreate({ date, setDateHour });
       return;
     };
 

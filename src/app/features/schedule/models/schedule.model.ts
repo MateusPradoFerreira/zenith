@@ -1,3 +1,4 @@
+import { Colors } from "../../../common/types/colors.type";
 import { PllID } from "../../../core/lib/pollaris";
 
 export class Schedule {
@@ -11,6 +12,7 @@ export class Schedule {
   endsAt: Date;
   startsAtTime: string;
   endsAtTime: string;
+  color: Colors;
 
   constructor(props: Partial<Schedule>) {
     Object.assign(this, props);

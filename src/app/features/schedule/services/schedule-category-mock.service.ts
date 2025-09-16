@@ -18,10 +18,11 @@ export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): S
 };
 
 export const INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA: ScheduleCategory[] = [
-  createMockedScheduleCategory({ name: "Reunião", color: "TEAL" }),
+  createMockedScheduleCategory({ name: "Trabalho", color: "TEAL" }),
   createMockedScheduleCategory({ name: "Tarefa", color: "VIOLET" }),
   createMockedScheduleCategory({ name: "Evento", color: "BLUE" }),
-  createMockedScheduleCategory({ name: "Estudo", color: "ORANGE" }),
+  createMockedScheduleCategory({ name: "Estudo", color: "INDIGO" }),
+  createMockedScheduleCategory({ name: "Meta", color: "SLATE", type: "GOAL" }),
   createMockedScheduleCategory({ name: "Despesa", color: "ROSE", type: "PAYABLE" }),
   createMockedScheduleCategory({ name: "Receita", color: "EMERALD", type: "RECEIVABLE" }),
 ];
@@ -45,6 +46,7 @@ export class ScheduleCategoryMockService extends PllMockRestService<ScheduleCate
   };
 
   private _filtering(records: ScheduleCategory[], params: GetAllScheduleCategoryByFilterParams): ScheduleCategory[] {
+    records = records.filter(record => !params.type || params.type === "ALL"? true : params.type === record.type);
     return records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
   };
 };

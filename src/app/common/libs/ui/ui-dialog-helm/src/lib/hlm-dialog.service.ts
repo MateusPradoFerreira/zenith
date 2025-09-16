@@ -8,14 +8,16 @@ import {
 } from '@spartan-ng/brain/dialog';
 import { DialogContentVariants, HlmDialogContentComponent } from './hlm-dialog-content.component';
 import { hlmDialogOverlayClass } from './hlm-dialog-overlay.directive';
+import { Subject } from 'rxjs';
 
 export type HlmDialogOptions<DialogContext = unknown> = Partial<BrnDialogOptions> & {
 	contentClass?: string;
 	context?: DialogContext;
 	header?: string;
-  width?: DialogContentVariants["width"];
+  size?: DialogContentVariants["size"];
 	severity?: DialogContentVariants["severity"];
   scroll?: DialogContentVariants["scroll"];
+	align?: DialogContentVariants["align"];
 };
 
 @Injectable({
@@ -36,7 +38,8 @@ export class HlmDialogService {
 				$header: options?.header,
 				$severity: options?.severity || "primary",
 				$scroll: options?.scroll || true,
-				$width: options?.width || "fit",
+				$size: options?.size || "fit",
+				$align: options?.align || "center",
 			},
 		};
 

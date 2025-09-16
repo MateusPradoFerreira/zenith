@@ -19,7 +19,8 @@ export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, Ce
 
   override header: string = "Centro de Custo";
   override component: Type<any> = CenterOfCostFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<CenterOfCost> = {

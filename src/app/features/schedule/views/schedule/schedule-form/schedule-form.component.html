@@ -1,49 +1,83 @@
 <form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
 
-  <div class="hlm-float-label col-span-12 xl:col-span-9">
-    <input hlmInput formControlName="title"/>
-    <label>Titulo</label>
+  <div class="col-span-12 flex gap-2">
+    <span class="hlm-float-label w-full">
+      <input hlmInput formControlName="title"/>
+      <label>Titulo</label>
+    </span>
+    <brn-popover sideOffset="5" class="peer">
+      <button brnPopoverTrigger type="button" hlmBtn variant="outline" size="icon" [disabled]="processing()">
+        <hlm-pin [color]="form.value.color" class="w-4 h-4 rounded-full" />
+      </button>
+      <div hlmPopoverContent class="w-fit grid grid-cols-4 p-1 gap-1" *brnPopoverContent="let ctx">
+        <button type="button" hlmBtn (click)="onChangeColor(color.key)" [variant]="form.value.color === color.key? 'text' : 'ghost'" size="icon" [disabled]="processing()" *ngFor="let color of colors" class="hover:bg-slate-100 h-[32px] w-[32px]">
+          <hlm-pin [color]="color.key" class="w-4 h-4 rounded-full" />
+        </button>
+      </div>
+    </brn-popover>
   </div>
 
-  <div class="hlm-float-label col-span-12 xl:col-span-3">
+  <div class="col-span-12 flex gap-2">
+    <span class="hlm-float-label w-full">
+      <brn-select placeholder="Selecione uma Frequência">
+        <hlm-select-trigger>
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content>
+          <hlm-option *ngFor="let option of frequencyOptions" [value]="option.value">{{ option.label }}</hlm-option>
+        </hlm-select-content>
+      </brn-select>
+      <label>Frequência</label>
+    </span>
+    <brn-popover sideOffset="5" class="peer">
+      <button brnPopoverTrigger type="button" hlmBtn hlmBtnIcon="clock-fading" variant="soft" size="icon" [disabled]="processing()"></button>
+      <div hlmPopoverContent class="w-72" *brnPopoverContent="let ctx">
+      </div>
+    </brn-popover>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
     <brn-select formControlName="categoryId" placeholder="Selecione uma Categoria">
       <hlm-select-trigger>
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of scheduleCategoryOptions" [value]="option.id">{{ option.name }}</hlm-option>
+        <hlm-option *ngFor="let option of scheduleCategoryOptions" [value]="option.id"><hlm-pin [color]="option.color" class="mr-2" /> {{ option.name }}</hlm-option>
       </hlm-select-content>
     </brn-select>
     <label>Categoria</label>
   </div>
 
-  <div class="hlm-float-label col-span-12 xl:col-span-3">
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
     <hlm-date-picker formControlName="startsAt" [forceSelection]="true">
       <span>Escolha uma Data</span>
     </hlm-date-picker>
     <label>Início</label>
   </div>
 
-  <div class="hlm-float-label col-span-12 xl:col-span-3">
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
+    <input hlmInput formControlName="startsAtTime" type="time"/>
+    <label>Horário de Início</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
     <hlm-date-picker formControlName="endsAt" [forceSelection]="true">
       <span>Escolha uma Data</span>
     </hlm-date-picker>
     <label>Fim</label>
   </div>
 
-  <div class="hlm-float-label col-span-12 xl:col-span-3">
-    <input hlmInput formControlName="startsAtTime" type="time"/>
-    <label>Horário de Início</label>
-  </div>
-
-   <div class="hlm-float-label col-span-12 xl:col-span-3">
+  <div class="hlm-float-label col-span-12 xl:col-span-6">
     <input hlmInput formControlName="endsAtTime" type="time"/>
     <label>Horário de Fim</label>
   </div>
 
-  <div class="col-span-12 xl:col-span-8"></div>
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
+    <textarea hlmInput rows="7"></textarea>
+    <label>Descrição</label>
+  </div>
 
-  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
-  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+  <button class="col-span-12 xl:col-span-6" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-6" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 
 </form>

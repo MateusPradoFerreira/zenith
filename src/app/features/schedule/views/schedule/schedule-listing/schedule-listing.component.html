@@ -3,10 +3,10 @@
   <div class="transition-all {{ this.sidebarActive()? 'pl-[296px]' : '' }}">
     <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [emptyMessOnTbBody]="true" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
       <ng-template hlmTemplate="layout-body">
-        <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.mainHeight() }">
-          <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" />
-          <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" />
-          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" [weekStartsOn]="1" (eventClicked)="handleUpdateRecord($event.event.meta)" (dayClicked)="dayClicked($event.day.date, $event.day.inMonth)" [activeDayIsOpen]="monthDayOpen()" />
+        <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.height() }">
+          <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" (hourSegmentClicked)="dayClicked($event.date, true, true)" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" (eventTimesChanged)="eventTimesChanged($event)" [refresh]="calendarRefresh" />
+          <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" (hourSegmentClicked)="dayClicked($event.date, true, true)" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" (eventTimesChanged)="eventTimesChanged($event)" [refresh]="calendarRefresh" />
+          <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" (eventClicked)="handleUpdateRecord($event.event.meta)" (dayClicked)="dayClicked($event.day.date, $event.day.inMonth)" (eventTimesChanged)="eventTimesChanged($event)" [activeDayIsOpen]="monthDayOpen()" [refresh]="calendarRefresh" />
         </div>
       </ng-template>
       <ng-template hlmTemplate="table-body">
@@ -39,7 +39,7 @@
       </ng-template>
       <ng-template hlmTemplate="action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
-          <button hlmBtn (click)="monthDayOpen.set(!monthDayOpen())" [hlmBtnIcon]="monthDayOpen()? 'calendar-arrow-up' : 'calendar-arrow-down'" variant="outline" size="icon"></button>
+          <button hlmBtn *ngIf="range() === 'month'" (click)="monthDayOpen.set(!monthDayOpen())" [hlmBtnIcon]="monthDayOpen()? 'calendar-arrow-up' : 'calendar-arrow-down'" variant="outline" size="icon"></button>
           <div class="hlm-button-group">
             <button hlmBtn (click)="handleChangeRange('day')" [severity]="range() === 'day'? 'help' : 'primary'" [variant]="range() === 'day'? 'soft' : 'outline'">Dia</button>
             <button hlmBtn (click)="handleChangeRange('week')" [severity]="range() === 'week'? 'help' : 'primary'" [variant]="range() === 'week'? 'soft' : 'outline'">Semana</button>
@@ -82,7 +82,7 @@
           <button hlmBtn hlmBtnIcon="plus" variant="ghost" size="icon-sm" class="opacity-0 group-hover:opacity-100 transition-all"></button>
         </ng-template>
         <div class="grid px-1 mb-4">
-          <div class="flex items-center justify-between px-3 py-1 mb-0.5 rounded-md hover:bg-slate-100 cursor-pointer group text-sm" *ngFor="let option of scheduleCategoryOptions" (click)="toggleScheduleCategorySelection(option.id)">
+          <div class="flex items-center justify-between px-3 py-1 mb-0.5 rounded-md hover:bg-slate-100 cursor-pointer group text-sm" *ngFor="let option of categoryOptions" (click)="toggleScheduleCategorySelection(option.id)">
             <div class="flex items-center gap-3">
               <hlm-pin [color]="option.color" />
               <span [class]="scheduleCategoryIsSelected(option.id)? '' : 'line-through opacity-60 text-slate-600'">{{ option.name }}</span>
@@ -95,8 +95,24 @@
         </div>
       </app-schedule-sidebar-session>
 
-      <app-schedule-sidebar-session label="Favoritos"></app-schedule-sidebar-session>
-      <app-schedule-sidebar-session label="Meu Calendário"></app-schedule-sidebar-session>
+      <app-schedule-sidebar-session label="Outros Registros">
+        <div class="grid px-1 mb-4">
+          <div class="flex items-center justify-between px-3 py-1 mb-0.5 rounded-md hover:bg-slate-100 cursor-pointer group text-sm" *ngFor="let option of otherCategoryOptions" (click)="toggleScheduleCategorySelection(option.id)">
+            <div class="flex items-center gap-3">
+              <hlm-pin [color]="option.color" />
+              <span [class]="scheduleCategoryIsSelected(option.id)? '' : 'line-through opacity-60 text-slate-600'">{{ option.name }}</span>
+            </div>
+            <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+              <button hlmBtn [hlmBtnIcon]="scheduleCategoryIsSelected(option.id)? 'eye' : 'eye-off'" variant="ghost" size="icon-sm"></button>
+              <button hlmBtn hlmBtnIcon="ellipsis" variant="ghost" size="icon-sm" (click)="$event.stopPropagation()"></button>
+            </div>
+          </div>
+        </div>
+      </app-schedule-sidebar-session>
+
+      <app-schedule-sidebar-session label="Favoritos">
+
+      </app-schedule-sidebar-session>
     </div>
   </div>
 </ng-template>

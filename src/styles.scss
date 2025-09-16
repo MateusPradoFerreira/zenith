@@ -74,7 +74,7 @@ body {
   position: relative;
 
   label {
-    @apply pointer-events-none rounded absolute text-sm text-zinc-900 duration-300 transform -translate-y-4 scale-85 top-2 z-10 origin-[0] bg-white px-3 peer-focus:px-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-85 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1;
+    @apply pointer-events-none rounded absolute text-sm text-zinc-900 duration-300 transform -translate-y-4 scale-85 top-2 z-10 origin-[0] bg-white px-3 peer-focus:px-3 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-6.5 peer-focus:top-2 peer-focus:scale-85 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1;
   }
 }
 
@@ -112,6 +112,27 @@ body {
 
 .hlm-button-group {
   display: flex;
+  
+  button {
+    border-radius: 0;
+    flex-shrink: 0;
+    border-left-width: 0px;
+
+    &:first-child {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      border-left-width: 1px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+  }
+}
+
+.hlm-button-group-grid {
+  display: grid;
   
   button {
     border-radius: 0;

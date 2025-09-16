@@ -182,7 +182,8 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TRecordQueryMo
 
   abstract header: string;
   abstract component: Type<any>;
-  abstract dialogWidth: DialogContentVariants["width"];
+  abstract dialogSize: DialogContentVariants["size"];
+  abstract dialogAlign: DialogContentVariants["align"];
   abstract closeOnSave: boolean;
 
   public readonly data = signal<PllPaginatedResponse<TRecordQueryModel>>({
@@ -299,7 +300,8 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TRecordQueryMo
   openToCreate(inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent> = {}): Observable<any> {
     return this.dialogFacade.open<BaseFormComponentDirective<TRecordModel>>(this.component, {
       header: this.header,
-      width: this.dialogWidth,
+      size: this.dialogSize,
+      align: this.dialogAlign,
       inputs: { ...inputs, closeOnSave: this.closeOnSave },
     }).closed$;
   };
@@ -307,7 +309,8 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TRecordQueryMo
   openToUpdate(id: PllID, inputs: Inputkeys<BaseFormComponentDirective<TRecordModel>> & Inputkeys<TComponent> = {}): Observable<any> {
     return this.dialogFacade.open<BaseFormComponentDirective<TRecordModel>>(this.component, {
       header: this.header,
-      width: this.dialogWidth,
+      size: this.dialogSize,
+      align: this.dialogAlign,
       inputs: { ...inputs, closeOnSave: this.closeOnSave, id },
     }).closed$;
   };

@@ -31,7 +31,7 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
     { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
     { icon: "list-todo", label: "Processar", command: () => this.changeStatus(data, "PROCESSED") },
     { separator: true },
-    { icon: "circle-fading-arrow-up", label: "Converter em", items: [
+    { icon: "circle-fading-arrow-up", label: "Converter em", children: [
       { icon: "calendar", label: "Agendamento", command: () => this.changeStatus(data, "PROCESSED") },
       { icon: "square-kanban", label: "Projeto", command: () => this.changeStatus(data, "PROCESSED") },
       { separator: true },

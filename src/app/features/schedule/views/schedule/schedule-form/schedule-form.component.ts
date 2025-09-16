@@ -2,10 +2,13 @@ import { Component, inject, input } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective, event } from '../../../../../common/directives/base-form-component.directive';
 import { Schedule } from '../../../models/schedule.model';
-import { ScheduleFacade } from '../../../facades/schedule.facade';
+import { ScheduleFacade, ScheduleWeekdayOptions } from '../../../facades/schedule.facade';
 import { switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
+import { SelectItem } from '../../../../../common/types/select-item.type';
+import moment from 'moment';
+import { Colors, colors } from '../../../../../common/types/colors.type';
 
 @Component({
   standalone: true,
@@ -15,6 +18,7 @@ import { ScheduleCategory } from '../../../models/schedule-category.model';
 })
 export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> {
   date = input<Date>();
+  setDateHour = input<boolean>();
   title = input<string>();
 
   override facade = inject(ScheduleFacade);
@@ -22,19 +26,43 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
   scheduleCategoryFacade = inject(ScheduleCategoryFacade);
 
   scheduleCategoryOptions: ScheduleCategory[] = [];
+  frequencyOptions: SelectItem[] = [];
+  colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
   
   override onNgOnInit = event(
     switchMap(() => this.handleGetScheduleCategoryOptions()),
   );
+
+  override onInitRecord = event(tap(() => this.setFrequencyOptions()));
 
   override onInitCreateRecord = event(tap(() => {
     if(this.title()) this.form.controls.title.setValue(this.title());
     if(this.date()) {
       this.form.controls.startsAt.setValue(this.date());
       this.form.controls.endsAt.setValue(this.date());
+      if(this.setDateHour()) {
+        this.form.controls.startsAtTime.setValue(moment(this.date()).format("HH:mm"));
+        this.form.controls.endsAtTime.setValue(moment(this.date()).add(30, "minutes").format("HH:mm"));
+      };
     };
     if(this.scheduleCategoryOptions.length) this.form.controls.categoryId.setValue(this.scheduleCategoryOptions[0].id);
   }));
 
-  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
+  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
+
+  setFrequencyOptions() {
+    const date = moment(this.form.value.startsAt);
+    this.frequencyOptions = [
+      { label: "Não se repete", value: "NO_REPETITION" },
+      { label: "Diariamente", value: "DAILY" },
+      { label: `Semanal: cada ${ScheduleWeekdayOptions[!date.day()? 6 : date.day() - 1]?.label.toLowerCase() || "Segunda-Feira"}`, value: "WEEKLY" },
+      { label: "Mensalmente", value: "MONTHLY" },
+      { label: `Anual em ${date.format("MMMM DD")}`, value: "YEARLY" },
+      { label: "Personalizar", value: "CUSTOM" },
+    ];
+  };
+
+  onChangeColor(color: Colors) {
+    this.form.controls.color.setValue(color);
+  };
 };

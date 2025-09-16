@@ -28,11 +28,11 @@ export function createMockedSchedule(data: Partial<Schedule>): Schedule {
   });
 };
 
-function buildMockedSchedules(title: string, startsAtTime: string, endsAtTime: string, categoryId: PllID, exeptions: number[] = [], only: boolean = false): Schedule[] {
+function buildMockedSchedules(title: string, startsAtTime: string, endsAtTime: string, categoryId: PllID, exeptions: number[] = [], only: boolean = false, days: number = 0): Schedule[] {
   const schedules: Schedule[] = [];
-  let date = moment().startOf("month");
-  while (date.isBefore(moment().endOf("month"))) {
-    if(only? exeptions.includes(date.day()) : !exeptions.includes(date.day())) schedules.push(createMockedSchedule({ title, startsAt: date.toDate(), endsAt: date.toDate(), startsAtTime, endsAtTime, categoryId }));
+  let date = moment().subtract(2, "months").startOf("month");
+  while (date.isBefore(moment().add(2, "months").endOf("month"))) {
+    if(only? exeptions.includes(date.day()) : !exeptions.includes(date.day())) schedules.push(createMockedSchedule({ title, startsAt: date.toDate(), endsAt: date.add(days, "days").toDate(), startsAtTime, endsAtTime, categoryId }));
     date = date.add(1, "day");
   };
   return schedules;
@@ -47,13 +47,16 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
 
   constructor() {
     super([
-      ...buildMockedSchedules("OnDoctor - Daily", "08:45:00", "08:45:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [0,6]),
-      ...buildMockedSchedules("OnDoctor - Treinamento", "09:00:00", "10:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [6], true),
+      ...buildMockedSchedules("OnDoctor - Daily", "09:00:00", "09:00:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [0,6]),
+      ...buildMockedSchedules("OnDoctor - Treinamento", "09:00:00", "09:00:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [6], true),
       ...buildMockedSchedules("Caminhada", "06:30:00", "07:20:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[1].id, [0]),
       ...buildMockedSchedules("Curso de DSA", "07:30:00", "08:00:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [0]),
-      ...buildMockedSchedules("PJ - Zenith", "17:00:00", "18:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [1,3,5], true),
-      ...buildMockedSchedules("Estudo Avulso", "17:00:00", "18:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [2,4,6], true),
+      ...buildMockedSchedules("PJ - Zenith", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [1,3,5], true),
+      ...buildMockedSchedules("Estudo Avulso", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[3].id, [2,4,6], true),
       ...buildMockedSchedules("Leitura", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id, [0]),
+      ...buildMockedSchedules("Dentista", "10:00:00", "10:30:00", INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[2].id, [1], true),
+      ...buildMockedSchedules("2h - ref. layout", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [4], true, 1),
+      ...buildMockedSchedules("4h - ref. documentos", null, null, INITIAL_SCHEDULE_CATEGORY_MOCKED_DATA[0].id, [1], true, 2),
     ]);
   };
 
@@ -64,7 +67,7 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
       const newRecord: GetAllScheduleByFilterResponse = {
         ...record,
         category: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.name || "",
-        color: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.color || "VIOLET",
+        color: record.color || this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.color || "VIOLET",
         type: this.scheduleCategoryService.records().find(category => category.id === record.categoryId)?.type || "SCHEDULE",
       };
       return newRecord;

@@ -23,7 +23,8 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryRe
 
   override header: string = "Receita";
   override component: Type<any> = ReceivableFormComponent;
-  override dialogWidth: DialogContentVariants["width"] = "lg";
+  override dialogSize: DialogContentVariants["size"] = "lg";
+  override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Receivable> = {

@@ -1,15 +1,14 @@
 import { GlobalModule } from "../../../../../../../core/modules/global-module.module";
-import { AfterContentInit, Component, computed, ContentChild, ContentChildren, effect, input, model, OnInit, output, QueryList, signal, TemplateRef, ViewChild } from "@angular/core";
+import { AfterContentInit, Component, computed, ContentChild, ContentChildren, effect, HostListener, input, model, OnInit, output, QueryList, signal, TemplateRef, ViewChild } from "@angular/core";
 import { PllID } from "../../../../../../../core/lib/pollaris";
 import { hlm } from "@spartan-ng/brain/core";
 import { ClassValue } from "clsx";
 import { HlmTemplateDirective } from "../../../../../../directives/hlm-template.directive";
+import { BrnMenuItem } from "@spartan-ng/ui-menu-helm";
 
-type HlmAction = { label: string, icon: string; command?: () => void; disabled?: boolean; visible?: boolean; separator?: boolean; shortcut?: string, items?: HlmDataTableAction[] };
-type HlmSeparator = Partial<HlmAction> & { separator: boolean };
 export type HlmDataTableRecord = Record<any, any> & { id: PllID };
 export type HlmDataTableColumn = { header: string, field?: string, class?: string };
-export type HlmDataTableAction = HlmAction | HlmSeparator;
+export type HlmDataTableAction = BrnMenuItem;
 export type HlmDataTableActionFc<TModel> = (data: TModel) => HlmDataTableAction[];
 export type HlmDataTableSelectionActionFc<TModel> = (data: TModel[]) => HlmDataTableAction[];
 
@@ -84,6 +83,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   });
 
   queryTimeout: NodeJS.Timeout;
+  resizeTimeout: NodeJS.Timeout;
 
   // multiselect
   selection = model<PllID[]>([]);
@@ -95,9 +95,13 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   onPaginate = output<{ page: number, size: number }>();
   onInputSearch= output<string>();
 
-  offsetHeight = input<number>();
-  mainHeight = computed(() => {
-    return (document.getElementById("main-container")?.offsetHeight - 54 - this.offsetHeight()) + "px";
+  offsetHeight = model<number>();
+  height = signal("0px");
+  heightNb = signal(0);
+
+  offsetEffect = effect(() => {
+    this.offsetHeight();
+    this.setHeight();
   });
 
   @ContentChildren(HlmTemplateDirective) templates!: QueryList<HlmTemplateDirective>;
@@ -117,6 +121,22 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ViewChild("table", { static: true }) tableTemplate: TemplateRef<any>;
   @ViewChild("grid", { static: true }) gridTemplate: TemplateRef<any>;
   body = signal<TemplateRef<any>>(null);
+
+  @HostListener('window:resize')
+  onResize() {
+    this.setHeightTimeout();
+  };
+
+  setHeightTimeout() {
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => this.setHeight(), 200);
+  };
+
+  setHeight() {
+    const height = document.getElementById("main-container")?.offsetHeight - 54 - this.offsetHeight();
+    this.height.set(height + "px");
+    this.heightNb.set(height);
+  };
 
   ngOnInit() {};
 

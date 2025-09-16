@@ -71,7 +71,7 @@
 <ng-container *ngIf="!bodyTemplate && body() && ['table', 'grid'].includes(layout())" [ngTemplateOutlet]="body()" />
 
 <ng-template #table>
-  <div [style]="{ height: mainHeight() }">
+  <div [style]="{ height: height() }">
     <hlm-table hlm stickyHeader [class]="_computedClass()">
       <hlm-trow class="bg-slate-50 mr-1.5" *ngIf="colHeader() && columns()?.length">
         <hlm-th *ngIf="multiselect()" class="!px-4">
@@ -95,8 +95,8 @@
                 <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
               </span>
               <ng-template #menu>
-                <hlm-menu class="w-48">
-                  <hlm-menu-group>
+                <hlm-menu class="w-48" [items]="actions()[rowData.id]">
+                  <!-- <hlm-menu-group>
                     <ng-container *ngFor="let action of actions()[rowData.id]">
                       <ng-container *ngIf="action.separator && action.visible !== false">
                         <hlm-menu-separator />
@@ -134,7 +134,7 @@
                         </ng-template>
                       </ng-container>
                     </ng-container>
-                  </hlm-menu-group>
+                  </hlm-menu-group> -->
                 </hlm-menu>
               </ng-template>
             </hlm-td>
@@ -169,7 +169,7 @@
 </ng-template>
 
 <ng-template #grid>
-  <div class="grid grid-cols-4 gap-2 mb-2 overflow-y-auto" [style]="{ height: mainHeight() }">
+  <div class="grid grid-cols-4 gap-2 mb-2 overflow-y-auto" [style]="{ height: height() }">
     <div *ngFor="let rowData of paginatedValues()">
       <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: rowData }"></ng-container>
     </div>
