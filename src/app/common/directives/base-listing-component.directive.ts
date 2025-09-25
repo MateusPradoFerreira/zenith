@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input, OnInit, signal, Signal } from '@angular/core';
-import { PllFacade, PllPaginatedResponse, PllRecord, PllRecordId } from '@pollaris';
+import { PllFacade, PllPaginatedResponse, PllQueryFacade, PllRecord, PllRecordId } from '@pollaris';
 import { PllFormSchema } from '@pollaris/forms';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
@@ -19,7 +19,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   offsetHeight = input<number>(0);
   isDialog = input<boolean>(false);
   
-  abstract facade: PllFacade<any, TRecordQueryModel, TRecordQueryParams>;
+  abstract facade: PllQueryFacade<any, TRecordQueryModel, TRecordQueryParams>;
 
   dialogFacade = inject(DialogFacade);
   dialogInputs: Signal<Inputkeys<any>> = computed(() => ({}));
@@ -40,7 +40,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
 
   ngOnInit() {
     this.loading = this.facade.loading;
-    this.processing = this.facade.processing;
+    this.processing = this.facade.facade.processing;
     this.configureFilter();
     this.onNgOnInit().pipe(
       switchMap(() => this.handleUpdateUI()),
@@ -69,22 +69,22 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   };
 
   handleCreate() {
-    this.facade.openToCreate(this.dialogInputs()).subscribe(() => this.updateUI());
+    this.facade.facade.openToCreate(this.dialogInputs()).subscribe(() => this.updateUI());
   };
 
   handleUpdate(rowData: TRecordQueryModel) {
-    this.facade.openToUpdate(rowData.id, this.dialogInputs()).subscribe(() => this.updateUI());
+    this.facade.facade.openToUpdate(rowData.id, this.dialogInputs()).subscribe(() => this.updateUI());
   };
 
   handleDelete(rowData: TRecordQueryModel) {
-    this.facade.openToDelete(rowData.id).subscribe({
+    this.facade.facade.openToDelete(rowData.id).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),
     });
   };
 
   handleDeleteMany(data: TRecordQueryModel[]) {
-    this.facade.openToDeleteMany(data.map(record => record.id)).subscribe({
+    this.facade.facade.openToDeleteMany(data.map(record => record.id)).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),
     });

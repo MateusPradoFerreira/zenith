@@ -1,4 +1,4 @@
-export type SelectItem = {
+export type SelectItem<T = any> = {
   label: string;
-  value: any;
+  value: T;
 };

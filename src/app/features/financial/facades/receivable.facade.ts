@@ -8,14 +8,13 @@ import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, Recei
 import { ReceivableState } from "../states/receivable.state";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
 export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
 export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
 
-@Injectable({ providedIn: "root" })
 export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryResponse, ReceivableUseQueryParams, ReceivableFormComponent> {
   override state = inject(ReceivableState);
   override service = inject(ReceivableService);
@@ -73,74 +72,15 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryRe
   };
   
   handlePay(id: PllID): Observable<Receivable> {
-    const sub$ = new Subject<Receivable>();
-    this.dialogFacade.confirm({ 
-      header: "Confirmar Recebimento?",
-      severity: "success",
-      events: {
-        onConfirm: () => {
-          this.service.pay(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
+    return this.dialogFacade.confirmRequest(this.service.pay(id), "Confirmar Pagamento?", "success").pipe(tap(() => this.state.remove(id)));
   };
 
   handleCancel(id: PllID): Observable<Receivable> {
-    const sub$ = new Subject<Receivable>();
-    this.dialogFacade.confirm({ 
-      header: "Cancelar Receita?",
-      severity: "danger",
-      events: {
-        onConfirm: () => {
-          this.service.cancel(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
+    return this.dialogFacade.confirmRequest(this.service.cancel(id), "Cancelar Despesa?", "danger").pipe(tap(() => this.state.remove(id)));
   };
 
   handleReopen(id: PllID): Observable<Receivable> {
-    const sub$ = new Subject<Receivable>();
-    this.dialogFacade.confirm({ 
-      header: "Reabrir Receita?",
-      events: {
-        onConfirm: () => {
-          this.service.reopen(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
+    return this.dialogFacade.confirmRequest(this.service.reopen(id), "Reabrir Despesa?", "info").pipe(tap(() => this.state.remove(id)));
   };
 };
 

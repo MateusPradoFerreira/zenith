@@ -1,4 +1,4 @@
-import { computed, Directive, input, model, OnInit, signal } from "@angular/core";
+import { computed, Directive, input, model, OnInit, output, signal } from "@angular/core";
 import { PllFacade, PllID, PllRecordId } from "../../core/lib/pollaris";
 import { PllFormSchema } from "../../core/lib/pollaris/forms";
 import { map, Observable, of, OperatorFunction, switchMap, tap } from "rxjs";
@@ -11,11 +11,16 @@ export const event = <T = void>(...operators: OperatorFunction<T, any>[]) => {
   return (data: T) => (of(data || null) as any).pipe(...operators) as Observable<any>;
 };
 
+export type BaseFormSubmitConfig = {
+  closeOnSave?: boolean;
+};
+
 @Directive()
 export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordId> implements OnInit {
   public readonly userClass = input<ClassValue>("", { alias: "class" });
+  public readonly baseUserClass = signal<ClassValue>("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3.5 gap-x-2");
 	protected readonly _computedClass = computed(() =>
-		hlm("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3.5 gap-x-2", this.userClass()),
+		hlm(this.baseUserClass(), this.userClass()),
 	);
   
   id = model<PllID>(null);
@@ -34,22 +39,24 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
-  onNgOnInit: EventObs<void> = event();
-  onUpdateUI: EventObs<TRecordModel> = event();
-  onInitRecord: EventObs<void> = event();
-  onInitCreateRecord: EventObs<void> = event();
-  onInitUpdateRecord: EventObs<void> = event();
-  onInitSumit: EventObs<void> = event();
-  onFinishSumit: EventObs<void> = event();
+  evNgOnInit: EventObs = event();
+  evUpdateUI: EventObs<TRecordModel> = event();
+  evInitRecord: EventObs = event();
+  evInitCreateRecord: EventObs = event();
+  evInitUpdateRecord: EventObs = event();
+  evInitSumit: EventObs<TRecordModel> = event();
+  evNextSumit: EventObs<TRecordModel> = event();
 
+  onNextSumit = output<TRecordModel>();
+  
   async ngOnInit() {
     this.loading = this.facade.loading;
     this.processing = this.facade.processing;
     this.configureFormSchema();
-    await this.onNgOnInit().pipe(
+    await this.evNgOnInit().pipe(
       switchMap(() => this.handleUpdateUI()),
     ).subscribe({
-      error: error => this.handlePopulateForm().subscribe(),
+      error: () => this.handlePopulateForm().subscribe(),
     });
   };
 
@@ -61,6 +68,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
 
   handleUpdateUI(): Observable<TRecordModel> {
     return of(this.id()).pipe(
+      tap(response => console.log("UPDATE-UI", response)),
       switchMap(id => {
         if(!id) return this.handlePopulateForm().pipe(tap(response => console.log("DEFAULT-DATA", response)));
         return this.facade.getRecord(id).pipe(
@@ -68,7 +76,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
           tap(response => this.orgRecord = response),
           tap(response => this.crrRecord = response),
           switchMap(response => this.handlePopulateForm(response)),
-          switchMap(response => this.onUpdateUI(response)),
+          switchMap(response => this.evUpdateUI(response)),
         );
       }),
     );
@@ -81,33 +89,36 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   handlePopulateForm(data?: TRecordModel): Observable<TRecordModel> {
     return of(data).pipe(
       switchMap(response => {
-        if(response) return this.form.setValue(data).pipe(switchMap(() => this.onInitUpdateRecord()));
+        if(response) return this.form.setValue(data).pipe(switchMap(() => this.evInitUpdateRecord()));
         this.configureFormSchema();
-        return this.onInitCreateRecord();
+        return this.evInitCreateRecord().pipe(
+          tap(() => this.orgRecord = this.form.value),
+          tap(() => this.crrRecord = this.form.value),
+        );
       }),
-      switchMap(() => this.onInitRecord()),
+      switchMap(() => this.evInitRecord()),
       tap(() => this.formReady.set(true)),
       map(() => this.form.value),
     );
   };
 
-  onSubmit() {
-    this.handleSubmit().subscribe({
+  onSubmit(config: BaseFormSubmitConfig = {}) {
+    this.handleSubmit(config).subscribe({
       error: error => console.error(error),
     });
   };
 
-  handleSubmit(): Observable<TRecordModel> {
+  handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
     return this.form.handleSubmit().pipe(
-      switchMap(response => this.onInitSumit().pipe(map(() => response))),
+      switchMap(response => this.evInitSumit(response).pipe(map(() => response))),
       switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
       tap(response => console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response)),
       tap(response => this.id.set(response.id)),
       tap(response => this.orgRecord = response),
       tap(response => this.crrRecord = response),
       switchMap(response => this.handlePopulateForm(response)),
-      switchMap(() => this.onFinishSumit()),
-      tap(() => this.closeOnSave() && this._context.close(this.crrRecord))
+      switchMap(response => this.evNextSumit(response).pipe(tap(() => this.onNextSumit.emit(response)))),
+      tap(() => ([true, false].includes(closeOnSave)? closeOnSave : this.closeOnSave()) && this._context.close(this.crrRecord))
     );
   };
 

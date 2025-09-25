@@ -5,6 +5,7 @@ import { delay, map, Observable, of } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 import { Util } from "../../../common/util/util";
+import { Injectable } from "@angular/core";
 
 export function createMockedGoal(data: Partial<Goal>): Goal {
   return new Goal({
@@ -22,6 +23,7 @@ export const INITIAL_GOAL_MOCKED_DATA: Goal[] = [
   createMockedGoal({ name: "Curso", color: "ORANGE" }),
 ];
 
+@Injectable({ providedIn: "root" })
 export class GoalMockService extends PllMockRestService<Goal> implements GoalService {
 
   constructor () {

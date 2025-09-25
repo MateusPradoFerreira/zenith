@@ -1,19 +1,21 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective, event } from '../../../../../common/directives/base-form-component.directive';
-import { Schedule } from '../../../models/schedule.model';
-import { ScheduleFacade, ScheduleWeekdayOptions } from '../../../facades/schedule.facade';
+import { Schedule, ScheduleFrequency } from '../../../models/schedule.model';
+import { ScheduleFacade } from '../../../facades/schedule.facade';
 import { switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import moment from 'moment';
 import { Colors, colors } from '../../../../../common/types/colors.type';
+import { RecurrenceWeekdayOptions } from '../../../facades/recurrence.facade';
+import { RecurrenceFormComponent } from '../../recurrence/recurrence-form/recurrence-form.component';
 
 @Component({
   standalone: true,
   selector: 'app-schedule-form',
-  imports: [GlobalModule],
+  imports: [GlobalModule, RecurrenceFormComponent],
   templateUrl: './schedule-form.component.html',
 })
 export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> {
@@ -26,16 +28,16 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
   scheduleCategoryFacade = inject(ScheduleCategoryFacade);
 
   scheduleCategoryOptions: ScheduleCategory[] = [];
-  frequencyOptions: SelectItem[] = [];
+  frequencyOptions: SelectItem<ScheduleFrequency>[] = [];
   colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
   
-  override onNgOnInit = event(
+  override evNgOnInit = event(
     switchMap(() => this.handleGetScheduleCategoryOptions()),
   );
 
-  override onInitRecord = event(tap(() => this.setFrequencyOptions()));
+  override evInitRecord = event(tap(() => this.setFrequencyOptions()));
 
-  override onInitCreateRecord = event(tap(() => {
+  override evInitCreateRecord = event(tap(() => {
     if(this.title()) this.form.controls.title.setValue(this.title());
     if(this.date()) {
       this.form.controls.startsAt.setValue(this.date());
@@ -55,14 +57,10 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
     this.frequencyOptions = [
       { label: "Não se repete", value: "NO_REPETITION" },
       { label: "Diariamente", value: "DAILY" },
-      { label: `Semanal: cada ${ScheduleWeekdayOptions[!date.day()? 6 : date.day() - 1]?.label.toLowerCase() || "Segunda-Feira"}`, value: "WEEKLY" },
+      { label: `Semanal: cada ${RecurrenceWeekdayOptions[!date.day()? 6 : date.day() - 1]?.label.toLowerCase() || "Segunda-Feira"}`, value: "WEEKLY" },
       { label: "Mensalmente", value: "MONTHLY" },
       { label: `Anual em ${date.format("MMMM DD")}`, value: "YEARLY" },
       { label: "Personalizar", value: "CUSTOM" },
     ];
-  };
-
-  onChangeColor(color: Colors) {
-    this.form.controls.color.setValue(color);
   };
 };

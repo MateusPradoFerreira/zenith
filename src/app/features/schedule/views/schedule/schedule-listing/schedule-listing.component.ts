@@ -156,7 +156,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     if(this.dayIsClicked) {
       clearTimeout(this.dayClickTimeout);
       this.dayIsClicked = false;
-      this.facade.openToCreate({ date, setDateHour });
+      this.facade.openToCreate({ date, setDateHour }).subscribe(() => this.updateUI());
       return;
     };
 
@@ -166,4 +166,6 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
       this.date.set(date);
     }, 200);
   };
+
+  json = JSON.stringify
 };

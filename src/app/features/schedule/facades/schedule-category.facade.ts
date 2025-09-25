@@ -11,7 +11,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type ScheduleCategoryUseQueryParams = GetAllScheduleCategoryByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategory, ScheduleCategoryUseQueryParams, ScheduleCategoryFormComponent> {
   override state = inject(ScheduleCategoryState);
   override service = inject(ScheduleCategoryService);

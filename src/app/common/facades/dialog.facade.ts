@@ -1,6 +1,7 @@
 import { EventEmitter, inject, Injectable, InputSignal, ModelSignal, OutputEmitterRef, Type } from "@angular/core";
-import { HlmDialogOptions, HlmDialogService } from "../libs/ui/ui-dialog-helm/src";
+import { DialogContentVariants, HlmDialogOptions, HlmDialogService } from "../libs/ui/ui-dialog-helm/src";
 import { ConfirmationComponent } from "../components/confirmation.component";
+import { Observable, Subject } from "rxjs";
 
 export type IsInput<T> = T extends InputSignal<any> | ModelSignal<any>? true : false;
 export type ExInput<T> = T extends InputSignal<infer V>? V : T;
@@ -28,6 +29,32 @@ export class DialogFacade {
 
   confirm(config: DialogConfig<ConfirmationComponent>) {
     return this.open<ConfirmationComponent>(ConfirmationComponent, config);
+  };
+
+  confirmRequest<T>(observable: Observable<T>, header: string, severity: DialogContentVariants["severity"] = "primary") {
+    const sub$ = new Subject<T>();
+    this.confirm({ 
+      header,
+      severity,
+      events: {
+        onConfirm: () => {
+          observable.subscribe({
+            next: response => {
+              sub$.next(response);
+              sub$.complete();
+            },
+            error: error => {
+              sub$.error(error);
+              sub$.complete();
+            },
+          })
+        },
+        onCancel: () => sub$.complete(),
+      },
+    }).closed$.subscribe(res => {
+      if(!res?.status) sub$.complete();
+    });
+    return sub$.asObservable();
   };
 
 };

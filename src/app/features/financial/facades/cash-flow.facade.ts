@@ -9,7 +9,6 @@ import moment from "moment";
 
 export type CashFlowUseQueryParams = GetAllCashFlowByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class CashFlowFacade extends PllFacade<CashFlow, CashFlow, CashFlowUseQueryParams> {
   override state = inject(CashFlowState);
   override service = inject(CashFlowService);

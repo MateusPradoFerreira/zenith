@@ -12,7 +12,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type BankAccountUseQueryParams = GetAllBankAccountByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class BankAccountFacade extends PllFacade<BankAccount, BankAccount, BankAccountUseQueryParams, BankAccountFormComponent> {
   override state = inject(BankAccountState);
   override service = inject(BankAccountService);

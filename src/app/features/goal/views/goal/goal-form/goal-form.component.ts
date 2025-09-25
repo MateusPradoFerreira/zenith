@@ -21,7 +21,7 @@ export class GoalFormComponent extends BaseFormComponentDirective<Goal> {
   colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
   days: { intensity: "HIGH" | "MEDIUM" | "LOW", date: Date }[] = []; 
 
-  override onNgOnInit: EventObs<void> = event(tap(() => {
+  override evNgOnInit: EventObs<void> = event(tap(() => {
     let date = moment().startOf("month");
     while (date.isBefore(moment().endOf("month"))) {
       this.days.push({ intensity: faker.helpers.arrayElement(["HIGH", "MEDIUM", "LOW"]), date: date.toDate() });

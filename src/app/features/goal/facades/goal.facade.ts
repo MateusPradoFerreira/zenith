@@ -11,7 +11,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type GoalUseQueryParams = GetAllGoalByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class GoalFacade extends PllFacade<Goal, GetAllGoalByFilterResponse, GoalUseQueryParams, GoalFormComponent> {
   override state = inject(GoalState);
   override service = inject(GoalService);

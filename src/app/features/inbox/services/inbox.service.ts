@@ -1,4 +1,4 @@
-import { PllPaginatedResponse, PllRestService } from "@pollaris";
+import { PllID, PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Inbox, InboxPriority, InboxStatus } from "../models/inbox.model";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
@@ -24,5 +24,17 @@ export class InboxService extends PllRestService<Inbox> {
       startsAt: moment(startsAt).format("YYYY-MM-DD"),
       endsAt: moment(endsAt).format("YYYY-MM-DD"),
     }});
+  };
+
+  process(id: PllID): Observable<Inbox> {
+    return this.http.post<Inbox>(`${this.baseRoute}/${this.pathRoute}/${id}/process`, {});
+  };
+
+  cancel(id: PllID): Observable<Inbox> {
+    return this.http.post<Inbox>(`${this.baseRoute}/${this.pathRoute}/${id}/cancel`, {});
+  };
+
+  reopen(id: PllID): Observable<Inbox> {
+    return this.http.post<Inbox>(`${this.baseRoute}/${this.pathRoute}/${id}/reopen`, {});
   };
 };

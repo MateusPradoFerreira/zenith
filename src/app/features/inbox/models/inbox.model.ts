@@ -9,6 +9,8 @@ export class Inbox {
   status: InboxStatus;
   priority: InboxPriority;
   createdAt: Date;
+  cancelledAt: Date;
+  processedAt: Date;
   dueAt: Date;
 
   constructor(props: Partial<Inbox>) {

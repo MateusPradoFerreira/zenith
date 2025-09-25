@@ -38,11 +38,11 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
   ]);
 
   override actionFn: HlmDataTableActionFc<Receivable> = (data: Receivable) => ([
-    { icon: "pencil-line", label: "Editar", disabled: this.processing(), command: () => this.handleUpdate(data) },
-    { icon: "dollar-sign", label: "Receber", disabled: this.processing(), command: () => this.handlePay(data.id), visible: data.status !== "PAID" },
+    { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
+    { icon: "dollar-sign", label: "Receber", command: () => this.handlePay(data.id), visible: data.status !== "PAID" },
     { separator: true, visible: data.status !== "PAID" },
-    { icon: "circle-x", label: "Cancelar", disabled: this.processing(), command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" && data.status !== "PAID" },
-    { icon: "check", label: "Reabrir", disabled: this.processing(), command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
+    { icon: "circle-x", label: "Cancelar", command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" && data.status !== "PAID" },
+    { icon: "check", label: "Reabrir", command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
   ]);
 
   secrecyFacade = inject(SecrecyFacade);

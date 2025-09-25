@@ -1,7 +1,7 @@
 
 import { PllID } from "../../../core/lib/pollaris";
 
-export type RecurrenceFrequency = "NO_REPETITION" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
+export type RecurrenceFrequency = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 export type RecurrenceWeekday = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
 export type RecurrenceType = "PAYABLE" | "RECEIVABLE" | "SCHEDULE" | "INBOX" | "GOAL";
 
@@ -18,6 +18,7 @@ export class Recurrence {
   endsAt: Date;
   exceptions: Date[];
   type: RecurrenceType;
+  active: boolean;
 
   constructor(props: Partial<Recurrence>) {
     Object.assign(this, props);

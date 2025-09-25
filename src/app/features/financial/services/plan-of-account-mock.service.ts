@@ -1,43 +1,24 @@
-import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { PlanOfAccount } from "../models/plan-of-account.model";
 import { GetAllPlanOfAccountByFilterParams, GetAllPlanOfAccountByFilterResponse, PlanOfAccountService } from "./plan-of-account.service";
-import { delay, map, Observable, of } from "rxjs";
-import { fakerJs } from "../../../core/config/faker.config";
-import { v4 as uuid } from 'uuid';
-import { Util } from "../../../common/util/util";
+import { delay, Observable } from "rxjs";
+import { inject, Injectable } from "@angular/core";
 
-export function createMockedPlanOfAccount(data: Partial<PlanOfAccount>): PlanOfAccount {
-  return new PlanOfAccount({
-    active: true,
-    ...data,
-    id: data.id || uuid(),
-  });
+@Injectable({ providedIn: "root" })
+export class PlanOfAccountMockState extends PllRecordState<PlanOfAccount> {};
+
+@Injectable({ providedIn: "root" })
+export class PlanOfAccountMockRepository extends PllRecordRepository<PlanOfAccount> {
+  override state = inject(PlanOfAccountMockState);
 };
 
-export const INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA: PlanOfAccount[] = [
-  createMockedPlanOfAccount({ name: "Geral" }),
-  createMockedPlanOfAccount({ name: "Vendas" }),
-  createMockedPlanOfAccount({ name: "Compras" }),
-  createMockedPlanOfAccount({ name: "Serviços" }),
-  createMockedPlanOfAccount({ name: "Financeiro" }),
-];
-
+@Injectable({ providedIn: "root" })
 export class PlanOfAccountMockService extends PllMockRestService<PlanOfAccount> implements PlanOfAccountService {
-
-  constructor () {
-    super(INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA);
-  };
-
-  override createRecord = (data: Partial<PlanOfAccount>) => createMockedPlanOfAccount(data);
+  override repository = inject(PlanOfAccountMockRepository);
 
   getAllByFilter(params: GetAllPlanOfAccountByFilterParams): Observable<PllPaginatedResponse<GetAllPlanOfAccountByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(
-      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
-      map(response => Util.paginatedValueFrom(response)),
-    );
-  };
-
-  private _filtering(records: PlanOfAccount[], params: GetAllPlanOfAccountByFilterParams): PlanOfAccount[] {
-    return records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
+    return this.repository.find({
+      ...(!params?.status || params.status === "ALL"? {} : { active: params.status === "ACTIVE" }),
+    }).pipe(delay(this.delay()));
   };
 };

@@ -1,38 +1,26 @@
-import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { CashFlow } from "../models/cash-flow.model";
 import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "./cash-flow.service";
-import { delay, map, Observable, of } from "rxjs";
-import { fakerJs } from "../../../core/config/faker.config";
-import { v4 as uuid } from 'uuid';
-import { inject } from "@angular/core";
-import { PayableService } from "./payable.service";
-import { ReceivableService } from "./receivable.service";
-import moment from "moment";
-import { BankAccountService } from "./bank-account.service";
-import { Util } from "../../../common/util/util";
+import { Observable, of } from "rxjs";
+import { inject, Injectable } from "@angular/core";
 
-export function createMockedCashFlow(data: Partial<CashFlow>): CashFlow {
-  return new CashFlow({
-    ...data,
-    id: data.id || uuid(),
-  });
+@Injectable({ providedIn: "root" })
+export class CashFlowMockState extends PllRecordState<CashFlow> {};
+
+@Injectable({ providedIn: "root" })
+export class CashFlowMockRepository extends PllRecordRepository<CashFlow> {
+  override state = inject(CashFlowMockState);
 };
 
+@Injectable({ providedIn: "root" })
 export class CashFlowMockService extends PllMockRestService<CashFlow> implements CashFlowService {
-  payableService = inject(PayableService);
-  receivableService = inject(ReceivableService);
-  bankAccountService = inject(BankAccountService);
-
-  override createRecord = (data: Partial<CashFlow>) => createMockedCashFlow(data);
+  override repository = inject(CashFlowMockRepository);
 
   getAllByFilter(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return of(this._filtering(params)).pipe(
-      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
-      map(response => Util.paginatedValueFrom(response)),
-    );
+    return of({ data: [], pagination: null }).pipe();
   };
 
-  private _filtering(params: GetAllCashFlowByFilterParams): CashFlow[] {
+  /* private _filtering(params: GetAllCashFlowByFilterParams): CashFlow[] {
     const flow: CashFlow[] = [];
 
     const start = moment().set("year", 1990).startOf("year");
@@ -47,8 +35,8 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
     });
 
     const normalize = (value: any) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-    let payables = this.payableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
-    let receivables = this.receivableService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+    let payables = this.payableMockService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
+    let receivables = this.receivableMockService.records().filter(record => record.status === "PAID" && (!params?.query? true : normalize(record.name).includes(normalize(params.query))));
 
     payables = payables.filter(record => !params.centerOfCostId? true : record.centerOfCostId === params.centerOfCostId);
     payables = payables.filter(record => !params.planOfAccountId? true : record.planOfAccountId === params.planOfAccountId);
@@ -106,7 +94,7 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
       type: "PERCENT",
     };
 
-    const payableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
+    const payableBankAccountsBalance: CashFlow[] = this.bankAccountMockService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => payables.filter(payable => payable.bankAccountId === bank.id && moment(payable.paidAt).isBetween(period.startsAt, period.endsAt, "day", "[]")).reduce((prev, crr) => prev + crr.value, 0) * -1),
@@ -128,7 +116,7 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
       type: "PAYABLE_MARK",
     };
 
-    const receivableBankAccountsBalance: CashFlow[] = this.bankAccountService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
+    const receivableBankAccountsBalance: CashFlow[] = this.bankAccountMockService.records().filter(record => params?.bankAccountId? record.id === params.bankAccountId : true).map(bank => ({
       id: bank.id,
       name: `--- ${bank.name}`,
       values: periods.map(period => receivables.filter(receivable => receivable.bankAccountId === bank.id && moment(receivable.paidAt).isBetween(period.startsAt, period.endsAt, "day", "[]")).reduce((prev, crr) => prev + crr.value, 0)),
@@ -158,5 +146,5 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
     flow.push(finalBalance);
 
     return flow;
-  };
+  }; */
 };

@@ -12,7 +12,6 @@ import { Refiners } from "@pollaris/forms/refiners";
 
 export type GoalTaskUseQueryParams = GetAllGoalTaskByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class GoalTaskFacade extends PllFacade<GoalTask, GoalTask, GoalTaskUseQueryParams, GoalTaskFormComponent> {
   override state = inject(GoalTaskState);
   override service = inject(GoalTaskService);

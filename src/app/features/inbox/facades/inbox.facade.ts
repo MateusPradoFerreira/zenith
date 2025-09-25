@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllID } from "../../../core/lib/pollaris";
 import { Inbox, InboxStatus } from "../models/inbox.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -8,13 +8,12 @@ import { GetAllInboxByFilterParams, InboxService } from "../services/inbox.servi
 import { InboxState } from "../states/inbox.state";
 import { InboxFormComponent } from "../views/inbox/inbox-form/inbox-form.component";
 import moment from "moment";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, tap } from "rxjs";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type InboxUseQueryParams = GetAllInboxByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, InboxFormComponent> {
   override state = inject(InboxState);
   override service = inject(InboxService);
@@ -22,7 +21,7 @@ export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, In
 
   override header: string = "Inbox";
   override component: Type<any> = InboxFormComponent;
-  override dialogSize: DialogContentVariants["size"] = "lg";
+  override dialogSize: DialogContentVariants["size"] = "md";
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
@@ -33,7 +32,9 @@ export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, In
       status: { value: "PENDING" },
       priority: { value: "MEDIUM" },
       dueAt: { value: new Date() },
-      createdAt: { value: new Date() },
+      createdAt: { value: new Date(), disabled: true },
+      cancelledAt: { value: null, disabled: true },
+      processedAt: { value: null, disabled: true },
     },
   };
 
@@ -46,14 +47,17 @@ export class InboxFacade extends PllFacade<Inbox, Inbox, InboxUseQueryParams, In
     },
   };
 
-  changeStatus(record: Inbox, status: InboxStatus): Observable<Inbox> {
-    return this.updateRecord({ ...record, status });
+  handleProcess(id: PllID): Observable<Inbox> {
+    return this.dialogFacade.confirmRequest(this.service.process(id), "Processar Inbox?", "success").pipe(tap(() => this.state.remove(id)));
   };
 
-  changeManyStatus(records: Inbox[], status: InboxStatus): Observable<Inbox[]> {
-    return this.updateManyRecords(records.map(record => ({ ...record, status })));
+  handleCancel(id: PllID): Observable<Inbox> {
+    return this.dialogFacade.confirmRequest(this.service.cancel(id), "Cancelar Inbox?", "danger").pipe(tap(() => this.state.remove(id)));
   };
 
+  handleReopen(id: PllID): Observable<Inbox> {
+    return this.dialogFacade.confirmRequest(this.service.reopen(id), "Reabrir Inbox?", "info").pipe(tap(() => this.state.remove(id)));
+  };
 };
 
 export const InboxStatusOptions: SelectItem[] = [

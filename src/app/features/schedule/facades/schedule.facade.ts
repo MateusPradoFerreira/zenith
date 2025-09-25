@@ -8,7 +8,6 @@ import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleS
 import { ScheduleState } from "../states/schedule.state";
 import { ScheduleFormComponent } from "../views/schedule/schedule-form/schedule-form.component";
 import moment from "moment";
-import { SelectItem } from "../../../common/types/select-item.type";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
@@ -16,7 +15,6 @@ import { colors } from "../../../common/types/colors.type";
 
 export type ScheduleUseQueryParams = GetAllScheduleByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterResponse, ScheduleUseQueryParams, ScheduleFormComponent> {
   override state = inject(ScheduleState);
   override service = inject(ScheduleService);
@@ -26,7 +24,7 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
   override component: Type<any> = ScheduleFormComponent;
   override dialogSize: DialogContentVariants["size"] = "xs";
   override dialogAlign: DialogContentVariants["align"] = "center";
-  override closeOnSave: boolean = true;
+  override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {
     fields: {
@@ -35,12 +33,12 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
       recurrenceId: { value: null },
       categoryId: { value: null },
       title: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
+      frequency: { value: "NO_REPETITION", validators: [Validators.required] },
       createdAt: { value: moment().toDate() },
       startsAt: { value: moment().toDate() },
       endsAt: { value: moment().toDate() },
       startsAtTime: { value: "08:00:00" },
       endsAtTime: { value: "08:00:00" },
-      color: { value: "VIOLET" },
     },
   };
 
@@ -66,21 +64,3 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
     return events;
   };
 };
-
-export const ScheduleFrequencyOptions: SelectItem[] = [
-  { label: "Não se repete", value: "NO_REPETITION" },
-  { label: "Diariamente", value: "DAILY" },
-  { label: "Semanalmente", value: "WEEKLY" },
-  { label: "Mensalmente", value: "MONTHLY" },
-  { label: "Anualmente", value: "YEARLY" },
-];
-
-export const ScheduleWeekdayOptions: SelectItem[] = [
-  { label: "Segunda-feira", value: "MO" },
-  { label: "Terça-feira", value: "TU" },
-  { label: "Quarta-feira", value: "WE" },
-  { label: "Quinta-feira", value: "TH" },
-  { label: "Sexta-feira", value: "FR" },
-  { label: "Sábado", value: "SA" },
-  { label: "Domingo", value: "SU" },
-];

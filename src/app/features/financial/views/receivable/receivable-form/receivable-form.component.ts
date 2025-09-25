@@ -35,14 +35,14 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
   planOfAccountOptions: PlanOfAccount[] = [];
   bankAccountOptions: BankAccount[] = [];
 
-  override onNgOnInit = event(switchMap(() => forkJoin({
+  override evNgOnInit = event(switchMap(() => forkJoin({
     handleGetSecrecyOptions: this.handleGetSecrecyOptions(),
     handleGetCenterOfCostOptions: this.handleGetCenterOfCostOptions(),
     handleGetPlanOfAccountOptions: this.handleGetPlanOfAccountOptions(),
     handleGetBankAccountOptions: this.handleGetBankAccountOptions(),
   })));
 
-  override onInitCreateRecord = event(tap(() => {
+  override evInitCreateRecord = event(tap(() => {
     if(this.name()) this.form.controls.name.setValue(this.name());
     if(this.secrecyOptions.length) this.form.controls.secrecyId.setValue(this.secrecyOptions[0].id);
     if(this.centerOfCostOptions.length) this.form.controls.centerOfCostId.setValue(this.centerOfCostOptions[0].id);

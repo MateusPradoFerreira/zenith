@@ -106,10 +106,10 @@
     <label>Observação</label>
   </div>
 
-  <div class="col-span-12 {{ !['PAID', 'CANCELLED'].includes(form.value.status)? 'xl:col-span-6' : 'xl:col-span-8' }}"></div>
+  <div class="col-span-12 {{ form.value.status !== 'PAID' && id()? 'xl:col-span-6' : 'xl:col-span-8' }}"></div>
 
-  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" hlmBtnIcon="dollar-sign" (click)="pay()">Receber</button>
-  <button *ngIf="['CANCELLED'].includes(form.value.status)" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="reopen()">Rabrir</button>
+  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" hlmBtnIcon="dollar-sign" (click)="pay()">Receber</button>
+  <button *ngIf="['CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="reopen()">Rabrir</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 

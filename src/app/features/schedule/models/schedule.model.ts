@@ -1,5 +1,6 @@
-import { Colors } from "../../../common/types/colors.type";
 import { PllID } from "../../../core/lib/pollaris";
+
+export type ScheduleFrequency = "NO_REPETITION" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY" | "CUSTOM";
 
 export class Schedule {
   id: PllID;
@@ -7,12 +8,12 @@ export class Schedule {
   recurrenceId: PllID;
   categoryId: PllID;
   title: string;
+  frequency: ScheduleFrequency;
   createdAt: Date;
   startsAt: Date;
   endsAt: Date;
   startsAtTime: string;
   endsAtTime: string;
-  color: Colors;
 
   constructor(props: Partial<Schedule>) {
     Object.assign(this, props);

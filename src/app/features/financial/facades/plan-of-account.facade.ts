@@ -11,7 +11,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type PlanOfAccountUseQueryParams = GetAllPlanOfAccountByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccount, PlanOfAccountUseQueryParams, PlanOfAccountFormComponent> {
   override state = inject(PlanOfAccountState);
   override service = inject(PlanOfAccountService);

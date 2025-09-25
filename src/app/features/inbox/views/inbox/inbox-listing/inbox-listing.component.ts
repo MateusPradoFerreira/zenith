@@ -7,6 +7,8 @@ import { InboxFacade, InboxPriorityOptions, InboxStatusOptions } from '../../../
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { PayableFacade } from '../../../../financial/facades/payable.facade';
 import { ReceivableFacade } from '../../../../financial/facades/receivable.facade';
+import { PllID } from '@pollaris';
+import { ScheduleFacade } from '../../../../schedule/facades/schedule.facade';
 
 @Component({
   standalone: true,
@@ -15,6 +17,7 @@ import { ReceivableFacade } from '../../../../financial/facades/receivable.facad
   templateUrl: './inbox-listing.component.html',
 })
 export class InboxListingComponent extends BaseRecordListingComponentDirective<Inbox, GetAllInboxByFilterParams> {
+  scheduleFacade = inject(ScheduleFacade);
   payableFacade = inject(PayableFacade);
   receivableFacade = inject(ReceivableFacade);
 
@@ -29,25 +32,26 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
 
   override actionFn: HlmDataTableActionFc<Inbox> = (data: Inbox) => ([
     { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
-    { icon: "list-todo", label: "Processar", command: () => this.changeStatus(data, "PROCESSED") },
-    { separator: true },
-    { icon: "circle-fading-arrow-up", label: "Converter em", children: [
-      { icon: "calendar", label: "Agendamento", command: () => this.changeStatus(data, "PROCESSED") },
-      { icon: "square-kanban", label: "Projeto", command: () => this.changeStatus(data, "PROCESSED") },
+    { icon: "list-todo", label: "Processar", command: () => this.handleProcess(data.id), visible: data.status === "PENDING" || data.status === "OVERDUE" },
+    { separator: true, visible: data.status === "PENDING" || data.status === "OVERDUE" },
+    { icon: "circle-fading-arrow-up", label: "Converter em", visible: data.status === "PENDING" || data.status === "OVERDUE", children: [
+      { icon: "calendar", label: "Agendamento", command: () => this.convertRecordIn(data, "SCHEDULE") },
+      { icon: "square-kanban", label: "Projeto" },
       { separator: true },
       { icon: "banknote-arrow-down", label: "Despesa", command: () => this.convertRecordIn(data, "PAYABLE") },
       { icon: "banknote-arrow-up", label: "Receita", command: () => this.convertRecordIn(data, "RECEIVABLE") },
-      { icon: "clock-fading", label: "Recorrência", command: () => this.changeStatus(data, "PROCESSED") },
+      { icon: "clock-fading", label: "Recorrência" },
     ]},
     { separator: true },
-    { icon: "circle-x", label: "Cancelar", command: () => this.changeStatus(data, "CANCELLED") },
-    { icon: "trash-2", label: "Excluir", command: () => this.handleDelete(data) },
+    { icon: "circle-x", label: "Cancelar", command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" },
+    { icon: "check", label: "Reabrir", command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
+    { icon: "trash-2", label: "Excluir", command: () => this.handleDelete(data), visible: data.status === "CANCELLED" },
   ]);
 
   override selectionActionFn: HlmDataTableSelectionActionFc<Inbox> = (data: Inbox[]) => ([
-    { icon: "list-todo", label: "Processar", command: () => this.changeManyStatus(data, "PROCESSED") },
+    { icon: "list-todo", label: "Processar" },
     { separator: true },
-    { icon: "circle-x", label: "Cancelar", command: () => this.changeManyStatus(data, "CANCELLED") },
+    { icon: "circle-x", label: "Cancelar" },
     { icon: "trash-2", label: "Excluir", command: () => this.handleDeleteMany(data) },
   ]);
 
@@ -62,29 +66,46 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
     ...InboxPriorityOptions,
   ];
 
-  changeStatus(rowData: Inbox, status: InboxStatus) {
-    this.facade.changeStatus(rowData, status).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.log(error),
-    });
-  };
-
-  changeManyStatus(rows: Inbox[], status: InboxStatus) {
-    this.facade.changeManyStatus(rows, status).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.log(error),
-    });
-  };
-
-  convertRecordIn(rowData: Inbox, to: "PAYABLE" | "RECEIVABLE") {
-    if(to === "PAYABLE") {
+  convertRecordIn(rowData: Inbox, to: "PAYABLE" | "RECEIVABLE" | "SCHEDULE") {
+    if(to === "SCHEDULE") {
+      this.scheduleFacade.openToCreate({ title: rowData.title }).subscribe(response => {
+        if(response) this.handleProcess(rowData.id);
+      });
+    } else if(to === "PAYABLE") {
       this.payableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
-        if(response) this.changeStatus(rowData, "PROCESSED");
+        if(response) this.handleProcess(rowData.id);
       });
     } else if(to == "RECEIVABLE") {
       this.receivableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
-        if(response) this.changeStatus(rowData, "PROCESSED");
+        if(response) this.handleProcess(rowData.id);
       });
     };
+  };
+
+  handleProcess(id: PllID) {
+    this.processing.set(false),
+    this.facade.handleProcess(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
+
+  handleCancel(id: PllID) {
+    this.processing.set(false),
+    this.facade.handleCancel(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
+  };
+
+  handleReopen(id: PllID) {
+    this.processing.set(false),
+    this.facade.handleReopen(id).subscribe({
+      next: () => this.updateUI(),
+      error: error => console.error(error),
+      complete: () => this.processing.set(false),
+    });
   };
 };

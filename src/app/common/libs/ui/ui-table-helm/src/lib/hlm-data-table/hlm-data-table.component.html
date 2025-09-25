@@ -82,7 +82,7 @@
         </hlm-th>
         <hlm-th *ngIf="actionFn()" class="w-16" />
       </hlm-trow>
-      <div class="h-full overflow-y-scroll custom-scroll {{ !paginatedValues().length && !tableBodyTemplate? '[&_hlm-trow:last-child]:border-b-0' : '' }}">
+      <div class="h-full {{ scroll() === 'scroll'? 'overflow-y-scroll' : 'overflow-y-auto' }} custom-scroll {{ !paginatedValues().length && !tableBodyTemplate? '[&_hlm-trow:last-child]:border-b-0' : '' }}">
         <ng-container *ngIf="tableBodyTemplate" [ngTemplateOutlet]="tableBodyTemplate"></ng-container>
         <ng-container *ngIf="!tableBodyTemplate">
           <hlm-trow class="cursor-pointer overflow-hidden {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
@@ -95,67 +95,27 @@
                 <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
               </span>
               <ng-template #menu>
-                <hlm-menu class="w-48" [items]="actions()[rowData.id]">
-                  <!-- <hlm-menu-group>
-                    <ng-container *ngFor="let action of actions()[rowData.id]">
-                      <ng-container *ngIf="action.separator && action.visible !== false">
-                        <hlm-menu-separator />
-                      </ng-container>
-                      <ng-container *ngIf="action.label && action.visible !== false">
-                        <button *ngIf="!action.items?.length" hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
-                          <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                          {{ action.label }}
-                          <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
-                        </button>
-
-                        <button *ngIf="action.items?.length" hlmMenuItem [disabled]="action.disabled" [brnMenuTriggerFor]="menuItems">
-                          <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                          <span class="w-full text-left">{{ action.label }}</span>
-                          <i-lucide name="chevron-down" size="16" hlmMenuIcon class="mr-0"></i-lucide>
-                        </button>
-
-                        <ng-template #menuItems>
-                          <hlm-menu class="w-48">
-                            <hlm-menu-group>
-                              <ng-container *ngFor="let action of action.items">
-                                <ng-container *ngIf="action.separator && action.visible !== false">
-                                  <hlm-menu-separator />
-                                </ng-container>
-                                <ng-container *ngIf="action.label && action.visible !== false">
-                                  <button hlmMenuItem [disabled]="action.disabled" (click)="action.command()">
-                                    <i-lucide [name]="action.icon" size="16" hlmMenuIcon></i-lucide>
-                                    {{ action.label }}
-                                    <hlm-menu-shortcut *ngIf="action.shortcut">{{ action.shortcut }}</hlm-menu-shortcut>
-                                  </button>
-                                </ng-container>
-                              </ng-container>
-                            </hlm-menu-group>
-                          </hlm-menu>
-                        </ng-template>
-                      </ng-container>
-                    </ng-container>
-                  </hlm-menu-group> -->
-                </hlm-menu>
+                <hlm-menu class="w-48" [items]="actions()[rowData.id]" />
               </ng-template>
             </hlm-td>
           </hlm-trow>
         </ng-container>
-        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && (emptyMessOnTbBody()? true : !tableBodyTemplate)">
+        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && (!emptyMessOnTbBody()? false : !tableBodyTemplate)">
           <hlm-td class="w-full flex justify-center flex-col">
-            <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
+            <div class="border border-slate-200/30 p-5 rounded-4xl {{ showEmptyMessOnTbBody()? 'mb-5' : '' }}" *ngIf="showEmptyIconOnTbBody()">
               <div class="border border-slate-200/50 p-5 rounded-4xl">
                 <div class="border border-slate-200 p-8 rounded-4xl">
-                  <i-lucide name="search"></i-lucide>
+                  <i-lucide [name]="emptyIconOnTbBody()"></i-lucide>
                 </div>
               </div>
             </div>
-            <span class="text-base font-medium">
+            <span class="text-base font-medium" *ngIf="showEmptyMessOnTbBody()">
               OOPS! Nenhum registro encontrado!
             </span>
-            <div class="text-sm">
+            <div class="text-sm" *ngIf="showEmptyMessOnTbBody()">
               Não tem nada para ser visualizado com os filtros selecionados! 
             </div>
-            <div class="mt-2 mb-15">
+            <div class="mt-2 mb-15" *ngIf="showEmptyMessOnTbBody()">
               <ng-container [ngTemplateOutlet]="emptyActionsTemplate" />
             </div>
           </hlm-td>

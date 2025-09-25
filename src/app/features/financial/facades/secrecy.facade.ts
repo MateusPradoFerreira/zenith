@@ -1,5 +1,4 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
 import { Secrecy } from "../models/secrecy.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -11,7 +10,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type SecrecyUseQueryParams = GetAllSecrecyByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class SecrecyFacade extends PllFacade<Secrecy, Secrecy, SecrecyUseQueryParams, SecrecyFormComponent> {
   override state = inject(SecrecyState);
   override service = inject(SecrecyService);

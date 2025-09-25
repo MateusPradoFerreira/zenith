@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllID } from "../../../core/lib/pollaris";
+import { PllFacade, PllID, PllQueryFacade } from "../../../core/lib/pollaris";
 import { Payable } from "../models/payable.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -8,7 +8,7 @@ import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableServ
 import { PayableState } from "../states/payable.state";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { PayableFormComponent } from "../views/payable/payable-form/payable-form.component";
-import { Observable, Subject } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
@@ -16,10 +16,9 @@ export type PayableUseQueryParams = GetAllPayableByFilterParams;
 export type PayableUseQueryResponse = GetAllPayableByFilterResponse;
 
 @Injectable({ providedIn: "root" })
-export class PayableFacade extends PllFacade<Payable, PayableUseQueryResponse, PayableUseQueryParams, PayableFormComponent> {
+export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
   override state = inject(PayableState);
   override service = inject(PayableService);
-  override queryFn = (params: PayableUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Despesa";
   override component: Type<any> = PayableFormComponent;
@@ -60,6 +59,24 @@ export class PayableFacade extends PllFacade<Payable, PayableUseQueryResponse, P
     },
   };
 
+  handlePay(id: PllID): Observable<Payable> {
+    return this.dialogFacade.confirmRequest(this.service.pay(id), "Confirmar Pagamento?", "success").pipe(tap(() => this.state.remove(id)));
+  };
+
+  handleCancel(id: PllID): Observable<Payable> {
+    return this.dialogFacade.confirmRequest(this.service.cancel(id), "Cancelar Despesa?", "danger").pipe(tap(() => this.state.remove(id)));
+  };
+
+  handleReopen(id: PllID): Observable<Payable> {
+    return this.dialogFacade.confirmRequest(this.service.reopen(id), "Reabrir Despesa?", "info").pipe(tap(() => this.state.remove(id)));
+  };
+};
+
+@Injectable({ providedIn: "root" })
+export class PayableQueryFacade extends PllQueryFacade<Payable, PayableUseQueryResponse, PayableUseQueryParams> {
+  override facade = inject(PayableFacade);
+  override queryFn = (params: PayableUseQueryParams) => this.facade.service.getAllByFilter(params);
+
   override filterSchema: PllFormSchemaConfig<PayableUseQueryParams> = {
     fields: {
       status: { value: "TOPAY" },
@@ -70,77 +87,6 @@ export class PayableFacade extends PllFacade<Payable, PayableUseQueryResponse, P
       startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
       endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
     },
-  };
-
-  handlePay(id: PllID): Observable<Payable> {
-    const sub$ = new Subject<Payable>();
-    this.dialogFacade.confirm({ 
-      header: "Confirmar Pagamento?",
-      severity: "success",
-      events: {
-        onConfirm: () => {
-          this.service.pay(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
-  };
-
-  handleCancel(id: PllID): Observable<Payable> {
-    const sub$ = new Subject<Payable>();
-    this.dialogFacade.confirm({ 
-      header: "Cancelar Despesa?",
-      severity: "danger",
-      events: {
-        onConfirm: () => {
-        this.service.cancel(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
-  };
-
-  handleReopen(id: PllID): Observable<Payable> {
-    const sub$ = new Subject<Payable>();
-    this.dialogFacade.confirm({ 
-      header: "Reabrir Despesa?",
-      events: {
-        onConfirm: () => {
-          this.service.reopen(id).subscribe({
-            next: response => {
-              this.state.remove(response.id);
-              sub$.next(response);
-              sub$.complete();
-            },
-            error: error => sub$.error(error),
-          })
-        },
-        onCancel: () => sub$.complete(),
-      },
-    }).closed$.subscribe(res => {
-      if(!res?.status) sub$.complete();
-    });
-    return sub$.asObservable();
   };
 };
 

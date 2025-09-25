@@ -3,17 +3,13 @@ import { Receivable } from "../models/receivable.model";
 import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "./receivable.service";
 import { delay, map, Observable, of, switchMap } from "rxjs";
 import { fakerJs } from "../../../core/config/faker.config";
-import { inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import moment from "moment";
 import { v4 as uuid } from 'uuid';
-import { INITIAL_SECRECY_MOCKED_DATA } from "./secrecy-mock.service";
-import { SecrecyService } from "./secrecy.service";
-import { INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA } from "./plan-of-account-mock.service";
-import { PlanOfAccountService } from "./plan-of-account.service";
-import { INITIAL_CENTER_OF_COST_MOCKED_DATA } from "./center-of-cost-mock.service";
-import { CenterOfCostService } from "./center-of-cost.service";
-import { INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
-import { BankAccountService } from "./bank-account.service";
+import { INITIAL_SECRECY_MOCKED_DATA, SecrecyMockService } from "./secrecy-mock.service";
+import { INITIAL_PLAN_OF_ACCOUNT_MOCKED_DATA, PlanOfAccountMockService } from "./plan-of-account-mock.service";
+import { CenterOfCostMockService, INITIAL_CENTER_OF_COST_MOCKED_DATA } from "./center-of-cost-mock.service";
+import { BankAccountMockService, INITIAL_BANK_ACCOUNT_MOCKED_DATA } from "./bank-account-mock.service";
 import { Util } from "../../../common/util/util";
 
 export function createMockedReceivable(data: Partial<Receivable>): Receivable {
@@ -43,11 +39,12 @@ export function createMockedReceivable(data: Partial<Receivable>): Receivable {
   });
 };
 
+@Injectable({ providedIn: "root" })
 export class ReceivableMockService extends PllMockRestService<Receivable> implements ReceivableService {
-  secrecyService = inject(SecrecyService);
-  centerOfCostService = inject(CenterOfCostService);
-  planOfAccountService = inject(PlanOfAccountService);
-  bankAccountService = inject(BankAccountService);
+  secrecyMockService = inject(SecrecyMockService);
+  centerOfCostMockService = inject(CenterOfCostMockService);
+  planOfAccountMockService = inject(PlanOfAccountMockService);
+  bankAccountMockService = inject(BankAccountMockService);
 
   constructor () {
     super([
@@ -70,10 +67,10 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
       map(records => records.map(record => {
         const newRecord: GetAllReceivableByFilterResponse = {
           ...record,
-          centerOfCost: this.centerOfCostService.records().find(centerOfCost => centerOfCost.id === record.centerOfCostId).name,
-          planOfAccount: this.planOfAccountService.records().find(planOfAccount => planOfAccount.id === record.planOfAccountId).name,
-          secrecy: this.secrecyService.records().find(secrecy => secrecy.id === record.secrecyId).name,
-          bankAccount: this.bankAccountService.records().find(bankAccount => bankAccount.id === record.bankAccountId).name,
+          centerOfCost: this.centerOfCostMockService.records().find(centerOfCost => centerOfCost.id === record.centerOfCostId).name,
+          planOfAccount: this.planOfAccountMockService.records().find(planOfAccount => planOfAccount.id === record.planOfAccountId).name,
+          secrecy: this.secrecyMockService.records().find(secrecy => secrecy.id === record.secrecyId).name,
+          bankAccount: this.bankAccountMockService.records().find(bankAccount => bankAccount.id === record.bankAccountId).name,
         };
         return newRecord;
       })),

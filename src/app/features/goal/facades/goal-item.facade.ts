@@ -10,7 +10,6 @@ import moment from "moment";
 
 export type GoalItemUseQueryParams = GetAllGoalItemByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class GoalItemFacade extends PllFacade<GoalItem, GoalItem, GoalItemUseQueryParams, GoalItemFormComponent> {
   override state = inject(GoalItemState);
   override service = inject(GoalItemService);

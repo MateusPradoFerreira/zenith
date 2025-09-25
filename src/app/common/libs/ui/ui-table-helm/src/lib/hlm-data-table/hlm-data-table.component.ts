@@ -64,7 +64,10 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   pagination = input<boolean>(true);
   multiselect = input<boolean>(false);
   colHeader = input<boolean>(true);
-  emptyMessOnTbBody= input<boolean>(false);
+  emptyMessOnTbBody = input<boolean>(true);
+  showEmptyMessOnTbBody = input<boolean>(true);
+  showEmptyIconOnTbBody = input<boolean>(true);
+  emptyIconOnTbBody = input<string>("search");
 
   // query
   page = model(1);
@@ -96,8 +99,11 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   onPaginate = output<{ page: number, size: number }>();
   onInputSearch= output<string>();
 
+  scroll = model<"scroll" | "auto">("scroll");
   offsetHeight = model<number>();
-  height = signal("0px");
+  fixedHeight = model<number>();
+  autoHeight = model<boolean>(false);
+  height = signal("auto");
   heightNb = signal(0);
 
   offsetEffect = effect(() => {
@@ -135,7 +141,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
 
   setHeight() {
     const height = document.getElementById("main-container")?.offsetHeight - 54 - this.offsetHeight();
-    this.height.set(height + "px");
+    const fixedHeight = this.fixedHeight() || height;
+    this.height.set(this.autoHeight()? "auto" : (fixedHeight + "px"));
     this.heightNb.set(height);
   };
 

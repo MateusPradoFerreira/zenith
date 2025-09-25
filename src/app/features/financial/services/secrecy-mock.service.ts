@@ -1,42 +1,24 @@
-import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
 import { GetAllSecrecyByFilterParams, GetAllSecrecyByFilterResponse, SecrecyService } from "./secrecy.service";
-import { delay, map, Observable, of } from "rxjs";
-import { fakerJs } from "../../../core/config/faker.config";
-import { v4 as uuid } from 'uuid';
-import { Util } from "../../../common/util/util";
+import { delay, Observable } from "rxjs";
+import { inject, Injectable } from "@angular/core";
 
-export function createMockedSecrecy(data: Partial<Secrecy>): Secrecy {
-  return new Secrecy({
-    active: true,
-    ...data,
-    id: data.id || uuid(),
-  });
+@Injectable({ providedIn: "root" })
+export class SecrecyMockState extends PllRecordState<Secrecy> {};
+
+@Injectable({ providedIn: "root" })
+export class SecrecyMockRepository extends PllRecordRepository<Secrecy> {
+  override state = inject(SecrecyMockState);
 };
 
-export const INITIAL_SECRECY_MOCKED_DATA: Secrecy[] = [
-  createMockedSecrecy({ name: "Dinheiro" }),
-  createMockedSecrecy({ name: "PIX" }),
-  createMockedSecrecy({ name: "Débito" }),
-  createMockedSecrecy({ name: "Crédito" }),
-];
-
+@Injectable({ providedIn: "root" })
 export class SecrecyMockService extends PllMockRestService<Secrecy> implements SecrecyService {
-
-  constructor () {
-    super(INITIAL_SECRECY_MOCKED_DATA);
-  };
-
-  override createRecord = (data: Partial<Secrecy>) => createMockedSecrecy(data);
+  override repository = inject(SecrecyMockRepository);
 
   getAllByFilter(params: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<GetAllSecrecyByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(
-      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
-      map(response => Util.paginatedValueFrom(response)),
-    );
-  };
-
-  private _filtering(records: Secrecy[], params: GetAllSecrecyByFilterParams): Secrecy[] {
-    return records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
+    return this.repository.find({
+      ...(!params?.status || params.status === "ALL"? {} : { active: params.status === "ACTIVE" }),
+    }).pipe(delay(this.delay()));
   };
 };

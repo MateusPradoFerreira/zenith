@@ -93,6 +93,15 @@ export class CashFlowChartCardComponent {
           x: { display: false },
           y: { display: false },
         },
+        animations: {
+          tension: {
+            duration: 1000,
+            easing: "easeInOutCirc",
+            from: 0.3,
+            to: 0.4,
+            loop: true
+          },
+        },
       },
     });
   };

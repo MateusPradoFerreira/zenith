@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 import moment from "moment";
 import { INITIAL_GOAL_MOCKED_DATA } from "./goal-mock.service";
 import { Util } from "../../../common/util/util";
+import { Injectable } from "@angular/core";
 
 export function createMockedGoalItem(data: Partial<GoalItem>): GoalItem {
   return new GoalItem({
@@ -19,12 +20,13 @@ export function createMockedGoalItem(data: Partial<GoalItem>): GoalItem {
 };
 
 export const INITIAL_GOAL_ITEM_MOCKED_DATA: GoalItem[] = [
-  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id }),
-  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id }),
-  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id }),
-  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id }),
+  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id, startsAt: moment().subtract(3, "day").toDate() }),
+  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id, startsAt: moment().subtract(2, "day").toDate() }),
+  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id, startsAt: moment().subtract(2, "day").toDate() }),
+  createMockedGoalItem({ goalId: INITIAL_GOAL_MOCKED_DATA[0].id, startsAt: moment().toDate() }),
 ];
 
+@Injectable({ providedIn: "root" })
 export class GoalItemMockService extends PllMockRestService<GoalItem> implements GoalItemService {
 
   constructor () {

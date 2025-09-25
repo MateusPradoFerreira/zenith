@@ -11,7 +11,6 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type CenterOfCostUseQueryParams = GetAllCenterOfCostByFilterParams;
 
-@Injectable({ providedIn: "root" })
 export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
   override state = inject(CenterOfCostState);
   override service = inject(CenterOfCostService);

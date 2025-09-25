@@ -1,41 +1,23 @@
-import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
+import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { BankAccount } from "../models/bank-account.model";
 import { GetAllBankAccountByFilterParams, GetAllBankAccountByFilterResponse, BankAccountService } from "./bank-account.service";
-import { delay, map, Observable, of } from "rxjs";
-import { fakerJs } from "../../../core/config/faker.config";
-import { v4 as uuid } from 'uuid';
-import { Util } from "../../../common/util/util";
+import { delay, Observable } from "rxjs";
+import { inject, Injectable } from "@angular/core";
 
-export function createMockedBankAccount(data: Partial<BankAccount>): BankAccount {
-  return new BankAccount({
-    active: true,
-    ...data,
-    id: data.id || uuid(),
-  });
+@Injectable({ providedIn: "root" })
+export class BankAccountMockState extends PllRecordState<BankAccount> {};
+
+@Injectable({ providedIn: "root" })
+export class BankAccountMockRepository extends PllRecordRepository<BankAccount> {
+  override state = inject(BankAccountMockState);
 };
 
-export const INITIAL_BANK_ACCOUNT_MOCKED_DATA: BankAccount[] = [
-  createMockedBankAccount({ name: "Sicoob" }),
-  createMockedBankAccount({ name: "Banco do Brasil" }),
-  createMockedBankAccount({ name: "Nubank" }),
-];
-
 export class BankAccountMockService extends PllMockRestService<BankAccount> implements BankAccountService {
-
-  constructor () {
-    super(INITIAL_BANK_ACCOUNT_MOCKED_DATA);
-  };
-
-  override createRecord = (data: Partial<BankAccount>) => createMockedBankAccount(data);
+  override repository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<GetAllBankAccountByFilterResponse>> {
-    return of(this._filtering(this.records(), params)).pipe(
-      delay(fakerJs.helpers.rangeToNumber({ min: 100, max: 500 })),
-      map(response => Util.paginatedValueFrom(response)),
-    );
-  };
-
-  private _filtering(records: BankAccount[], params: GetAllBankAccountByFilterParams): BankAccount[] {
-    return records.filter(record => !params.status || params.status === "ALL"? true : params.status === "ACTIVE"? record.active : !record.active);
+    return this.repository.find({
+      ...(!params?.status || params.status === "ALL"? {} : { active: params.status === "ACTIVE" }),
+    }).pipe(delay(this.delay()));
   };
 };

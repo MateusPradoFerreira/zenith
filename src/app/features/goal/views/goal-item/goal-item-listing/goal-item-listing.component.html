@@ -1,9 +1,20 @@
 <div [class]="_computedClass()">
-  <hlm-data-table [offsetHeight]="offsetHeight()" [showHeader]="false" [offsetHeight]="300" [pagination]="false" [values]="values()" [filter]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
-    <ng-template hlmTemplate="row" let-rowData>
-      <hlm-td class="flex-1">{{ rowData.startsAt | date : "dd:MM:YYYY" }}</hlm-td>
-      <hlm-td class="flex-1">{{ rowData.duration }} min</hlm-td>
-      <hlm-td class="flex-1 justify-end">{{ rowData.startsAt | date : "hh:mm:ss" }} - {{ getEndsAtTime(rowData) | date : "hh:mm:ss" }}</hlm-td>
+  <hlm-data-table [offsetHeight]="offsetHeight()" [showHeader]="false" [showEmptyMessOnTbBody]="false" [fixedHeight]="456" emptyIconOnTbBody="plus" scroll="auto" [pagination]="false" [values]="values()" [filter]="false" [columns]="columns()" (onSelect)="handleUpdate($event)" [selectionActionFn]="selectionActionFn">
+    <ng-template hlmTemplate="table-body">
+      <ng-container *ngFor="let group of groupedValues()">
+        <hlm-trow class="overflow-hidden bg-slate-50">
+          <hlm-td class="flex-1 justify-between">
+            <span>{{ group.date | date : "dd 'de' MMMM 'de' YYYY" }}</span>
+            <span>{{ group.date | date : "EEEE" }}</span>
+          </hlm-td>
+        </hlm-trow>
+        <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden">
+          <hlm-td class="flex-1 justify-between">
+            <span>{{ rowData.duration }} min</span>
+            <span>{{ rowData.startsAt | date : "hh:mm" }} - {{ getEndsAtTime(rowData) | date : "hh:mm" }}</span>
+          </hlm-td>
+        </hlm-trow>
+      </ng-container>
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
