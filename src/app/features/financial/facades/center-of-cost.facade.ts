@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
 import { CenterOfCost } from "../models/center-of-cost.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -10,15 +10,16 @@ import { CenterOfCostFormComponent } from "../views/center-of-cost/center-of-cos
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type CenterOfCostUseQueryParams = GetAllCenterOfCostByFilterParams;
+export type CenterOfCostUseQueryResponse = CenterOfCost;
 
-export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
+@Injectable({ providedIn: "root" })
+export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCostFormComponent> {
   override state = inject(CenterOfCostState);
   override service = inject(CenterOfCostService);
-  override queryFn = (params: CenterOfCostUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Centro de Custo";
   override component: Type<any> = CenterOfCostFormComponent;
-  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "md";
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
@@ -29,6 +30,12 @@ export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCost, Ce
       active: { value: true },
     },
   };
+};
+
+@Injectable({ providedIn: "root" })
+export class CenterOfCostQueryFacade extends PllQueryFacade<CenterOfCostUseQueryResponse, CenterOfCostUseQueryParams> {
+  override service = inject(CenterOfCostService);
+  override queryFn = (params: CenterOfCostUseQueryParams) => this.service.getAllByFilter(params);
 
   override filterSchema: PllFormSchemaConfig<CenterOfCostUseQueryParams> = {
     fields: {

@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllID } from "../../../core/lib/pollaris";
+import { PllFacade, PllID, PllQueryFacade } from "../../../core/lib/pollaris";
 import { Receivable } from "../models/receivable.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -8,17 +8,17 @@ import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, Recei
 import { ReceivableState } from "../states/receivable.state";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
-import { Observable, Subject, tap } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
 export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
 export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
 
-export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryResponse, ReceivableUseQueryParams, ReceivableFormComponent> {
+@Injectable({ providedIn: "root" })
+export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormComponent> {
   override state = inject(ReceivableState);
   override service = inject(ReceivableService);
-  override queryFn = (params: ReceivableUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Receita";
   override component: Type<any> = ReceivableFormComponent;
@@ -59,18 +59,6 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryRe
     },
   };
 
-  override filterSchema: PllFormSchemaConfig<ReceivableUseQueryParams> = {
-    fields: {
-      status: { value: "TOPAY" },
-      centerOfCostId: { value: null },
-      planOfAccountId: { value: null },
-      bankAccountId: { value: null },
-      secrecyId: { value: null },
-      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
-    },
-  };
-  
   handlePay(id: PllID): Observable<Receivable> {
     return this.dialogFacade.confirmRequest(this.service.pay(id), "Confirmar Pagamento?", "success").pipe(tap(() => this.state.remove(id)));
   };
@@ -81,6 +69,24 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableUseQueryRe
 
   handleReopen(id: PllID): Observable<Receivable> {
     return this.dialogFacade.confirmRequest(this.service.reopen(id), "Reabrir Despesa?", "info").pipe(tap(() => this.state.remove(id)));
+  };
+};
+
+@Injectable({ providedIn: "root" })
+export class ReceivableQueryFacade extends PllQueryFacade<ReceivableUseQueryResponse, ReceivableUseQueryParams> {
+  override service = inject(ReceivableService);
+  override queryFn = (params: ReceivableUseQueryParams) => this.service.getAllByFilter(params);
+
+  override filterSchema: PllFormSchemaConfig<ReceivableUseQueryParams> = {
+    fields: {
+      status: { value: "TOPAY" },
+      centerOfCostId: { value: null },
+      planOfAccountId: { value: null },
+      bankAccountId: { value: null },
+      secrecyId: { value: null },
+      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
+      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
+    },
   };
 };
 

@@ -47,7 +47,7 @@ export class DialogFacade {
               sub$.error(error);
               sub$.complete();
             },
-          })
+          });
         },
         onCancel: () => sub$.complete(),
       },

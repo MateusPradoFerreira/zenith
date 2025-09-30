@@ -1,32 +1,31 @@
-import { computed, Directive, inject, input, OnInit, signal, Signal } from '@angular/core';
+import { computed, Directive, inject, input, OnInit, signal } from '@angular/core';
 import { PllFacade, PllPaginatedResponse, PllQueryFacade, PllRecord, PllRecordId } from '@pollaris';
 import { PllFormSchema } from '@pollaris/forms';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableSelectionActionFc } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { event, EventObs } from './base-form-component.directive';
+import { BaseFormComponentDirective, event, EventObs } from './base-form-component.directive';
 import { hlm } from '@spartan-ng/brain/core';
 import { ClassValue } from 'clsx';
 
 @Directive()
-export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord> implements OnInit {  
+export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord, TComponent extends BaseFormComponentDirective<any> = BaseFormComponentDirective<any>> implements OnInit {  
   public readonly userClass = input<ClassValue>("", { alias: "class" });
 	protected readonly _computedClass = computed(() =>
 		hlm("", this.userClass()),
 	);
 
-  showHeader = input<boolean>(true);
-  offsetHeight = input<number>(0);
   isDialog = input<boolean>(false);
+  offsetHeight = input<number>(0);
   
-  abstract facade: PllQueryFacade<any, TRecordQueryModel, TRecordQueryParams>;
+  abstract facade: PllFacade<any>;
+  abstract queryFacade: PllQueryFacade<TRecordQueryModel, TRecordQueryParams>;
 
   dialogFacade = inject(DialogFacade);
-  dialogInputs: Signal<Inputkeys<any>> = computed(() => ({}));
 
   filter: PllFormSchema<TRecordQueryParams>;
-  values = computed(() => this.facade.data()?.data || []);
-  pagination = computed(() => this.facade.data().pagination);
+  values = computed(() => this.queryFacade.data()?.data || []);
+  pagination = computed(() => this.queryFacade.data().pagination);
 
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
@@ -35,59 +34,62 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   actionFn: HlmDataTableActionFc<TRecordQueryModel>;
   selectionActionFn: HlmDataTableSelectionActionFc<TRecordQueryModel>;
 
-  onNgOnInit: EventObs<void> = event();
-  onUpdateUI: EventObs<PllPaginatedResponse<TRecordQueryModel>> = event();
+  $evNgOnInit: EventObs<void> = event();
+  $evUpdateUI: EventObs<PllPaginatedResponse<TRecordQueryModel>> = event();
+  $evInitFilter: EventObs<void> = event();
 
   ngOnInit() {
-    this.loading = this.facade.loading;
-    this.processing = this.facade.facade.processing;
-    this.configureFilter();
-    this.onNgOnInit().pipe(
-      switchMap(() => this.handleUpdateUI()),
+    this._configureFilterSchema();
+    this.$evNgOnInit().pipe(
+      switchMap(() => this.$evInitFilter()),
+      switchMap(() => this.$updateUI()),
     ).subscribe({
       error: error => console.error(error),
     });
   };
 
-  configureFilter() {
-    this.filter = new PllFormSchema(this.facade.filterSchema);
+  private _configureFilterSchema() {
+    this.filter = new PllFormSchema(this.queryFacade.filterSchema);
+  };
+
+  handleApplyFilters() {
+    this.updateUI();
+  };
+
+  handleClearFilters() {
+    this.$evInitFilter().pipe(tap(() => this._configureFilterSchema())).subscribe();
   };
 
   updateUI() {
-    this.handleUpdateUI().subscribe({
+    this.$updateUI().subscribe({
       error: error => console.error(error),
     });
   };
 
-  handleUpdateUI(): Observable<PllPaginatedResponse<TRecordQueryModel>> {
+  $updateUI(): Observable<PllPaginatedResponse<TRecordQueryModel>> {
+    this.loading.set(true);
     return this.filter.handleSubmit().pipe(
       tap(response => console.log("FILTERS", response)),
-      switchMap(params => this.facade.useQuery(params)),
+      switchMap(params => this.queryFacade.useQuery(params)),
       tap(response => console.log("UPDATE-UI", response)),
-      switchMap(response => this.onUpdateUI(response)),
+      tap(() => this.loading.set(false)),
+      switchMap(response => this.$evUpdateUI(response)),
     );
   };
 
-  handleCreate() {
-    this.facade.facade.openToCreate(this.dialogInputs()).subscribe(() => this.updateUI());
+  handleCreate(inputs: Inputkeys<BaseFormComponentDirective<any>> & Inputkeys<TComponent> = {}) {
+    this.facade.openToCreate(inputs).subscribe(() => this.updateUI());
   };
 
-  handleUpdate(rowData: TRecordQueryModel) {
-    this.facade.facade.openToUpdate(rowData.id, this.dialogInputs()).subscribe(() => this.updateUI());
+  handleUpdate(rowData: TRecordQueryModel, inputs: Inputkeys<BaseFormComponentDirective<any>> & Inputkeys<TComponent> = {}) {
+    this.facade.openToUpdate(rowData.id, inputs).subscribe(() => this.updateUI());
   };
 
   handleDelete(rowData: TRecordQueryModel) {
-    this.facade.facade.openToDelete(rowData.id).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.error(error),
-    });
+    this.facade.openToDelete(rowData.id).subscribe(() => this.updateUI());
   };
 
   handleDeleteMany(data: TRecordQueryModel[]) {
-    this.facade.facade.openToDeleteMany(data.map(record => record.id)).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.error(error),
-    });
+    this.facade.openToDeleteMany(data.map(record => record.id)).subscribe(() => this.updateUI());
   };
-
 };

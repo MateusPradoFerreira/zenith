@@ -73,9 +73,9 @@ export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
 };
 
 @Injectable({ providedIn: "root" })
-export class PayableQueryFacade extends PllQueryFacade<Payable, PayableUseQueryResponse, PayableUseQueryParams> {
-  override facade = inject(PayableFacade);
-  override queryFn = (params: PayableUseQueryParams) => this.facade.service.getAllByFilter(params);
+export class PayableQueryFacade extends PllQueryFacade<PayableUseQueryResponse, PayableUseQueryParams> {
+  override service = inject(PayableService);
+  override queryFn = (params: PayableUseQueryParams) => this.service.getAllByFilter(params);
 
   override filterSchema: PllFormSchemaConfig<PayableUseQueryParams> = {
     fields: {
@@ -84,8 +84,8 @@ export class PayableQueryFacade extends PllQueryFacade<Payable, PayableUseQueryR
       planOfAccountId: { value: null },
       bankAccountId: { value: null },
       secrecyId: { value: null },
-      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("month").toDate() },
+      endsAt: { value: moment().endOf("month").toDate() },
     },
   };
 };

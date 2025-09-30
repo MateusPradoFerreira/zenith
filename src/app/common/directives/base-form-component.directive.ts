@@ -27,7 +27,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   closeOnSave = model<boolean>(true);
   isDialog = input<boolean>(false);
 
-  abstract facade: PllFacade<TRecordModel, any, any, any>;
+  abstract facade: PllFacade<TRecordModel, any>;
   private readonly _context = injectBrnDialogContext();
 
   orgRecord: TRecordModel;
@@ -39,64 +39,61 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
-  evNgOnInit: EventObs = event();
-  evUpdateUI: EventObs<TRecordModel> = event();
-  evInitRecord: EventObs = event();
-  evInitCreateRecord: EventObs = event();
-  evInitUpdateRecord: EventObs = event();
-  evInitSumit: EventObs<TRecordModel> = event();
-  evNextSumit: EventObs<TRecordModel> = event();
+  $evNgOnInit: EventObs = event();
+  $evUpdateUI: EventObs<TRecordModel> = event();
+  $evInitRecord: EventObs = event();
+  $evInitCreateRecord: EventObs = event();
+  $evInitUpdateRecord: EventObs = event();
+  $evInitSumit: EventObs<TRecordModel> = event();
+  $evNextSumit: EventObs<TRecordModel> = event();
 
   onNextSumit = output<TRecordModel>();
   
   async ngOnInit() {
-    this.loading = this.facade.loading;
-    this.processing = this.facade.processing;
-    this.configureFormSchema();
-    await this.evNgOnInit().pipe(
-      switchMap(() => this.handleUpdateUI()),
+    this._configureFormSchema();
+    await this.$evNgOnInit().pipe(
+      switchMap(() => this.$updateUI()),
     ).subscribe({
-      error: () => this.handlePopulateForm().subscribe(),
+      error: () => this.$populateForm().subscribe(),
     });
   };
 
   updateUI() {
-    this.handleUpdateUI().subscribe({
+    this.$updateUI().subscribe({
       error: error => console.error(error),
     });
   };
 
-  handleUpdateUI(): Observable<TRecordModel> {
+  $updateUI(): Observable<TRecordModel> {
     return of(this.id()).pipe(
-      tap(response => console.log("UPDATE-UI", response)),
       switchMap(id => {
-        if(!id) return this.handlePopulateForm().pipe(tap(response => console.log("DEFAULT-DATA", response)));
+        if(!id) return this.$populateForm().pipe(tap(response => console.log("DEFAULT-DATA", response)));
         return this.facade.getRecord(id).pipe(
           tap(response => console.log("UPDATE-UI", response)),
           tap(response => this.orgRecord = response),
           tap(response => this.crrRecord = response),
-          switchMap(response => this.handlePopulateForm(response)),
-          switchMap(response => this.evUpdateUI(response)),
+          switchMap(response => this.$populateForm(response)),
+          switchMap(response => this.$evUpdateUI(response)),
         );
       }),
     );
   };
 
-  configureFormSchema() {
+  private _configureFormSchema() {
     this.form = new PllFormSchema(this.facade.recordSchema);
   };
 
-  handlePopulateForm(data?: TRecordModel): Observable<TRecordModel> {
+  $populateForm(data?: TRecordModel): Observable<TRecordModel> {
     return of(data).pipe(
       switchMap(response => {
-        if(response) return this.form.setValue(data).pipe(switchMap(() => this.evInitUpdateRecord()));
-        this.configureFormSchema();
-        return this.evInitCreateRecord().pipe(
+        if(response) return this.form.setValue(data).pipe(switchMap(() => this.$evInitUpdateRecord()));
+        this._configureFormSchema();
+        return this.$evInitCreateRecord().pipe(
           tap(() => this.orgRecord = this.form.value),
           tap(() => this.crrRecord = this.form.value),
         );
       }),
-      switchMap(() => this.evInitRecord()),
+      switchMap(() => this.$evInitRecord()),
       tap(() => this.formReady.set(true)),
       map(() => this.form.value),
     );
@@ -110,14 +107,14 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
 
   handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
     return this.form.handleSubmit().pipe(
-      switchMap(response => this.evInitSumit(response).pipe(map(() => response))),
+      switchMap(response => this.$evInitSumit(response).pipe(map(() => response))),
       switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
       tap(response => console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response)),
       tap(response => this.id.set(response.id)),
       tap(response => this.orgRecord = response),
       tap(response => this.crrRecord = response),
-      switchMap(response => this.handlePopulateForm(response)),
-      switchMap(response => this.evNextSumit(response).pipe(tap(() => this.onNextSumit.emit(response)))),
+      switchMap(response => this.$populateForm(response)),
+      switchMap(response => this.$evNextSumit(response).pipe(tap(() => this.onNextSumit.emit(response)))),
       tap(() => ([true, false].includes(closeOnSave)? closeOnSave : this.closeOnSave()) && this._context.close(this.crrRecord))
     );
   };

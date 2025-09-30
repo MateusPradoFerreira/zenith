@@ -1,11 +1,11 @@
 import { PllMockRestService, PllPaginatedResponse } from "@pollaris";
-import { ScheduleCategory } from "../models/schedule-category.model";
-import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "./schedule-category.service";
+import { ScheduleCategory } from "../../models/schedule-category.model";
+import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "../schedule-category.service";
 import { delay, map, Observable, of } from "rxjs";
-import { fakerJs } from "../../../core/config/faker.config";
+import { fakerJs } from "../../../../core/config/faker.config";
 import { v4 as uuid } from 'uuid';
 import { Injectable } from "@angular/core";
-import { Util } from "../../../common/util/util";
+import { Util } from "../../../../common/util/util";
 
 export function createMockedScheduleCategory(data: Partial<ScheduleCategory>): ScheduleCategory {
   return new ScheduleCategory({

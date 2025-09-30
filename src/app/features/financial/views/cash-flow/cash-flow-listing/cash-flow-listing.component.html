@@ -80,8 +80,8 @@
           <label>Título</label>
         </div>
 
-        <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
-        <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
+        <button hlmBtn variant="text" (click)="handleClearFilters()">Limpar</button>
+        <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="handleApplyFilters(); ctx.close()">Aplicar</button>
       </div>
     </ng-template>
   </hlm-data-table>

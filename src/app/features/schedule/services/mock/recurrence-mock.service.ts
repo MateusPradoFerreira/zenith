@@ -1,6 +1,6 @@
 import { PllMockRestService } from "@pollaris";
-import { Recurrence } from "../models/recurrence.model";
-import { RecurrenceService } from "./recurrence.service";
+import { Recurrence } from "../../models/recurrence.model";
+import { RecurrenceService } from "../recurrence.service";
 import { v4 as uuid } from 'uuid';
 import { Injectable } from "@angular/core";
 

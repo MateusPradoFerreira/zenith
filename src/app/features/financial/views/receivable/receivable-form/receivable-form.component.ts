@@ -4,13 +4,9 @@ import { BaseFormComponentDirective, event } from '../../../../../common/directi
 import { Receivable } from '../../../models/receivable.model';
 import { ReceivableFacade, ReceivableStatusOptions } from '../../../facades/receivable.facade';
 import { forkJoin, switchMap, tap } from 'rxjs';
-import { CenterOfCostFacade } from '../../../facades/center-of-cost.facade';
-import { PlanOfAccountFacade } from '../../../facades/plan-of-account.facade';
-import { SecrecyFacade } from '../../../facades/secrecy.facade';
 import { Secrecy } from '../../../models/secrecy.model';
 import { CenterOfCost } from '../../../models/center-of-cost.model';
 import { PlanOfAccount } from '../../../models/plan-of-account.model';
-import { BankAccountFacade } from '../../../facades/bank-account.facade';
 import { BankAccount } from '../../../models/bank-account.model';
 
 @Component({
@@ -24,10 +20,10 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
   
   override facade = inject(ReceivableFacade);
 
-  secrecyFacade = inject(SecrecyFacade);
+  /* secrecyFacade = injecty(SecrecyFacade);
   centerOfCostFacade = inject(CenterOfCostFacade);
   planOfAccountFacade = inject(PlanOfAccountFacade);
-  bankAccountFacade = inject(BankAccountFacade);
+  bankAccountFacade = inject(BankAccountFacade); */
 
   statusOptions = ReceivableStatusOptions;
   secrecyOptions: Secrecy[] = [];
@@ -35,14 +31,9 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
   planOfAccountOptions: PlanOfAccount[] = [];
   bankAccountOptions: BankAccount[] = [];
 
-  override evNgOnInit = event(switchMap(() => forkJoin({
-    handleGetSecrecyOptions: this.handleGetSecrecyOptions(),
-    handleGetCenterOfCostOptions: this.handleGetCenterOfCostOptions(),
-    handleGetPlanOfAccountOptions: this.handleGetPlanOfAccountOptions(),
-    handleGetBankAccountOptions: this.handleGetBankAccountOptions(),
-  })));
+  override $evNgOnInit = event();
 
-  override evInitCreateRecord = event(tap(() => {
+  override $evInitCreateRecord = event(tap(() => {
     if(this.name()) this.form.controls.name.setValue(this.name());
     if(this.secrecyOptions.length) this.form.controls.secrecyId.setValue(this.secrecyOptions[0].id);
     if(this.centerOfCostOptions.length) this.form.controls.centerOfCostId.setValue(this.centerOfCostOptions[0].id);
@@ -50,15 +41,15 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
     if(this.bankAccountOptions.length) this.form.controls.bankAccountId.setValue(this.bankAccountOptions[0].id);
   }));
 
-  handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.secrecyOptions = response.data));
+  /* handleGetSecrecyOptions = () => this.secrecyFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.secrecyOptions = response.data));
   handleGetCenterOfCostOptions = () => this.centerOfCostFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.centerOfCostOptions = response.data));
   handleGetPlanOfAccountOptions = () => this.planOfAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.planOfAccountOptions = response.data));
-  handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.bankAccountOptions = response.data));
+  handleGetBankAccountOptions = () => this.bankAccountFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => this.bankAccountOptions = response.data)); */
 
   formatSequence(number: number): string {
     return number.toString().padStart(4, '0');
   };
-  
+
   pay() {
     this.processing.set(true);
     this.facade.handlePay(this.id()).subscribe({
@@ -69,7 +60,7 @@ export class ReceivableFormComponent extends BaseFormComponentDirective<Receivab
   };
 
   reopen() {
-    this.processing.set(false),
+    this.processing.set(true),
     this.facade.handleReopen(this.id()).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),

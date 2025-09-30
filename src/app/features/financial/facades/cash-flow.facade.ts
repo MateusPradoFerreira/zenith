@@ -1,26 +1,34 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
 import { CashFlow } from "../models/cash-flow.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
-import { GetAllCashFlowByFilterParams, CashFlowService } from "../services/cash-flow.service";
+import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "../services/cash-flow.service";
 import { CashFlowState } from "../states/cash-flow.state";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
 export type CashFlowUseQueryParams = GetAllCashFlowByFilterParams;
+export type CashFlowUseQueryResponse = GetAllCashFlowByFilterResponse;
 
-export class CashFlowFacade extends PllFacade<CashFlow, CashFlow, CashFlowUseQueryParams> {
+@Injectable({ providedIn: "root" })
+export class CashFlowFacade extends PllFacade<CashFlow> {
   override state = inject(CashFlowState);
+  override service = inject(CashFlowService);
+
+  override header: string = "Movimento de Caixa";
+  override component: Type<any>;
+  override dialogSize: DialogContentVariants["size"] = "lg";
+  override dialogAlign: DialogContentVariants["align"] = "center";
+  override closeOnSave: boolean = false;
+
+  override recordSchema: PllFormSchemaConfig<CashFlow>;
+};
+
+@Injectable({ providedIn: "root" })
+export class CashFlowQueryFacade extends PllQueryFacade<CashFlowUseQueryResponse, CashFlowUseQueryParams> {
   override service = inject(CashFlowService);
   override queryFn = (params: CashFlowUseQueryParams) => this.service.getAllByFilter(params);
 
-  override header: string;
-  override component: Type<any>;
-  override dialogSize: DialogContentVariants["size"];
-  override dialogAlign: DialogContentVariants["align"] = "center";
-  override closeOnSave: boolean;
-
-  override recordSchema: PllFormSchemaConfig<CashFlow>;
   override filterSchema: PllFormSchemaConfig<CashFlowUseQueryParams> = {
     fields: {
       centerOfCostId: { value: null },

@@ -8,15 +8,13 @@ export type GetAllCenterOfCostByFilterParams = {
   status?: "ACTIVE" | "INACTIVE" | "ALL";
 };
 
-export type GetAllCenterOfCostByFilterResponse = CenterOfCost;
-
 @Injectable()
 export class CenterOfCostService extends PllRestService<CenterOfCost> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "secrecy";
+  override pathRoute: string = "center-of-cost";
 
-  getAllByFilter({ status }: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllCenterOfCostByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+  getAllByFilter({ status }: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<CenterOfCost>> {
+    return this.http.get<PllPaginatedResponse<CenterOfCost>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
     }});
   };

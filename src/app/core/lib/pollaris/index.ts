@@ -79,23 +79,40 @@ export abstract class PllRecordState<TRecordModel extends PllRecordId> {
 export abstract class PllRecordRepository<TRecordModel extends PllRecordId> {
   abstract state: PllRecordState<TRecordModel>;
 
-  find(query?: Query<TRecordModel>): Observable<PllPaginatedResponse<TRecordModel>> {
-    const data = !query? this.state.data() : this.state.data().filter(sift(query));
-    const paginatied: PllPaginatedResponse<TRecordModel> = { data, pagination: {
-      page: 1,
-      size: 1,
-      total: 1,
-      sort: "ASC",
-    }};
-    return of(paginatied);
+  find(query?: Query<TRecordModel>, pagination?: Partial<PllPagination>): Observable<PllPaginatedResponse<TRecordModel>> {
+    const formatedQuery = this._formatQuery(query);
+    const filteredData = this.state.data().filter(sift(formatedQuery));
+
+    const defaultPagination: PllPagination = { page: 1, size: 50, total: 1, sort: "ASC" };
+    const finalPagination: PllPagination = {
+      ...defaultPagination,
+      ...pagination,
+      total: filteredData.length,
+    };
+
+    const paginationStart = (finalPagination.page - 1) * finalPagination.size;
+    const paginationEnd = paginationStart + finalPagination.size;
+
+    if(finalPagination.sort === "DESC") filteredData.reverse();
+    const data = !pagination? filteredData : filteredData.slice(paginationStart, paginationEnd);
+    
+    const response: PllPaginatedResponse<TRecordModel> = { data, pagination: finalPagination};
+    return of(response);
   };
 
   findOne(query: Query<TRecordModel>): Observable<TRecordModel | null> {
-    return of(this.state.data().find(sift(query)) || null);
+    const formatedQuery = this._formatQuery(query);
+    return of(this.state.data().find(sift(formatedQuery)) || null);
   };
 
   count(query?: Query<TRecordModel>): Observable<number> {
-    return query? of(this.state.data().filter(sift(query)).length) : of(this.state.data().length);
+    const formatedQuery = this._formatQuery(query);
+    return of(this.state.data().filter(sift(formatedQuery)).length);
+  };
+
+  private _formatQuery(query?: Query<TRecordModel>): Query<TRecordModel> {
+    if(!query) return {} as Query<TRecordModel>;
+    return Object.fromEntries(Object.entries(query).filter(([, v]) => v !== undefined)) as Query<TRecordModel>;
   };
 };
 
@@ -140,23 +157,23 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   override baseRoute: string = "";
   override pathRoute: string = "";
 
-  protected minDelay: number = 50;
-  protected maxDelay: number = 300;
+  protected minDelay: number = 100;
+  protected maxDelay: number = 500;
 
-  protected evGet: EventObs<TRecordModel> = event();
-  protected evPost: EventObs<TRecordModel> = event();
-  protected evPostMany: EventObs<TRecordModel[]> = event();
-  protected evPut: EventObs<TRecordModel> = event();
-  protected evPutMany: EventObs<TRecordModel[]> = event();
-  protected evDelete: EventObs<TRecordModel> = event();
-  protected evDeleteMany: EventObs<TRecordModel[]> = event();
+  protected $evGet: EventObs<TRecordModel> = event();
+  protected $evPost: EventObs<TRecordModel> = event();
+  protected $evPostMany: EventObs<TRecordModel[]> = event();
+  protected $evPut: EventObs<TRecordModel> = event();
+  protected $evPutMany: EventObs<TRecordModel[]> = event();
+  protected $evDelete: EventObs<TRecordModel> = event();
+  protected $evDeleteMany: EventObs<TRecordModel[]> = event();
 
   override get(id: PllID): Observable<TRecordModel> {
-    return of(this.repository.state.data().find(record => record.id === id) || null).pipe(
+    return of(this.repository.state.get(id)).pipe(
       delay(this.delay()), 
       switchMap(response => {
         if(!response) return throwError(() => new HttpErrorResponse({ status: 404, error: new Error("Not Found Record!") }));
-        return this.evGet(response).pipe(map(eventResponse => eventResponse || response));
+        return this.$evGet(response).pipe(map(() => response));
       }),
     );
   };
@@ -165,7 +182,7 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return of({ ...data, id: data.id || uuid() }).pipe(
       delay(this.delay()), 
       tap(response => this.repository.state.insert(response)),
-      switchMap(response => this.evPost(response).pipe(map(eventResponse => eventResponse || response))),
+      switchMap(response => this.$evPost(response).pipe(map(() => response))),
     );
   };
 
@@ -173,30 +190,31 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return of(data.map(record => ({ ...record, id: record.id || uuid() }))).pipe(
       delay(this.delay()),
       tap(response => this.repository.state.insertMany(response)),
-      switchMap(response => this.evPostMany(response).pipe(map(eventResponse => eventResponse || response))),
+      switchMap(response => this.$evPostMany(response).pipe(map(() => response))),
     );
   };
 
   override put(data: TRecordModel): Observable<TRecordModel> {
-    return of(data).pipe(
+    return this.get(data.id).pipe(
       delay(this.delay()), 
+      map(response => ({ ...response, ...data })),
       tap(response => this.repository.state.update(response)),
-      switchMap(response => this.evPut(response).pipe(map(eventResponse => eventResponse || response))),
+      switchMap(response => this.$evPut(response).pipe(map(() => response))),
     );
   };
 
   override putMany(data: TRecordModel[]): Observable<TRecordModel[]> {
-    return of(data).pipe(
-      delay(this.delay()), 
-      tap(response => this.repository.state.updateMany(response)),
-      switchMap(response => this.evPutMany(response).pipe(map(eventResponse => eventResponse || response))),
+    return from(data).pipe(
+      concatMap(record => this.put(record)),
+      toArray(),
+      switchMap(response => this.$evPutMany(response).pipe(map(() => response))),
     );
   };
 
   override delete(id: PllID): Observable<TRecordModel> {
     return this.get(id).pipe(
       tap(() => this.repository.state.remove(id)),
-      switchMap(response => this.evDelete(response).pipe(map(eventResponse => eventResponse || response))),
+      switchMap(response => this.$evDelete(response).pipe(map(() => response))),
     );
   };
 
@@ -204,15 +222,15 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return from(ids).pipe(
       concatMap(id => this.delete(id)),
       toArray(),
-      switchMap(response => this.evDeleteMany(response).pipe(map(eventResponse => eventResponse || response))),
+      switchMap(response => this.$evDeleteMany(response).pipe(map(() => response))),
     );
   };
 
   protected delay() {
-    return faker.number.int({ min: this.minDelay, max: this.minDelay });
+    return faker.number.int({ min: this.minDelay, max: this.maxDelay });
   };
 
-  protected mergeData<TFirstRecord, TSecondRecord>(records: TFirstRecord[], builder: (record: TFirstRecord) => Partial<TFirstRecord> & Omit<TSecondRecord, keyof TFirstRecord>): TSecondRecord[] {
+  protected merge<TFirstRecord, TSecondRecord>(records: TFirstRecord[], builder: (record: TFirstRecord) => Partial<TFirstRecord> & Omit<TSecondRecord, keyof TFirstRecord>): TSecondRecord[] {
     return records.map(record => {
       const newRecord: any = { ...record, ...builder(record) };
       return newRecord;
@@ -239,84 +257,48 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TComponent ext
 
   dialogFacade = inject(DialogFacade);
 
-  loading = signal<boolean>(false);
-  processing = signal<boolean>(false);
-
   getRecord(id: PllID): Observable<TRecordModel> {
-    this.loading.set(true);
     return of(this.state.get(id)).pipe(
       switchMap(record => {
         if(record) return of(record);
         return this.service.get(id).pipe(tap(response => this.state.insert(response)));
       }),
-      tap(() => this.loading.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
   insertRecord(data: TRecordModel): Observable<TRecordModel> {
-    this.processing.set(true);
     return of(data).pipe(
       switchMap(record => this.service.post(record)),
-      tap(reponse => this.state.insert(reponse)),
-      tap(() => this.processing.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
   updateRecord(data: TRecordModel): Observable<TRecordModel> {
-    this.processing.set(true);
     return of(data).pipe(
       switchMap(record => this.service.put(record)),
-      tap(reponse => this.state.update(reponse)),
-      tap(() => this.processing.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
   updateManyRecords(data: TRecordModel[]): Observable<TRecordModel[]> {
-    this.processing.set(true);
     return of(data.map(reg => reg)).pipe(
       switchMap(records => this.service.putMany(records)),
-      tap(records => records.map(record => this.state.update(record))),
-      tap(() => this.processing.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
   deleteRecord(id: PllID): Observable<TRecordModel> {
-    this.processing.set(true);
     return this.service.delete(id).pipe(
       tap(() => this.state.remove(id)),
-      tap(() => this.processing.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
   deleteManyRecords(ids: PllID[]): Observable<TRecordModel[]> {
-    this.processing.set(true);
     return this.service.deleteMany(ids).pipe(
       tap(() => ids.map(id => this.state.remove(id))),
-      tap(() => this.processing.set(false)),
-      catchError(error => {
-        this.processing.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 
@@ -347,24 +329,20 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TComponent ext
   };
 };
 
-export abstract class PllQueryFacade<TRecordModel extends PllRecordId, TRecordQueryModel extends PllRecordId = TRecordModel, TRecordQueryParams extends PllRecord = any> {
-  abstract facade: PllFacade<TRecordModel>;
+export abstract class PllQueryFacade<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord = any> {
+  abstract service: PllRestService<any>;
   abstract queryFn: (params: TRecordQueryParams) => Observable<PllPaginatedResponse<TRecordQueryModel>>;
 
   abstract filterSchema: PllFormSchemaConfig<TRecordQueryParams>;
 
-  data = signal<PllPaginatedResponse<TRecordModel>>({ data: [], pagination: null });
-  loading = signal<boolean>(false);
+  data = signal<PllPaginatedResponse<TRecordQueryModel>>({ data: [], pagination: null });
+  clearDataBeforeUseQuery: boolean = false;
   
   useQuery(params: TRecordQueryParams): Observable<PllPaginatedResponse<TRecordQueryModel>> {
-    this.loading.set(true);
+    if(this.clearDataBeforeUseQuery) this.data.set({ data: [], pagination: null });
     return this.queryFn(params).pipe(
       tap(response => this.data.set(response)),
-      tap(() => this.loading.set(false)),
-      catchError(error => {
-        this.loading.set(false);
-        return throwError(error);
-      }),
+      catchError(error => throwError(error)),
     );
   };
 };

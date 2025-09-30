@@ -7,25 +7,29 @@ import localePt from '@angular/common/locales/pt';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { PayableService } from './features/financial/services/payable.service';
-import { PayableMockService } from './features/financial/services/payable-mock.service';
+import { PayableMockService } from './features/financial/services/mock/payable-mock.service';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { ReceivableService } from './features/financial/services/receivable.service';
+import { ReceivableMockService } from './features/financial/services/mock/receivable-mock.service';
+import { CashFlowMockService } from './features/financial/services/mock/cash-flow-mock.service';
+import { CashFlowService } from './features/financial/services/cash-flow.service';
 
 registerLocaleData(localePt);
 
 const services: (Provider | EnvironmentProviders)[] = [
   /* { provide: InboxService, useClass: InboxMockService }, */
   { provide: PayableService, useClass: PayableMockService },
-  /* { provide: ReceivableService, useClass: ReceivableMockService },
-  { provide: SecrecyService, useClass: SecrecyMockService },
+  { provide: ReceivableService, useClass: ReceivableMockService },
+  { provide: CashFlowService, useClass: CashFlowMockService },
+  /* { provide: SecrecyService, useClass: SecrecyMockService },
   { provide: PlanOfAccountService, useClass: PlanOfAccountMockService },
   { provide: CenterOfCostService, useClass: CenterOfCostMockService },
   { provide: ScheduleService, useClass: ScheduleMockService },
   { provide: RecurrenceService, useClass: RecurrenceMockService },
   { provide: ScheduleCategoryService, useClass: ScheduleCategoryMockService },
   { provide: BankAccountService, useClass: BankAccountMockService },
-  { provide: CashFlowService, useClass: CashFlowMockService },
   { provide: GoalService, useClass: GoalMockService },
   { provide: GoalTaskService, useClass: GoalTaskService },
   { provide: GoalItemService, useClass: GoalItemMockService }, */

@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
-import { Schedule } from "../models/schedule.model";
-import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "./schedule.service";
+import { Schedule } from "../../models/schedule.model";
+import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../schedule.service";
 import { delay, map, Observable } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 
