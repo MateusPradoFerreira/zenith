@@ -4,6 +4,10 @@ import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, Recei
 import { delay, map, Observable, switchMap } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import moment from "moment";
+import { CenterOfCostMockRepository } from "./center-of-cost-mock.service";
+import { PlanOfAccountMockRepository } from "./plan-of-account-mock.service";
+import { SecrecyMockRepository } from "./secrecy-mock.service";
+import { BankAccountMockRepository } from "./bank-account-mock.service";
 
 @Injectable({ providedIn: "root" })
 export class ReceivableMockState extends PllRecordState<Receivable> {};
@@ -15,6 +19,11 @@ export class ReceivableMockRepository extends PllRecordRepository<Receivable> {
 
 export class ReceivableMockService extends PllMockRestService<Receivable> implements ReceivableService {
   override repository = inject(ReceivableMockRepository);
+
+  centerOfCostMockRepository = inject(CenterOfCostMockRepository);
+  planOfAccountMockRepository = inject(PlanOfAccountMockRepository);
+  secrecyMockRepository = inject(SecrecyMockRepository);
+  bankAccountMockRepository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
     return this.repository.find({
@@ -30,11 +39,11 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
       ],
     }).pipe(
       delay(this.delay()),
-      map(response => ({ ...response, data: this.merge<Receivable, GetAllReceivableByFilterResponse>(response.data, () => ({
-        centerOfCost: "",
-        planOfAccount: "",
-        secrecy: "",
-        bankAccount: "",
+      map(response => ({ ...response, data: this.merge<Receivable, GetAllReceivableByFilterResponse>(response.data, record => ({
+        centerOfCost: this.centerOfCostMockRepository.state.get(record.centerOfCostId)?.name || "",
+        planOfAccount: this.planOfAccountMockRepository.state.get(record.centerOfCostId)?.name || "",
+        secrecy: this.secrecyMockRepository.state.get(record.centerOfCostId)?.name || "",
+        bankAccount: this.bankAccountMockRepository.state.get(record.centerOfCostId)?.name || "",
       }))})),
     );
   };

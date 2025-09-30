@@ -5,6 +5,9 @@ import { delay, map, Observable, switchMap } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import moment from "moment";
 import { CenterOfCostMockRepository } from "./center-of-cost-mock.service";
+import { PlanOfAccountMockRepository } from "./plan-of-account-mock.service";
+import { SecrecyMockRepository } from "./secrecy-mock.service";
+import { BankAccountMockRepository } from "./bank-account-mock.service";
 
 @Injectable({ providedIn: "root" })
 export class PayableMockState extends PllRecordState<Payable> {};
@@ -18,6 +21,9 @@ export class PayableMockService extends PllMockRestService<Payable> implements P
   override repository = inject(PayableMockRepository);
 
   centerOfCostMockRepository = inject(CenterOfCostMockRepository);
+  planOfAccountMockRepository = inject(PlanOfAccountMockRepository);
+  secrecyMockRepository = inject(SecrecyMockRepository);
+  bankAccountMockRepository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
     return this.repository.find({
@@ -35,9 +41,9 @@ export class PayableMockService extends PllMockRestService<Payable> implements P
       delay(this.delay()),
       map(response => ({ ...response, data: this.merge<Payable, GetAllPayableByFilterResponse>(response.data, record => ({
         centerOfCost: this.centerOfCostMockRepository.state.get(record.centerOfCostId)?.name || "",
-        planOfAccount: "",
-        secrecy: "",
-        bankAccount: "",
+        planOfAccount: this.planOfAccountMockRepository.state.get(record.centerOfCostId)?.name || "",
+        secrecy: this.secrecyMockRepository.state.get(record.centerOfCostId)?.name || "",
+        bankAccount: this.bankAccountMockRepository.state.get(record.centerOfCostId)?.name || "",
       }))})),
     );
   };

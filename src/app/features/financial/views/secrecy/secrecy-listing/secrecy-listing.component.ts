@@ -1,20 +1,20 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { CenterOfCostFacade, CenterOfCostQueryFacade, CenterOfCostUseQueryParams, CenterOfCostUseQueryResponse } from '../../../facades/center-of-cost.facade';
+import { SecrecyFacade, SecrecyQueryFacade, SecrecyUseQueryParams, SecrecyUseQueryResponse } from '../../../facades/secrecy.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { CenterOfCostFormComponent } from '../center-of-cost-form/center-of-cost-form.component';
+import { SecrecyFormComponent } from '../secrecy-form/secrecy-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 
 @Component({
   standalone: true,
-  selector: 'app-center-of-cost-listing',
+  selector: 'app-secrecy-listing',
   imports: [GlobalModule, HlmDataTableComponent],
-  templateUrl: './center-of-cost-listing.component.html',
+  templateUrl: './secrecy-listing.component.html',
 })
-export class CenterOfCostListingComponent extends BaseRecordListingComponentDirective<CenterOfCostUseQueryResponse, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
-  override facade = inject(CenterOfCostFacade);
-  override queryFacade = inject(CenterOfCostQueryFacade);
+export class SecrecyListingComponent extends BaseRecordListingComponentDirective<SecrecyUseQueryResponse, SecrecyUseQueryParams, SecrecyFormComponent> {
+  override facade = inject(SecrecyFacade);
+  override queryFacade = inject(SecrecyQueryFacade);
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "Nome", class: "flex-1" },

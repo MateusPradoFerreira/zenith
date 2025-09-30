@@ -1,20 +1,20 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { CenterOfCostFacade, CenterOfCostQueryFacade, CenterOfCostUseQueryParams, CenterOfCostUseQueryResponse } from '../../../facades/center-of-cost.facade';
+import { PlanOfAccountFacade, PlanOfAccountQueryFacade, PlanOfAccountUseQueryParams, PlanOfAccountUseQueryResponse } from '../../../facades/plan-of-account.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { CenterOfCostFormComponent } from '../center-of-cost-form/center-of-cost-form.component';
+import { PlanOfAccountFormComponent } from '../plan-of-account-form/plan-of-account-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 
 @Component({
   standalone: true,
-  selector: 'app-center-of-cost-listing',
+  selector: 'app-plan-of-account-listing',
   imports: [GlobalModule, HlmDataTableComponent],
-  templateUrl: './center-of-cost-listing.component.html',
+  templateUrl: './plan-of-account-listing.component.html',
 })
-export class CenterOfCostListingComponent extends BaseRecordListingComponentDirective<CenterOfCostUseQueryResponse, CenterOfCostUseQueryParams, CenterOfCostFormComponent> {
-  override facade = inject(CenterOfCostFacade);
-  override queryFacade = inject(CenterOfCostQueryFacade);
+export class PlanOfAccountListingComponent extends BaseRecordListingComponentDirective<PlanOfAccountUseQueryResponse, PlanOfAccountUseQueryParams, PlanOfAccountFormComponent> {
+  override facade = inject(PlanOfAccountFacade);
+  override queryFacade = inject(PlanOfAccountQueryFacade);
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "Nome", class: "flex-1" },

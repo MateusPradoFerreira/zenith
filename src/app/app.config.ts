@@ -15,6 +15,14 @@ import { ReceivableService } from './features/financial/services/receivable.serv
 import { ReceivableMockService } from './features/financial/services/mock/receivable-mock.service';
 import { CashFlowMockService } from './features/financial/services/mock/cash-flow-mock.service';
 import { CashFlowService } from './features/financial/services/cash-flow.service';
+import { CenterOfCostMockService } from './features/financial/services/mock/center-of-cost-mock.service';
+import { SecrecyMockService } from './features/financial/services/mock/secrecy-mock.service';
+import { CenterOfCostService } from './features/financial/services/center-of-cost.service';
+import { SecrecyService } from './features/financial/services/secrecy.service';
+import { PlanOfAccountMockService } from './features/financial/services/mock/plan-of-account-mock.service';
+import { PlanOfAccountService } from './features/financial/services/plan-of-account.service';
+import { BankAccountMockService } from './features/financial/services/mock/bank-account-mock.service';
+import { BankAccountService } from './features/financial/services/bank-account.service';
 
 registerLocaleData(localePt);
 
@@ -23,13 +31,13 @@ const services: (Provider | EnvironmentProviders)[] = [
   { provide: PayableService, useClass: PayableMockService },
   { provide: ReceivableService, useClass: ReceivableMockService },
   { provide: CashFlowService, useClass: CashFlowMockService },
-  /* { provide: SecrecyService, useClass: SecrecyMockService },
-  { provide: PlanOfAccountService, useClass: PlanOfAccountMockService },
   { provide: CenterOfCostService, useClass: CenterOfCostMockService },
-  { provide: ScheduleService, useClass: ScheduleMockService },
+  { provide: SecrecyService, useClass: SecrecyMockService },
+  { provide: PlanOfAccountService, useClass: PlanOfAccountMockService },
+  { provide: BankAccountService, useClass: BankAccountMockService },
+  /* { provide: ScheduleService, useClass: ScheduleMockService },
   { provide: RecurrenceService, useClass: RecurrenceMockService },
   { provide: ScheduleCategoryService, useClass: ScheduleCategoryMockService },
-  { provide: BankAccountService, useClass: BankAccountMockService },
   { provide: GoalService, useClass: GoalMockService },
   { provide: GoalTaskService, useClass: GoalTaskService },
   { provide: GoalItemService, useClass: GoalItemMockService }, */

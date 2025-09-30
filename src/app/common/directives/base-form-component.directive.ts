@@ -1,7 +1,7 @@
 import { computed, Directive, input, model, OnInit, output, signal } from "@angular/core";
 import { PllFacade, PllID, PllRecordId } from "../../core/lib/pollaris";
 import { PllFormSchema } from "../../core/lib/pollaris/forms";
-import { map, Observable, of, OperatorFunction, switchMap, tap } from "rxjs";
+import { catchError, map, Observable, of, OperatorFunction, switchMap, tap, throwError } from "rxjs";
 import { injectBrnDialogContext, injectBrnDialogCtx } from "@spartan-ng/brain/dialog";
 import { ClassValue } from "clsx";
 import { hlm } from "@spartan-ng/brain/core";
@@ -65,6 +65,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   $updateUI(): Observable<TRecordModel> {
+    this.loading.set(true);
     return of(this.id()).pipe(
       switchMap(id => {
         if(!id) return this.$populateForm().pipe(tap(response => console.log("DEFAULT-DATA", response)));
@@ -74,6 +75,11 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
           tap(response => this.crrRecord = response),
           switchMap(response => this.$populateForm(response)),
           switchMap(response => this.$evUpdateUI(response)),
+          tap(() => this.loading.set(false)),
+          catchError(error => {
+            this.loading.set(false);
+            return throwError(error);
+          }),
         );
       }),
     );
@@ -106,6 +112,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
+    this.processing.set(true);
     return this.form.handleSubmit().pipe(
       switchMap(response => this.$evInitSumit(response).pipe(map(() => response))),
       switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
@@ -116,6 +123,12 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
       switchMap(response => this.$populateForm(response)),
       switchMap(response => this.$evNextSumit(response).pipe(tap(() => this.onNextSumit.emit(response)))),
       tap(() => ([true, false].includes(closeOnSave)? closeOnSave : this.closeOnSave()) && this._context.close(this.crrRecord))
+    ).pipe(
+      tap(() => this.processing.set(false)),
+      catchError(error => {
+        this.processing.set(false);
+        return throwError(error);
+      }),
     );
   };
 

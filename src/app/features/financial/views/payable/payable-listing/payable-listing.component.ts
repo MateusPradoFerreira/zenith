@@ -3,12 +3,15 @@ import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { PayableFacade, PayableQueryFacade, PayableStatusOptions, PayableUseQueryParams, PayableUseQueryResponse } from '../../../facades/payable.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { Secrecy } from '../../../models/secrecy.model';
-import { CenterOfCost } from '../../../models/center-of-cost.model';
-import { PlanOfAccount } from '../../../models/plan-of-account.model';
 import { PllID } from '../../../../../core/lib/pollaris';
-import { BankAccount } from '../../../models/bank-account.model';
 import { PayableFormComponent } from '../payable-form/payable-form.component';
+import { SelectItem } from '../../../../../common/types/select-item.type';
+import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
+import { forkJoin, switchMap, tap } from 'rxjs';
+import { SecrecyService } from '../../../services/secrecy.service';
+import { CenterOfCostService } from '../../../services/center-of-cost.service';
+import { PlanOfAccountService } from '../../../services/plan-of-account.service';
+import { BankAccountService } from '../../../services/bank-account.service';
 
 @Component({
   standalone: true,
@@ -40,10 +43,42 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
     { icon: "check", label: "Reabrir", command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
   ]);
 
-  secrecyOptions: Secrecy[] = [];
-  centerOfCostOptions: CenterOfCost[] = [];
-  planOfAccountOptions: PlanOfAccount[] = [];
-  bankAccountOptions: BankAccount[] = [];
+  secrecyService = inject(SecrecyService);
+  centerOfCostService = inject(CenterOfCostService);
+  planOfAccountService = inject(PlanOfAccountService);
+  bankAccountService = inject(BankAccountService);
+
+  secrecyOptions: SelectItem<PllID>[] = [];
+  centerOfCostOptions: SelectItem<PllID>[] = [];
+  planOfAccountOptions: SelectItem<PllID>[] = [];
+  bankAccountOptions: SelectItem<PllID>[] = [];
+
+  override $evNgOnInit: EventObs<void> = event(switchMap(() => forkJoin({
+    a: this.$getSecrecyOptions(),
+    b: this.$getCenterOfCostOptions(),
+    c: this.$getPlanOfAccountOptions(),
+    d: this.$getBankAccountOptions(),
+  })));
+
+  $getSecrecyOptions = () => this.secrecyService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+    this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
+    this.secrecyOptions.unshift({ label: "Todos", value: null });
+  }));
+
+  $getCenterOfCostOptions = () => this.centerOfCostService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+    this.centerOfCostOptions = response.data.map(record => ({ label: record.name, value: record.id }));
+    this.centerOfCostOptions.unshift({ label: "Todos", value: null });
+  }));
+
+  $getPlanOfAccountOptions = () => this.planOfAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+    this.planOfAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
+    this.planOfAccountOptions.unshift({ label: "Todos", value: null });
+  }));
+
+  $getBankAccountOptions = () => this.bankAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+    this.bankAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
+    this.bankAccountOptions.unshift({ label: "Todas", value: null });
+  }));
 
   statusOptions = [
     { label: "Todos", value: "ALL" },

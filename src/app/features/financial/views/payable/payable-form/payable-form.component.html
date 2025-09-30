@@ -26,7 +26,7 @@
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+        <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
       </hlm-select-content>
     </brn-select>
     <label>Conta Bancária</label>
@@ -38,7 +38,7 @@
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.id">{{ option.name }}</hlm-option>
+        <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.value">{{ option.label }}</hlm-option>
       </hlm-select-content>
     </brn-select>
     <label>Centro de Custo</label>
@@ -50,7 +50,7 @@
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+        <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
       </hlm-select-content>
     </brn-select>
     <label>Plano de Conta</label>
@@ -62,7 +62,7 @@
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of secrecyOptions" [value]="option.id">{{ option.name }}</hlm-option>
+        <hlm-option *ngFor="let option of secrecyOptions" [value]="option.value">{{ option.label }}</hlm-option>
       </hlm-select-content>
     </brn-select>
     <label>Título</label>
