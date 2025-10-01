@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective } from '../../../../../common/directives/base-form-component.directive';
 import { Inbox } from '../../../models/inbox.model';
-import { InboxFacade, InboxPriorityOptions, InboxStatusOptions } from '../../../facades/inbox.facade';
+import { InboxFacade, InboxPriorityOptions } from '../../../facades/inbox.facade';
 
 @Component({
   standalone: true,

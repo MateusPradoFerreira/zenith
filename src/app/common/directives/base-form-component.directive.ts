@@ -6,9 +6,9 @@ import { injectBrnDialogContext, injectBrnDialogCtx } from "@spartan-ng/brain/di
 import { ClassValue } from "clsx";
 import { hlm } from "@spartan-ng/brain/core";
 
-export type EventObs<T = void> = (data?: T) => Observable<any>;
-export const event = <T = void>(...operators: OperatorFunction<T, any>[]) => {
-  return (data: T) => (of(data || null) as any).pipe(...operators) as Observable<any>;
+export type EventObs<T = void, TR = any> = (data?: T) => Observable<TR>;
+export const event = <T = void, TR = any>(...operators: OperatorFunction<T, TR>[]) => {
+  return (data: T) => (of(data || null) as any).pipe(...operators) as Observable<TR>;
 };
 
 export type BaseFormSubmitConfig = {

@@ -23,11 +23,13 @@ import { PlanOfAccountMockService } from './features/financial/services/mock/pla
 import { PlanOfAccountService } from './features/financial/services/plan-of-account.service';
 import { BankAccountMockService } from './features/financial/services/mock/bank-account-mock.service';
 import { BankAccountService } from './features/financial/services/bank-account.service';
+import { InboxMockService } from './features/inbox/services/mock/inbox-mock.service';
+import { InboxService } from './features/inbox/services/inbox.service';
 
 registerLocaleData(localePt);
 
 const services: (Provider | EnvironmentProviders)[] = [
-  /* { provide: InboxService, useClass: InboxMockService }, */
+  { provide: InboxService, useClass: InboxMockService },
   { provide: PayableService, useClass: PayableMockService },
   { provide: ReceivableService, useClass: ReceivableMockService },
   { provide: CashFlowService, useClass: CashFlowMockService },

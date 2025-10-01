@@ -160,10 +160,10 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   protected minDelay: number = 100;
   protected maxDelay: number = 500;
 
-  protected $evGet: EventObs<TRecordModel> = event();
-  protected $evPost: EventObs<TRecordModel> = event();
+  protected $evGet: EventObs<TRecordModel, TRecordModel> = event();
+  protected $evPost: EventObs<TRecordModel, TRecordModel> = event();
   protected $evPostMany: EventObs<TRecordModel[]> = event();
-  protected $evPut: EventObs<TRecordModel> = event();
+  protected $evPut: EventObs<TRecordModel, TRecordModel> = event();
   protected $evPutMany: EventObs<TRecordModel[]> = event();
   protected $evDelete: EventObs<TRecordModel> = event();
   protected $evDeleteMany: EventObs<TRecordModel[]> = event();
@@ -173,7 +173,7 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
       delay(this.delay()), 
       switchMap(response => {
         if(!response) return throwError(() => new HttpErrorResponse({ status: 404, error: new Error("Not Found Record!") }));
-        return this.$evGet(response).pipe(map(() => response));
+        return this.$evGet(response).pipe(map(record => record || response));
       }),
     );
   };
@@ -181,8 +181,8 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   override post(data: TRecordModel): Observable<TRecordModel> {
     return of({ ...data, id: data.id || uuid() }).pipe(
       delay(this.delay()), 
+      switchMap(response => this.$evPost(response).pipe(map(record => record || response))),
       tap(response => this.repository.state.insert(response)),
-      switchMap(response => this.$evPost(response).pipe(map(() => response))),
     );
   };
 
@@ -198,8 +198,8 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return this.get(data.id).pipe(
       delay(this.delay()), 
       map(response => ({ ...response, ...data })),
+      switchMap(response => this.$evPut(response).pipe(map(record => record || response))),
       tap(response => this.repository.state.update(response)),
-      switchMap(response => this.$evPut(response).pipe(map(() => response))),
     );
   };
 

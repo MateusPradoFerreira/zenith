@@ -35,7 +35,7 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
       $or: [
         { status: "PAID", paidAt: { $gte: params.startsAt, $lte: params.endsAt } },
         { status: "CANCELLED", cancelledAt: { $gte: params.startsAt, $lte: params.endsAt } },
-        { status: { $nin: ["PAID", "OVERDUE", "CANCELLED", "OVERDUE"] as any }, createdAt: { $gte: params.startsAt, $lte: params.endsAt } },
+        { status: { $nin: ["PAID", "CANCELLED" ] as any }, createdAt: { $gte: params.startsAt, $lte: params.endsAt } },
       ],
     }).pipe(
       delay(this.delay()),

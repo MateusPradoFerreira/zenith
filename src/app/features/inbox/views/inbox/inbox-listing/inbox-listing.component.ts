@@ -1,14 +1,11 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { Inbox, InboxStatus } from '../../../models/inbox.model';
+import { Inbox } from '../../../models/inbox.model';
 import { GetAllInboxByFilterParams } from '../../../services/inbox.service';
-import { InboxFacade, InboxPriorityOptions, InboxStatusOptions } from '../../../facades/inbox.facade';
+import { InboxFacade, InboxPriorityOptions, InboxQueryFacade, InboxStatusOptions } from '../../../facades/inbox.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { PayableFacade } from '../../../../financial/facades/payable.facade';
-import { ReceivableFacade } from '../../../../financial/facades/receivable.facade';
 import { PllID } from '@pollaris';
-import { ScheduleFacade } from '../../../../schedule/facades/schedule.facade';
 
 @Component({
   standalone: true,
@@ -17,11 +14,9 @@ import { ScheduleFacade } from '../../../../schedule/facades/schedule.facade';
   templateUrl: './inbox-listing.component.html',
 })
 export class InboxListingComponent extends BaseRecordListingComponentDirective<Inbox, GetAllInboxByFilterParams> {
-  scheduleFacade = inject(ScheduleFacade);
-  payableFacade = inject(PayableFacade);
-  receivableFacade = inject(ReceivableFacade);
-
   override facade = inject(InboxFacade);
+  override queryFacade = inject(InboxQueryFacade);
+
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "Title", class: "flex-1" },
     { header: "Status", class: "w-38 2xl:w-48" },
@@ -67,23 +62,11 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
   ];
 
   convertRecordIn(rowData: Inbox, to: "PAYABLE" | "RECEIVABLE" | "SCHEDULE") {
-    if(to === "SCHEDULE") {
-      this.scheduleFacade.openToCreate({ title: rowData.title }).subscribe(response => {
-        if(response) this.handleProcess(rowData.id);
-      });
-    } else if(to === "PAYABLE") {
-      this.payableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
-        if(response) this.handleProcess(rowData.id);
-      });
-    } else if(to == "RECEIVABLE") {
-      this.receivableFacade.openToCreate({ name: rowData.title }).subscribe(response => {
-        if(response) this.handleProcess(rowData.id);
-      });
-    };
+
   };
 
   handleProcess(id: PllID) {
-    this.processing.set(false),
+    this.processing.set(true),
     this.facade.handleProcess(id).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),
@@ -92,7 +75,7 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
   };
 
   handleCancel(id: PllID) {
-    this.processing.set(false),
+    this.processing.set(true),
     this.facade.handleCancel(id).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),
@@ -101,7 +84,7 @@ export class InboxListingComponent extends BaseRecordListingComponentDirective<I
   };
 
   handleReopen(id: PllID) {
-    this.processing.set(false),
+    this.processing.set(true),
     this.facade.handleReopen(id).subscribe({
       next: () => this.updateUI(),
       error: error => console.error(error),
