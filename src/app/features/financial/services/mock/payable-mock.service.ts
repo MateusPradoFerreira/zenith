@@ -26,7 +26,7 @@ export class PayableMockService extends PllMockRestService<Payable> implements P
   bankAccountMockRepository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
-    return this.repository.find({
+    return this.repository.$find({
       centerOfCostId: params.centerOfCostId || undefined,
       planOfAccountId: params.planOfAccountId || undefined,
       secrecyId: params.secrecyId || undefined,

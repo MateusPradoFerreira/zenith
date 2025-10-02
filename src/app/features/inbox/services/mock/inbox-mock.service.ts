@@ -20,18 +20,18 @@ export class InboxMockService extends PllMockRestService<Inbox> implements Inbox
   protected override $evGet: EventObs<Inbox, Inbox> = event(map(record => ({ ...record, status: this._transformStatus(record) })));
 
   getAllByFilter(params: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
-    const tomorrow = moment().add(1, "day").toDate();
-    return this.repository.find({
+    const yesterday = moment().subtract(1, "day").toDate();
+    return this.repository.$find({
       priority: !params.priority || params.priority === "ALL"? undefined : params.priority,
-      /* $or: [
-        { status: "PROCESSED", processedAt: { $gte: params.startsAt, $lte: params.endsAt } },
-        { status: "CANCELLED", cancelledAt: { $gte: params.startsAt, $lte: params.endsAt } },
-        { status: { $in: ["PENDING", "OVERDUE"] as any }, createdAt: { $gte: params.startsAt, $lte: params.endsAt } },
-      ], */
+      $or: [
+        { $and: [{ processedAt: { $ne: null }}, { processedAt: { $gte: params.startsAt, $lte: params.endsAt } }] },
+        { $and: [{ cancelledAt: { $ne: null }}, { cancelledAt: { $gte: params.startsAt, $lte: params.endsAt } }] },
+        { $and: [{ processedAt: { $eq: null }, cancelledAt: { $eq: null } }, { createdAt: { $gte: params.startsAt, $lte: params.endsAt } }] },
+      ],
       ...(params?.status === "PROCESSED"? { processedAt: { $ne: null } } : {}),
       ...(params?.status === "CANCELLED"? { cancelledAt: { $ne: null } } : {}),
-      ...(params?.status === "PENDING"? { processedAt: { $eq: null }, cancelledAt: { $eq: null }, dueAt: { $gte: tomorrow } } : {}),
-      ...(params?.status === "OVERDUE"? { processedAt: { $eq: null }, cancelledAt: { $eq: null }, dueAt: { $lt: tomorrow } } : {}),
+      ...(params?.status === "PENDING"? { processedAt: { $eq: null }, cancelledAt: { $eq: null }, dueAt: { $gte: yesterday } } : {}),
+      ...(params?.status === "OVERDUE"? { processedAt: { $eq: null }, cancelledAt: { $eq: null }, dueAt: { $lt: yesterday } } : {}),
       ...(params?.status === "TOMAKE"? { processedAt: { $eq: null }, cancelledAt: { $eq: null } } : {}),
     }).pipe(
       delay(this.delay()),

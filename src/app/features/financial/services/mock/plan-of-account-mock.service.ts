@@ -16,7 +16,7 @@ export class PlanOfAccountMockService extends PllMockRestService<PlanOfAccount> 
   override repository = inject(PlanOfAccountMockRepository);
 
   getAllByFilter(params: GetAllPlanOfAccountByFilterParams): Observable<PllPaginatedResponse<PlanOfAccount>> {
-    return this.repository.find({
+    return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));
   };

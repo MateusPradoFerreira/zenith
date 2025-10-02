@@ -16,7 +16,7 @@ export class CenterOfCostMockService extends PllMockRestService<CenterOfCost> im
   override repository = inject(CenterOfCostMockRepository);
 
   getAllByFilter(params: GetAllCenterOfCostByFilterParams): Observable<PllPaginatedResponse<CenterOfCost>> {
-    return this.repository.find({
+    return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));
   };

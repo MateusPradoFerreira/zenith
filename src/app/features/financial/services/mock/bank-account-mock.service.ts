@@ -16,7 +16,7 @@ export class BankAccountMockService extends PllMockRestService<BankAccount> impl
   override repository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<BankAccount>> {
-    return this.repository.find({
+    return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));
   };

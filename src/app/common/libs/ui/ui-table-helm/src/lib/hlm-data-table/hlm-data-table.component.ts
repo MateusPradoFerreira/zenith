@@ -97,7 +97,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   // outputs
   onSelect = output<any>();
   onPaginate = output<{ page: number, size: number }>();
-  onInputSearch= output<string>();
+  onInputSearch = output<string>();
 
   scroll = model<"scroll" | "auto">("scroll");
   offsetHeight = model<number>();

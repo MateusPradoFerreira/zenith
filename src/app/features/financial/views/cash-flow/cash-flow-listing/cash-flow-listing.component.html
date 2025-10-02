@@ -18,9 +18,9 @@
         <div class="hlm-button-group shrink-0">
           <button hlmBtn (click)="handleSetPrevRange()" hlmBtnIcon="chevron-left" variant="outline" size="icon"></button>
           <brn-popover sideOffset="5" class="peer">
-            <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ filter.value.startsAt | date : "dd/MM/YYYY" }}</button>
+            <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ filter.value.date | date : "dd/MM/YYYY" }}</button>
             <div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
-              <hlm-calendar calendarClass="border-0 rounded-none" [date]="filter.value.startsAt" (dateChange)="onDateChange($event)"/>
+              <hlm-calendar calendarClass="border-0 rounded-none" [date]="filter.value.date" (dateChange)="onDateChange($event)"/>
             </div>
           </brn-popover>
           <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
@@ -38,7 +38,7 @@
               <hlm-select-value />
             </hlm-select-trigger>
             <hlm-select-content>
-              <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+              <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
             </hlm-select-content>
           </brn-select>
           <label>Conta Bancária</label>
@@ -50,7 +50,7 @@
               <hlm-select-value />
             </hlm-select-trigger>
             <hlm-select-content>
-              <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.id">{{ option.name }}</hlm-option>
+              <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.value">{{ option.label }}</hlm-option>
             </hlm-select-content>
           </brn-select>
           <label>Centro de Custo</label>
@@ -62,7 +62,7 @@
               <hlm-select-value />
             </hlm-select-trigger>
             <hlm-select-content>
-              <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.id">{{ option.name }}</hlm-option>
+              <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
             </hlm-select-content>
           </brn-select>
           <label>Plano de Conta</label>
@@ -74,7 +74,7 @@
               <hlm-select-value />
             </hlm-select-trigger>
             <hlm-select-content>
-              <hlm-option *ngFor="let option of secrecyOptions" [value]="option.id">{{ option.name }}</hlm-option>
+              <hlm-option *ngFor="let option of secrecyOptions" [value]="option.value">{{ option.label }}</hlm-option>
             </hlm-select-content>
           </brn-select>
           <label>Título</label>

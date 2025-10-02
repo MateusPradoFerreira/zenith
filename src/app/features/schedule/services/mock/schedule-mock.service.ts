@@ -36,7 +36,7 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   ); */
 
   getAllByFilter(params: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<GetAllScheduleByFilterResponse>> {
-    return this.repository.find({
+    return this.repository.$find({
       startsAt: { $lte: params.endsAt },
       endsAt: { $gte: params.startsAt },
       ...(!params?.categoryIds || !params.categoryIds.length? {} : { categoryId: { $in: params?.categoryIds }}),

@@ -26,7 +26,7 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
   bankAccountMockRepository = inject(BankAccountMockRepository);
 
   getAllByFilter(params: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
-    return this.repository.find({
+    return this.repository.$find({
       centerOfCostId: params.centerOfCostId || undefined,
       planOfAccountId: params.planOfAccountId || undefined,
       secrecyId: params.secrecyId || undefined,

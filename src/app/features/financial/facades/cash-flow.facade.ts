@@ -35,9 +35,8 @@ export class CashFlowQueryFacade extends PllQueryFacade<CashFlowUseQueryResponse
       planOfAccountId: { value: null },
       bankAccountId: { value: null },
       secrecyId: { value: null },
-      startsAt: { value: moment().toDate() },
+      date: { value: moment().toDate() },
       query: { value: null },
-      period: { value: "YEARLY" },
     },
   };
 };

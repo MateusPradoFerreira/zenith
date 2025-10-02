@@ -79,7 +79,11 @@ export abstract class PllRecordState<TRecordModel extends PllRecordId> {
 export abstract class PllRecordRepository<TRecordModel extends PllRecordId> {
   abstract state: PllRecordState<TRecordModel>;
 
-  find(query?: Query<TRecordModel>, pagination?: Partial<PllPagination>): Observable<PllPaginatedResponse<TRecordModel>> {
+  $find(query?: Query<TRecordModel>, pagination?: Partial<PllPagination>): Observable<PllPaginatedResponse<TRecordModel>> {
+    return of(this.find(query, pagination));
+  };
+
+  find(query?: Query<TRecordModel>, pagination?: Partial<PllPagination>): PllPaginatedResponse<TRecordModel> {
     const formatedQuery = this._formatQuery(query);
     const filteredData = this.state.data().filter(sift(formatedQuery));
 
@@ -97,15 +101,15 @@ export abstract class PllRecordRepository<TRecordModel extends PllRecordId> {
     const data = !pagination? filteredData : filteredData.slice(paginationStart, paginationEnd);
     
     const response: PllPaginatedResponse<TRecordModel> = { data, pagination: finalPagination};
-    return of(response);
+    return response;
   };
 
-  findOne(query: Query<TRecordModel>): Observable<TRecordModel | null> {
+  $findOne(query: Query<TRecordModel>): Observable<TRecordModel | null> {
     const formatedQuery = this._formatQuery(query);
     return of(this.state.data().find(sift(formatedQuery)) || null);
   };
 
-  count(query?: Query<TRecordModel>): Observable<number> {
+  $count(query?: Query<TRecordModel>): Observable<number> {
     const formatedQuery = this._formatQuery(query);
     return of(this.state.data().filter(sift(formatedQuery)).length);
   };
@@ -196,7 +200,6 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
 
   override put(data: TRecordModel): Observable<TRecordModel> {
     return this.get(data.id).pipe(
-      delay(this.delay()), 
       map(response => ({ ...response, ...data })),
       switchMap(response => this.$evPut(response).pipe(map(record => record || response))),
       tap(response => this.repository.state.update(response)),
@@ -277,6 +280,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TComponent ext
   updateRecord(data: TRecordModel): Observable<TRecordModel> {
     return of(data).pipe(
       switchMap(record => this.service.put(record)),
+      tap(response => this.state.remove(response.id)),
       catchError(error => throwError(error)),
     );
   };
@@ -284,6 +288,7 @@ export abstract class PllFacade<TRecordModel extends PllRecordId, TComponent ext
   updateManyRecords(data: TRecordModel[]): Observable<TRecordModel[]> {
     return of(data.map(reg => reg)).pipe(
       switchMap(records => this.service.putMany(records)),
+      tap(records => records.map(record => this.state.remove(record.id))),
       catchError(error => throwError(error)),
     );
   };

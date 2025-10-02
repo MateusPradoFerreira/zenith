@@ -11,8 +11,7 @@ export type GetAllCashFlowByFilterParams = {
   secrecyId?: PllID | null;
   bankAccountId?: PllID | null;
   query?: string;
-  period: "YEARLY" | "MONTHLY";
-  startsAt: Date;
+  date: Date;
 };
 
 export type GetAllCashFlowByFilterResponse = CashFlow;
@@ -22,10 +21,10 @@ export class CashFlowService extends PllRestService<CashFlow> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "cash-flow";
 
-  getAllByFilter({ startsAt, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+  getAllByFilter({ date, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
     return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       ...params,
-      startsAt: moment(startsAt).format("YYYY-MM-DD"),
+      date: moment(date).format("YYYY-MM-DD"),
     }});
   };
 };

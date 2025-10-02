@@ -16,7 +16,7 @@ export class SecrecyMockService extends PllMockRestService<Secrecy> implements S
   override repository = inject(SecrecyMockRepository);
 
   getAllByFilter(params: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<Secrecy>> {
-    return this.repository.find({
+    return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));
   };
