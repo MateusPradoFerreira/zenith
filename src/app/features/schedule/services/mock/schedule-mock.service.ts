@@ -3,6 +3,7 @@ import { Schedule } from "../../models/schedule.model";
 import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../schedule.service";
 import { delay, map, Observable } from "rxjs";
 import { inject, Injectable } from "@angular/core";
+import { ScheduleCategoryMockRepository } from "./schedule-category-mock.service";
 
 @Injectable({ providedIn: "root" })
 export class ScheduleMockState extends PllRecordState<Schedule> {};
@@ -14,7 +15,9 @@ export class ScheduleMockRepository extends PllRecordRepository<Schedule> {
 
 export class ScheduleMockService extends PllMockRestService<Schedule> implements ScheduleService {
   override repository = inject(ScheduleMockRepository);
-
+  
+  scheduleCategoryMockRepository = inject(ScheduleCategoryMockRepository);
+  
   /* override evPost: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.post({
       id: null, 
@@ -42,9 +45,9 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
       ...(!params?.categoryIds || !params.categoryIds.length? {} : { categoryId: { $in: params?.categoryIds }}),
     }).pipe(
       delay(this.delay()),
-      map(response => ({ ...response, data: this.mergeData<Schedule, GetAllScheduleByFilterResponse>(response.data, () => ({
-        category: "",
-        color: "VIOLET",
+      map(response => ({ ...response, data: this.merge<Schedule, GetAllScheduleByFilterResponse>(response.data, record => ({
+        category: this.scheduleCategoryMockRepository.state.get(record.categoryId)?.name || "",
+        color: this.scheduleCategoryMockRepository.state.get(record.categoryId)?.color || "VIOLET",
         type: "SCHEDULE",
       }))})),
     );

@@ -9,13 +9,21 @@ import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import moment from 'moment';
 import { Colors, colors } from '../../../../../common/types/colors.type';
-import { RecurrenceWeekdayOptions } from '../../../facades/recurrence.facade';
-import { RecurrenceFormComponent } from '../../recurrence/recurrence-form/recurrence-form.component';
+
+export const RecurrenceWeekdayOptions: SelectItem[] = [
+  { label: "Segunda-feira", value: "MO" },
+  { label: "Terça-feira", value: "TU" },
+  { label: "Quarta-feira", value: "WE" },
+  { label: "Quinta-feira", value: "TH" },
+  { label: "Sexta-feira", value: "FR" },
+  { label: "Sábado", value: "SA" },
+  { label: "Domingo", value: "SU" },
+];
 
 @Component({
   standalone: true,
   selector: 'app-schedule-form',
-  imports: [GlobalModule, RecurrenceFormComponent],
+  imports: [GlobalModule],
   templateUrl: './schedule-form.component.html',
 })
 export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> {
@@ -31,13 +39,13 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
   frequencyOptions: SelectItem<ScheduleFrequency>[] = [];
   colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
   
-  override evNgOnInit = event(
-    switchMap(() => this.handleGetScheduleCategoryOptions()),
+  override $evNgOnInit = event(
+    switchMap(() => this.$getScheduleCategoryOptions()),
   );
 
-  override evInitRecord = event(tap(() => this.setFrequencyOptions()));
+  override $evInitRecord = event(tap(() => this.setFrequencyOptions()));
 
-  override evInitCreateRecord = event(tap(() => {
+  override $evInitCreateRecord = event(tap(() => {
     if(this.title()) this.form.controls.title.setValue(this.title());
     if(this.date()) {
       this.form.controls.startsAt.setValue(this.date());
@@ -50,7 +58,7 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
     if(this.scheduleCategoryOptions.length) this.form.controls.categoryId.setValue(this.scheduleCategoryOptions[0].id);
   }));
 
-  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
+  $getScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE", type: "SCHEDULE" }).pipe(tap(response => this.scheduleCategoryOptions = response.data));
 
   setFrequencyOptions() {
     const date = moment(this.form.value.startsAt);

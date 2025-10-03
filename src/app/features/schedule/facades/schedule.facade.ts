@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
 import { Schedule } from "../models/schedule.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -7,24 +7,25 @@ import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
 import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../services/schedule.service";
 import { ScheduleState } from "../states/schedule.state";
 import { ScheduleFormComponent } from "../views/schedule/schedule-form/schedule-form.component";
-import moment from "moment";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
+import moment from "moment";
 import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
 import { colors } from "../../../common/types/colors.type";
 
 export type ScheduleUseQueryParams = GetAllScheduleByFilterParams;
+export type ScheduleUseQueryResponse = GetAllScheduleByFilterResponse;
 
-export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterResponse, ScheduleUseQueryParams, ScheduleFormComponent> {
+@Injectable({ providedIn: "root" })
+export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
   override state = inject(ScheduleState);
   override service = inject(ScheduleService);
-  override queryFn = (params: ScheduleUseQueryParams) => this.service.getAllByFilter(params);
 
-  override header: string = "Agendamento";
+  override header: string = "Categoria";
   override component: Type<any> = ScheduleFormComponent;
   override dialogSize: DialogContentVariants["size"] = "xs";
   override dialogAlign: DialogContentVariants["align"] = "center";
-  override closeOnSave: boolean = false;
+  override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {
     fields: {
@@ -41,6 +42,12 @@ export class ScheduleFacade extends PllFacade<Schedule, GetAllScheduleByFilterRe
       endsAtTime: { value: "08:00:00" },
     },
   };
+};
+
+@Injectable({ providedIn: "root" })
+export class ScheduleQueryFacade extends PllQueryFacade<ScheduleUseQueryResponse, ScheduleUseQueryParams> {
+  override service = inject(ScheduleService);
+  override queryFn = (params: ScheduleUseQueryParams) => this.service.getAllByFilter(params);
 
   override filterSchema: PllFormSchemaConfig<ScheduleUseQueryParams> = {
     fields: {

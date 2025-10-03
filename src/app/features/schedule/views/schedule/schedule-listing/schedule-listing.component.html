@@ -65,8 +65,8 @@
       </ng-template>
       <ng-template hlmTemplate="filter" let-ctx>
         <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
-          <button hlmBtn variant="text" (click)="configureFilter()">Limpar</button>
-          <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="updateUI(); ctx.close()">Aplicar</button>
+          <button hlmBtn variant="text" (click)="handleClearFilters()">Limpar</button>
+          <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="handleApplyFilters(); ctx.close()">Aplicar</button>
         </div>
       </ng-template>
     </hlm-data-table>

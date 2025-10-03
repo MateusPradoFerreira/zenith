@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
 import { ScheduleCategory } from "../models/schedule-category.model";
 import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -10,11 +10,12 @@ import { ScheduleCategoryFormComponent } from "../views/schedule-category/schedu
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
 export type ScheduleCategoryUseQueryParams = GetAllScheduleCategoryByFilterParams;
+export type ScheduleCategoryUseQueryResponse = ScheduleCategory;
 
-export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategory, ScheduleCategoryUseQueryParams, ScheduleCategoryFormComponent> {
+@Injectable({ providedIn: "root" })
+export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategoryFormComponent> {
   override state = inject(ScheduleCategoryState);
   override service = inject(ScheduleCategoryService);
-  override queryFn = (params: ScheduleCategoryUseQueryParams) => this.service.getAllByFilter(params);
 
   override header: string = "Categoria";
   override component: Type<any> = ScheduleCategoryFormComponent;
@@ -33,10 +34,17 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
       }},
     },
   };
+};
+
+@Injectable({ providedIn: "root" })
+export class ScheduleCategoryQueryFacade extends PllQueryFacade<ScheduleCategoryUseQueryResponse, ScheduleCategoryUseQueryParams> {
+  override service = inject(ScheduleCategoryService);
+  override queryFn = (params: ScheduleCategoryUseQueryParams) => this.service.getAllByFilter(params);
 
   override filterSchema: PllFormSchemaConfig<ScheduleCategoryUseQueryParams> = {
     fields: {
       status: { value: "ACTIVE" },
+      type: { value: "ALL" },
     },
   };
 };

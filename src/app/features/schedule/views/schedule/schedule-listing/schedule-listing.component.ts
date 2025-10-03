@@ -1,16 +1,15 @@
 import { Component, computed, inject, model, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse } from '../../../services/schedule.service';
-import { ScheduleFacade } from '../../../facades/schedule.facade';
-import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
+import { ScheduleFacade, ScheduleQueryFacade, ScheduleUseQueryParams, ScheduleUseQueryResponse } from '../../../facades/schedule.facade';
+import { HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import moment from 'moment';
 import { ClassValue } from 'clsx';
 import { hlm } from '@spartan-ng/brain/core';
 import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { PllID, PllPaginatedResponse } from '@pollaris';
-import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { forkJoin, Subject, switchMap, tap, timeout } from 'rxjs';
+import { event } from '../../../../../common/directives/base-form-component.directive';
+import { forkJoin, Subject, switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { ScheduleSidebarSessionComponent } from '../../../components/schedule-sidebar-session.component';
@@ -23,8 +22,9 @@ import { ReceivableFacade } from '../../../../financial/facades/receivable.facad
   imports: [GlobalModule, HlmDataTableComponent, ScheduleSidebarSessionComponent],
   templateUrl: './schedule-listing.component.html',
 })
-export class ScheduleListingComponent extends BaseRecordListingComponentDirective<GetAllScheduleByFilterResponse, GetAllScheduleByFilterParams> {
+export class ScheduleListingComponent extends BaseRecordListingComponentDirective<ScheduleUseQueryResponse, ScheduleUseQueryParams> {
   override facade = inject(ScheduleFacade);
+  override queryFacade = inject(ScheduleQueryFacade);
 
   scheduleCategoryFacade = inject(ScheduleCategoryFacade);
   payableFacade = inject(PayableFacade);
@@ -46,9 +46,9 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
 
   calendarRefresh = new Subject<void>();
 
-  groupedValues = computed<{ date: Date, values: GetAllScheduleByFilterResponse[] }[]>(() => {
+  groupedValues = computed<{ date: Date, values: ScheduleUseQueryResponse[] }[]>(() => {
     if(this.layout() === "calendar") return [];
-    const groups: Record<string, GetAllScheduleByFilterResponse[]> = {};
+    const groups: Record<string, ScheduleUseQueryResponse[]> = {};
     for (const item of this.values()) {
       const day = moment(item.startsAt).startOf("day").format("YYYY-MM-DD");
       if (!groups[day]) groups[day] = [];
@@ -69,20 +69,20 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
 
   isToday = computed<boolean>(() => moment().format("DD-MM-YYYY") === moment(this.date()).format("DD-MM-YYYY"));
 
-  override onNgOnInit = event(switchMap(() => forkJoin({
-    handleGetScheduleCategoryOptions: this.handleGetScheduleCategoryOptions(),
+  override $evNgOnInit = event(switchMap(() => forkJoin({
+    a: this.$getScheduleCategoryOptions(),
   })));
 
-  override onUpdateUI = event<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(tap(() => this.handleRemapEvents()));
+  override $evUpdateUI = event<PllPaginatedResponse<ScheduleUseQueryResponse>>(tap(() => this.handleRemapEvents()));
 
-  handleGetScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
+  $getScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.categoryOptions = response.data.filter(record => record.type === "SCHEDULE");
     this.otherCategoryOptions = response.data.filter(record => record.type !== "SCHEDULE");
     this.filter.controls.categoryIds.setValue(response.data.map(record => record.id));
   }));
 
   handleRemapEvents() {
-    this.events.set(this.facade.handleRemapEvents(this.values()));
+    this.events.set(this.queryFacade.handleRemapEvents(this.values()));
     console.log("EVENTS", this.events());
   };
 
@@ -123,7 +123,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     this.categoryTimeout = setTimeout(() => this.updateUI(), 300);
   };
 
-  handleUpdateRecord(rowData: GetAllScheduleByFilterResponse) {
+  handleUpdateRecord(rowData: ScheduleUseQueryResponse) {
     console.log(rowData)
     switch (rowData.type) {
       case "PAYABLE": 
@@ -167,5 +167,4 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     }, 200);
   };
 
-  json = JSON.stringify
 };

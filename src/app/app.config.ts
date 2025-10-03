@@ -25,6 +25,10 @@ import { BankAccountMockService } from './features/financial/services/mock/bank-
 import { BankAccountService } from './features/financial/services/bank-account.service';
 import { InboxMockService } from './features/inbox/services/mock/inbox-mock.service';
 import { InboxService } from './features/inbox/services/inbox.service';
+import { ScheduleService } from './features/schedule/services/schedule.service';
+import { ScheduleCategoryService } from './features/schedule/services/schedule-category.service';
+import { ScheduleMockService } from './features/schedule/services/mock/schedule-mock.service';
+import { ScheduleCategoryMockService } from './features/schedule/services/mock/schedule-category-mock.service';
 
 registerLocaleData(localePt);
 
@@ -37,12 +41,9 @@ const services: (Provider | EnvironmentProviders)[] = [
   { provide: SecrecyService, useClass: SecrecyMockService },
   { provide: PlanOfAccountService, useClass: PlanOfAccountMockService },
   { provide: BankAccountService, useClass: BankAccountMockService },
-  /* { provide: ScheduleService, useClass: ScheduleMockService },
-  { provide: RecurrenceService, useClass: RecurrenceMockService },
+  { provide: ScheduleService, useClass: ScheduleMockService },
   { provide: ScheduleCategoryService, useClass: ScheduleCategoryMockService },
-  { provide: GoalService, useClass: GoalMockService },
-  { provide: GoalTaskService, useClass: GoalTaskService },
-  { provide: GoalItemService, useClass: GoalItemMockService }, */
+  /* { provide: RecurrenceService, useClass: RecurrenceMockService }, */
 ];
 
 const lucideIcons = { Archive, Sheet, Timer, ChevronsUpDown, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown, Hourglass, PanelLeftClose, Eye, EyeOff, Ellipsis, EyeClosed, PanelLeftOpen, AlarmClockPlus, PanelRightDashed, PanelLeftDashed, TrendingUp, TrendingDown, ShoppingCart, Goal, Menu, DollarSign, ChevronDown, ChevronLeft, ChevronRight, ArrowLeftRight, ChevronUp, LogOut, BookOpenText, Headset, Monitor, Sun, MoonStar, CircleFadingArrowUp, Shrimp, Trash2, ListTodo, Check, ListFilter, X, CircleX, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, Table, ArrowDownNarrowWide, ArrowDownUp, ArrowUpDown,  CircleOff, EllipsisVertical, ChevronsDown, PanelLeft, ChartPie, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, LayoutGrid, ClipboardList, FolderOpen, LayoutDashboard, Pin, PinOff };
