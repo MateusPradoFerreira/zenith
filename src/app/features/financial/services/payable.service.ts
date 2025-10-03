@@ -27,15 +27,8 @@ export class PayableService extends PllRestService<Payable> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "payable";
 
-  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllPayableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
-      status,
-      centerOfCostId,
-      planOfAccountId,
-      secrecyId,
-      startsAt: moment(startsAt).format("YYYY-MM-DD"),
-      endsAt: moment(endsAt).format("YYYY-MM-DD"),
-    }});
+  getAllByFilter({ startsAt, endsAt, ...params }: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllPayableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params });
   };
 
   pay(id: PllID): Observable<Payable> {

@@ -22,9 +22,8 @@ export class CashFlowService extends PllRestService<CashFlow> {
   override pathRoute: string = "cash-flow";
 
   getAllByFilter({ date, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}`, { params: {
       ...params,
-      date: moment(date).format("YYYY-MM-DD"),
     }});
   };
 };

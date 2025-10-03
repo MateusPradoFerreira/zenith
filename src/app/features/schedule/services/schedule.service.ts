@@ -25,10 +25,8 @@ export class ScheduleService extends PllRestService<Schedule> {
   override pathRoute: string = "schedule";
 
   getAllByFilter({ startsAt, endsAt, categoryIds }: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<GetAllScheduleByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params: {
       categoryIds: categoryIds? categoryIds.join(",") : "",
-      startsAt: moment(startsAt).format("YYYY-MM-DD"),
-      endsAt: moment(endsAt).format("YYYY-MM-DD"),
     }});
   };
 };

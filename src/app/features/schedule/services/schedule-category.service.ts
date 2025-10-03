@@ -14,10 +14,7 @@ export class ScheduleCategoryService extends PllRestService<ScheduleCategory> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "schedule-category";
 
-  getAllByFilter({ status = "ALL", type = "ALL" }: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
-    return this.http.get<PllPaginatedResponse<ScheduleCategory>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
-      status,
-      type,
-    }});
+  getAllByFilter(params: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
+    return this.http.get<PllPaginatedResponse<ScheduleCategory>>(`${this.baseRoute}/${this.pathRoute}`, { params });
   };
 };

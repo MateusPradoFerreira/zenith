@@ -27,15 +27,8 @@ export class ReceivableService extends PllRestService<Receivable> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "receivable";
 
-  getAllByFilter({ status, centerOfCostId, planOfAccountId, secrecyId, startsAt, endsAt }: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllReceivableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
-      status,
-      centerOfCostId,
-      planOfAccountId,
-      secrecyId,
-      startsAt: moment(startsAt).format("YYYY-MM-DD"),
-      endsAt: moment(endsAt).format("YYYY-MM-DD"),
-    }});
+  getAllByFilter({ startsAt, endsAt, ...params }: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllReceivableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params });
   };
 
   pay(id: PllID): Observable<Receivable> {
