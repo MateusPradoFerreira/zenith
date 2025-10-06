@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: "payables", component: PayableListingComponent, data: { header: "Despesas" } },
     { path: "receivables", component: ReceivableListingComponent, data: { header: "Receitas" } },
     { path: "cash-flow", component: CashFlowListingComponent, data: { header: "Fluxo de Caixa" }},
-    { path: "financial-registries", component: FinancialRegistriesPanelComponent, data: { header: "Cadastros de Financeiro" } },
+    { path: "registries", component: FinancialRegistriesPanelComponent, data: { header: "Cadastros" } },
     { path: "schedules", component: ScheduleListingComponent, data: { header: "Agenda" } },
   ]},
 ];

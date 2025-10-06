@@ -6,18 +6,18 @@ import { Validators } from "@angular/forms";
 import { RecurrenceService } from "../services/recurrence.service";
 import { RecurrenceState } from "../states/recurrence.state";
 import { RecurrenceFormComponent } from "../views/recurrence/recurrence-form/recurrence-form.component";
+import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
-import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export class RecurrenceFacade extends PllFacade<Recurrence, any, any, RecurrenceFormComponent> {
+@Injectable({ providedIn: "root" })
+export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormComponent> {
   override state = inject(RecurrenceState);
   override service = inject(RecurrenceService);
-  override queryFn: any;
 
-  override header: string = "Recorrencia";
+  override header: string = "Categoria";
   override component: Type<any> = RecurrenceFormComponent;
-  override dialogSize: DialogContentVariants["size"] = "xs";
+  override dialogSize: DialogContentVariants["size"] = "sm";
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 
@@ -38,16 +38,7 @@ export class RecurrenceFacade extends PllFacade<Recurrence, any, any, Recurrence
       active: { value: true },
     },
   };
-
-  override filterSchema: PllFormSchemaConfig<any>;
 };
-
-export const RecurrenceFrequencyOptions: SelectItem[] = [
-  { label: "Diariamente", value: "DAILY" },
-  { label: "Semanalmente", value: "WEEKLY" },
-  { label: "Mensalmente", value: "MONTHLY" },
-  { label: "Anualmente", value: "YEARLY" },
-];
 
 export const RecurrenceWeekdayOptions: SelectItem[] = [
   { label: "Segunda-feira", value: "MO" },

@@ -9,21 +9,13 @@ import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import moment from 'moment';
 import { Colors, colors } from '../../../../../common/types/colors.type';
-
-export const RecurrenceWeekdayOptions: SelectItem[] = [
-  { label: "Segunda-feira", value: "MO" },
-  { label: "Terça-feira", value: "TU" },
-  { label: "Quarta-feira", value: "WE" },
-  { label: "Quinta-feira", value: "TH" },
-  { label: "Sexta-feira", value: "FR" },
-  { label: "Sábado", value: "SA" },
-  { label: "Domingo", value: "SU" },
-];
+import { RecurrenceFormComponent } from '../../recurrence/recurrence-form/recurrence-form.component';
+import { RecurrenceWeekdayOptions } from '../../../facades/recurrence.facade';
 
 @Component({
   standalone: true,
   selector: 'app-schedule-form',
-  imports: [GlobalModule],
+  imports: [GlobalModule, RecurrenceFormComponent],
   templateUrl: './schedule-form.component.html',
 })
 export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> {

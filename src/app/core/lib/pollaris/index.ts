@@ -44,24 +44,28 @@ export abstract class PllRecordState<TRecordModel extends PllRecordId> {
     const newHashMap: Map<PllID, TRecordModel> = new Map(this._data());
     newHashMap.set(data.id, data);
     this._data.set(newHashMap);
+    return data;
   };
 
   insertMany(dataArr: TRecordModel[]) {
     const newHashMap: Map<PllID, TRecordModel> = new Map(this._data());
     for(let data of dataArr) newHashMap.set(data.id, data);
     this._data.set(newHashMap);
+    return dataArr;
   };
 
   update(data: TRecordModel) {
     const newHashMap: Map<PllID, TRecordModel> = new Map(this._data());
     newHashMap.set(data.id, data);
     this._data.set(newHashMap);
+    return data;
   };
 
   updateMany(dataArr: TRecordModel[]) {
     const newHashMap: Map<PllID, TRecordModel> = new Map(this._data());
     for(let data of dataArr) newHashMap.set(data.id, data);
     this._data.set(newHashMap);
+    return dataArr;
   };
 
   remove(id: PllID) {
@@ -165,12 +169,12 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   protected maxDelay: number = 500;
 
   protected $evGet: EventObs<TRecordModel, TRecordModel> = event();
-  protected $evPost: EventObs<TRecordModel, TRecordModel> = event();
-  protected $evPostMany: EventObs<TRecordModel[]> = event();
-  protected $evPut: EventObs<TRecordModel, TRecordModel> = event();
-  protected $evPutMany: EventObs<TRecordModel[]> = event();
-  protected $evDelete: EventObs<TRecordModel> = event();
-  protected $evDeleteMany: EventObs<TRecordModel[]> = event();
+  protected $evInitPost: EventObs<TRecordModel, TRecordModel> = event();
+  protected $evNextPost: EventObs<TRecordModel> = event();
+  protected $evInitPut: EventObs<TRecordModel, TRecordModel> = event();
+  protected $evNextPut: EventObs<TRecordModel> = event();
+  protected $evInitDelete: EventObs<TRecordModel> = event();
+  protected $evNextDelete: EventObs<TRecordModel> = event();
 
   override get(id: PllID): Observable<TRecordModel> {
     return of(this.repository.state.get(id)).pipe(
@@ -185,8 +189,9 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   override post(data: TRecordModel): Observable<TRecordModel> {
     return of({ ...data, id: data.id || uuid() }).pipe(
       delay(this.delay()), 
-      switchMap(response => this.$evPost(response).pipe(map(record => record || response))),
+      switchMap(response => this.$evInitPost(response).pipe(map(record => record || response))),
       tap(response => this.repository.state.insert(response)),
+      switchMap(response => this.$evNextPost(response).pipe(map(() => response))),
     );
   };
 
@@ -194,15 +199,15 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return of(data.map(record => ({ ...record, id: record.id || uuid() }))).pipe(
       delay(this.delay()),
       tap(response => this.repository.state.insertMany(response)),
-      switchMap(response => this.$evPostMany(response).pipe(map(() => response))),
     );
   };
 
   override put(data: TRecordModel): Observable<TRecordModel> {
     return this.get(data.id).pipe(
       map(response => ({ ...response, ...data })),
-      switchMap(response => this.$evPut(response).pipe(map(record => record || response))),
+      switchMap(response => this.$evInitPut(response).pipe(map(record => record || response))),
       tap(response => this.repository.state.update(response)),
+      switchMap(response => this.$evNextPut(response).pipe(map(() => response))),
     );
   };
 
@@ -210,14 +215,14 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return from(data).pipe(
       concatMap(record => this.put(record)),
       toArray(),
-      switchMap(response => this.$evPutMany(response).pipe(map(() => response))),
     );
   };
 
   override delete(id: PllID): Observable<TRecordModel> {
     return this.get(id).pipe(
+      switchMap(response => this.$evInitDelete(response).pipe(map(() => response))),
       tap(() => this.repository.state.remove(id)),
-      switchMap(response => this.$evDelete(response).pipe(map(() => response))),
+      switchMap(response => this.$evNextDelete(response).pipe(map(() => response))),
     );
   };
 
@@ -225,7 +230,6 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return from(ids).pipe(
       concatMap(id => this.delete(id)),
       toArray(),
-      switchMap(response => this.$evDeleteMany(response).pipe(map(() => response))),
     );
   };
 

@@ -4,6 +4,7 @@
     <button hlmTabsTrigger="secrecy">Títulos</button>
     <button hlmTabsTrigger="plan-of-account">Planos de Conta</button>
     <button hlmTabsTrigger="center-of-cost">Centros de Custo</button>
+    <button hlmTabsTrigger="schedule-category">Categorias de Agendamento</button>
   </hlm-tabs-list>
   <div hlmTabsContent="bank-account" class="p-0">
     <app-bank-account-listing class="p-0 xl:p-0" [offsetHeight]="36" />
@@ -16,5 +17,8 @@
   </div>
   <div hlmTabsContent="plan-of-account" class="">
     <app-plan-of-account-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+  </div>
+  <div hlmTabsContent="schedule-category" class="">
+    <app-schedule-category-listing class="p-0 xl:p-0" [offsetHeight]="36" />
   </div>
 </hlm-tabs>

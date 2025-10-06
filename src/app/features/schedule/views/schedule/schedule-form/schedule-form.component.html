@@ -20,6 +20,7 @@
     <brn-popover sideOffset="5" class="peer" *ngIf="form.value.frequency === 'CUSTOM'">
       <button brnPopoverTrigger type="button" hlmBtn hlmBtnIcon="clock-fading" variant="outline" size="icon" [disabled]="processing()"></button>
       <div hlmPopoverContent class="w-72" *brnPopoverContent="let ctx">
+        <app-recurrence-form *ngIf="this.form.value.recurrenceId" [id]="this.form.value.recurrenceId" />
       </div>
     </brn-popover>
   </div>

@@ -4,11 +4,12 @@ import { SecrecyListingComponent } from '../secrecy/secrecy-listing/secrecy-list
 import { CenterOfCostListingComponent } from '../center-of-cost/center-of-cost-listing/center-of-cost-listing.component';
 import { PlanOfAccountListingComponent } from '../plan-of-account/plan-of-account-listing/plan-of-account-listing.component';
 import { BankAccountListingComponent } from '../bank-account/bank-account-listing/bank-account-listing.component';
+import { ScheduleCategoryListingComponent } from '../../../schedule/views/schedule-category/schedule-category-listing/schedule-category-listing.component';
 
 @Component({
   standalone: true,
   selector: 'app-financial-registries-panel',
-  imports: [GlobalModule, SecrecyListingComponent, CenterOfCostListingComponent, PlanOfAccountListingComponent, BankAccountListingComponent],
+  imports: [GlobalModule, SecrecyListingComponent, CenterOfCostListingComponent, PlanOfAccountListingComponent, BankAccountListingComponent, ScheduleCategoryListingComponent],
   templateUrl: './financial-registries-panel.component.html',
 })
 export class FinancialRegistriesPanelComponent {};
