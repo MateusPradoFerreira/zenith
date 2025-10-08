@@ -1,5 +1,4 @@
-
-import { PllID } from "../../../core/lib/pollaris";
+import { PllID } from "@pollaris";
 
 export type RecurrenceFrequency = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 export type RecurrenceWeekday = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU";
@@ -9,8 +8,6 @@ export class Recurrence {
   id: PllID;
   frequency: RecurrenceFrequency;
   byWeekday: RecurrenceWeekday[];
-  byMonthDay: number[];
-  byMonth: number[];
   interval: number;
   count: number;
   createdAt: Date;

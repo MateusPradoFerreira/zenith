@@ -1,4 +1,4 @@
-import { PllID } from "../../../core/lib/pollaris";
+import { PllID } from "@pollaris";
 
 export type ReceivableStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
 

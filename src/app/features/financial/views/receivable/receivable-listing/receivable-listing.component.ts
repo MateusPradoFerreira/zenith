@@ -3,7 +3,6 @@ import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { ReceivableFacade, ReceivableQueryFacade, ReceivableStatusOptions, ReceivableUseQueryParams, ReceivableUseQueryResponse } from '../../../facades/receivable.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { PllID } from '../../../../../core/lib/pollaris';
 import { ReceivableFormComponent } from '../receivable-form/receivable-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
@@ -12,6 +11,7 @@ import { SecrecyService } from '../../../services/secrecy.service';
 import { CenterOfCostService } from '../../../services/center-of-cost.service';
 import { PlanOfAccountService } from '../../../services/plan-of-account.service';
 import { BankAccountService } from '../../../services/bank-account.service';
+import { PllID } from '@pollaris';
 
 @Component({
   standalone: true,

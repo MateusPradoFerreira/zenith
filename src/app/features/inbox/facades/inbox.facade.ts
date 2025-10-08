@@ -1,9 +1,9 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllID, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllID, PllQueryFacade } from "@pollaris";
 import { Inbox } from "../models/inbox.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { Refiners } from "@pollaris/forms/refiners";
 import { GetAllInboxByFilterParams, InboxService } from "../services/inbox.service";
 import { InboxState } from "../states/inbox.state";
 import { InboxFormComponent } from "../views/inbox/inbox-form/inbox-form.component";

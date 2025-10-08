@@ -61,8 +61,18 @@
       "@spartan-ng/ui-menu-helm": [
         ".\\src/app/common/libs/ui/ui-menu-helm/src/index.ts"
       ],
-      "@pollaris": [".\\src/app/core/lib/pollaris/index.ts"],
-      "@pollaris/*": [".\\src/app/core/lib/pollaris/*"]
+      "@pollaris": [
+        ".\\src/app/core/lib/pollaris/index.ts"
+      ],
+      "@pollaris/*": [
+        ".\\src/app/core/lib/pollaris/*"
+      ],
+      "@spartan-ng/helm/radio-group": [
+        "./src/app/common/libs/ui/ui-radio-group-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/utils": [
+        "./src/app/common/libs/ui/ui-utils-helm/src/index.ts"
+      ]
     },
     "strictPropertyInitialization": false,
     "strictNullChecks": false

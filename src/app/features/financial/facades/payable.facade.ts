@@ -1,9 +1,9 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllID, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllID, PllQueryFacade } from "@pollaris";
 import { Payable } from "../models/payable.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { Refiners } from "@pollaris/forms/refiners";
 import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "../services/payable.service";
 import { PayableState } from "../states/payable.state";
 import { SelectItem } from "../../../common/types/select-item.type";

@@ -3,7 +3,7 @@ import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { PayableFacade, PayableQueryFacade, PayableStatusOptions, PayableUseQueryParams, PayableUseQueryResponse } from '../../../facades/payable.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
-import { PllID } from '../../../../../core/lib/pollaris';
+import { PllID } from '@pollaris';
 import { PayableFormComponent } from '../payable-form/payable-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';

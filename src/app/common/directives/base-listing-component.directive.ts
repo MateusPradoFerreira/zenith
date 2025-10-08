@@ -5,7 +5,7 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableSelectionActionFc } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { BaseFormComponentDirective, event, EventObs } from './base-form-component.directive';
-import { hlm } from '@spartan-ng/brain/core';
+import { hlm } from '@spartan-ng/helm/utils';
 import { ClassValue } from 'clsx';
 
 @Directive()

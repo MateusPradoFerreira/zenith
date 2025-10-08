@@ -1,9 +1,9 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "@pollaris";
 import { CenterOfCost } from "../models/center-of-cost.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { Refiners } from "@pollaris/forms/refiners";
 import { GetAllCenterOfCostByFilterParams, CenterOfCostService } from "../services/center-of-cost.service";
 import { CenterOfCostState } from "../states/center-of-cost.state";
 import { CenterOfCostFormComponent } from "../views/center-of-cost/center-of-cost-form/center-of-cost-form.component";

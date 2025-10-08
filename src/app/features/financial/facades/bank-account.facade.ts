@@ -1,9 +1,9 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "@pollaris";
 import { BankAccount } from "../models/bank-account.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { Refiners } from "@pollaris/forms/refiners";
 import { GetAllBankAccountByFilterParams, BankAccountService } from "../services/bank-account.service";
 import { BankAccountState } from "../states/bank-account.state";
 import { BankAccountFormComponent } from "../views/bank-account/bank-account-form/bank-account-form.component";

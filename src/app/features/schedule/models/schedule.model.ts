@@ -1,4 +1,4 @@
-import { PllID } from "../../../core/lib/pollaris";
+import { PllID } from "@pollaris";
 
 export type ScheduleFrequency = "NO_REPETITION" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY" | "CUSTOM";
 

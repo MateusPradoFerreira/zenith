@@ -1,9 +1,9 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
-import { Refiners } from "../../../core/lib/pollaris/forms/refiners";
+import { Refiners } from "@pollaris/forms/refiners";
 import { GetAllSecrecyByFilterParams, SecrecyService } from "../services/secrecy.service";
 import { SecrecyState } from "../states/secrecy.state";
 import { SecrecyFormComponent } from "../views/secrecy/secrecy-form/secrecy-form.component";

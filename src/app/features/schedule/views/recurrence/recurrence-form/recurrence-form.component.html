@@ -1,4 +1,66 @@
 <form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit({ closeOnSave: false })">
-  <button class="col-span-12 xl:col-span-6" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
-  <button class="col-span-12 xl:col-span-6" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+  <div class="col-span-12 -mb-1.5 text-sm">
+    Repetir a cada:
+  </div>
+
+  <div class="col-span-4">
+    <input type="number" hlmInput formControlName="interval"/>
+  </div>
+
+  <div class="col-span-8">
+    <brn-select placeholder="Selecione uma Frequência" formControlName="frequency">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of frequencyOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+  </div>
+
+  <div class="col-span-12 -mb-1.5 text-sm">
+    Repetir
+  </div>
+
+  <div class="col-span-12 flex items-center justify-between">
+    <div *ngFor="let option of shortWeekdayOptions" (click)="onChangeWeekday(option.value)" class="text-sm w-7 h-7 rounded-full flex items-center justify-center cursor-pointer {{ this.form.value.byWeekday.includes(option.value)? 'bg-violet-100 text-violet-500' : 'bg-slate-100' }}">{{ option.label }}</div>
+  </div>
+
+  <div class="col-span-12 flex items-center justify-between">
+    <input type="text" hlmInput value="Mensal no dia 7" readonly="true" />
+  </div>
+
+  <div class="col-span-12 flex items-center justify-between">
+    <input type="text" hlmInput value="Anual no dia 7 de outubro" readonly="true" />
+  </div>
+
+  <div class="col-span-12 -mb-1.5 text-sm">
+    Termina em
+  </div>
+
+  <div class="col-span-4">
+    
+  </div>
+
+  <div class="col-span-8">
+
+  </div>
+
+  <div class="col-span-4">
+
+  </div>
+
+  <div class="col-span-8">
+
+  </div>
+
+  <div class="col-span-4">
+
+  </div>
+
+  <div class="col-span-8">
+
+  </div>
+
 </form>

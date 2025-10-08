@@ -1,6 +1,6 @@
 import { GlobalModule } from "../../../../../../../core/modules/global-module.module";
 import { AfterContentInit, Component, computed, ContentChild, ContentChildren, effect, HostListener, input, model, OnInit, output, QueryList, signal, TemplateRef, ViewChild } from "@angular/core";
-import { PllID } from "../../../../../../../core/lib/pollaris";
+import { PllID } from "@pollaris";
 import { hlm } from "@spartan-ng/brain/core";
 import { ClassValue } from "clsx";
 import { HlmTemplateDirective } from "../../../../../../directives/hlm-template.directive";

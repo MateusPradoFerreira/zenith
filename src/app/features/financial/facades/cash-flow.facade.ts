@@ -1,7 +1,7 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade, PllQueryFacade } from "../../../core/lib/pollaris";
+import { PllFacade, PllQueryFacade } from "@pollaris";
 import { CashFlow } from "../models/cash-flow.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "../services/cash-flow.service";
 import { CashFlowState } from "../states/cash-flow.state";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";

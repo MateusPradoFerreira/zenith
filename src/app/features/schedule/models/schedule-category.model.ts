@@ -1,6 +1,6 @@
 
 import { Colors } from "../../../common/types/colors.type";
-import { PllID } from "../../../core/lib/pollaris";
+import { PllID } from "@pollaris";
 
 export type ScheduleCategoryType = "SCHEDULE" | "PAYABLE" | "RECEIVABLE" | "GOAL";
 

@@ -5,7 +5,7 @@ import { ScheduleFacade, ScheduleQueryFacade, ScheduleUseQueryParams, ScheduleUs
 import { HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import moment from 'moment';
 import { ClassValue } from 'clsx';
-import { hlm } from '@spartan-ng/brain/core';
+import { hlm } from '@spartan-ng/helm/utils';
 import { CalendarEvent, CalendarEventTimesChangedEvent } from 'angular-calendar';
 import { PllID, PllPaginatedResponse } from '@pollaris';
 import { event } from '../../../../../common/directives/base-form-component.directive';

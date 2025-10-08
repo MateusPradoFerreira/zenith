@@ -1,7 +1,7 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "../../../core/lib/pollaris";
-import { Recurrence } from "../models/recurrence.model";
-import { PllFormSchemaConfig } from "../../../core/lib/pollaris/forms";
+import { PllFacade } from "@pollaris";
+import { Recurrence, RecurrenceFrequency, RecurrenceWeekday } from "../models/recurrence.model";
+import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { RecurrenceService } from "../services/recurrence.service";
 import { RecurrenceState } from "../states/recurrence.state";
@@ -26,8 +26,6 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
       id: { value: null },
       frequency: { value: "DAILY", validators: [Validators.required] },
       byWeekday: { value: [] },
-      byMonthDay: { value: [] },
-      byMonth: { value: [] },
       interval: { value: 1 },
       count: { value: 1 },
       createdAt: { value: moment().toDate() },
@@ -40,7 +38,14 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
   };
 };
 
-export const RecurrenceWeekdayOptions: SelectItem[] = [
+export const RecurrenceFrequencyOptions: SelectItem<RecurrenceFrequency>[] = [
+  { label: "dia", value: "DAILY" },
+  { label: "semana", value: "WEEKLY" },
+  { label: "mês", value: "MONTHLY" },
+  { label: "ano", value: "YEARLY" },
+];
+
+export const RecurrenceWeekdayOptions: SelectItem<RecurrenceWeekday>[] = [
   { label: "Segunda-feira", value: "MO" },
   { label: "Terça-feira", value: "TU" },
   { label: "Quarta-feira", value: "WE" },
@@ -48,4 +53,14 @@ export const RecurrenceWeekdayOptions: SelectItem[] = [
   { label: "Sexta-feira", value: "FR" },
   { label: "Sábado", value: "SA" },
   { label: "Domingo", value: "SU" },
+];
+
+export const RecurrenceShortWeekdayOptions: SelectItem<RecurrenceWeekday>[] = [
+  { label: "S", value: "MO" },
+  { label: "T", value: "TU" },
+  { label: "Q", value: "WE" },
+  { label: "Q", value: "TH" },
+  { label: "S", value: "FR" },
+  { label: "S", value: "SA" },
+  { label: "D", value: "SU" },
 ];

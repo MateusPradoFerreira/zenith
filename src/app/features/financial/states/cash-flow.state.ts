@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PllRecordState } from "../../../core/lib/pollaris";
+import { PllRecordState } from "@pollaris";
 import { CashFlow } from "../models/cash-flow.model";
 
 @Injectable({ providedIn: "root" })
