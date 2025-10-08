@@ -21,6 +21,8 @@ import { HlmMenuModule } from '../../common/libs/ui/ui-menu-helm/src';
 import { NgxCurrencyDirective } from "ngx-currency";
 import { CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter, CalendarModule, CalendarUtils } from 'angular-calendar';
 import { HlmPinComponent } from '../../common/components/pin.component';
+import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
+import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 
 const generalModules = [
 	NgxMaskDirective, 
@@ -57,6 +59,8 @@ const spartanUIModules = [
 	HlmPaginationModule,
 	HlmSelectModule,
 	HlmPinComponent,
+	...HlmRadioGroupImports,
+	HlmToasterComponent,
 ];
 
 @NgModule({

@@ -75,6 +75,12 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
 
   override $evUpdateUI = event<PllPaginatedResponse<ScheduleUseQueryResponse>>(tap(() => this.handleRemapEvents()));
 
+  getScheduleCategoryOptions() {
+    this.$getScheduleCategoryOptions().subscribe({
+      error: error => console.error(error),
+    });
+  };
+
   $getScheduleCategoryOptions = () => this.scheduleCategoryFacade.service.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.categoryOptions = response.data.filter(record => record.type === "SCHEDULE");
     this.otherCategoryOptions = response.data.filter(record => record.type !== "SCHEDULE");
@@ -165,6 +171,18 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
       this.dayIsClicked = false;
       this.date.set(date);
     }, 200);
+  };
+
+  handleCreateScheduleCategory() {
+    this.scheduleCategoryFacade.openToCreate().subscribe({
+      next: response => response && this.getScheduleCategoryOptions(),
+    });
+  };
+
+  handleUpdateScheduleCategory(id: PllID) {
+    this.scheduleCategoryFacade.openToUpdate(id).subscribe({
+      next: response => response && this.getScheduleCategoryOptions(),
+    });
   };
 
 };

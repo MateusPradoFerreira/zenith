@@ -25,14 +25,15 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   
   override $evInitPost: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.post({
-      id: null, 
-      frequency: schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM" ? "DAILY" : schedule.frequency, 
-      byWeekday: schedule.frequency === "WEEKLY"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
+      id: null,
+      endType: "NEVER",
+      frequency: schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? "WEEKLY" : schedule.frequency, 
+      byWeekday: schedule.frequency === "WEEKLY" || schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
       interval: 1,
       count: 0,
       createdAt: new Date(),
       startsAt: schedule.startsAt,
-      endsAt: schedule.endsAt,
+      endsAt: schedule.startsAt,
       exceptions: [],
       type: "SCHEDULE",
       active: schedule.frequency !== "NO_REPETITION",
@@ -42,9 +43,17 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   override $evNextPut: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.get(schedule.recurrenceId).pipe(
       switchMap(recurrence => schedule.frequency === "CUSTOM"? of(schedule) : this.recurrenceMockService.put({ 
-        ...recurrence,  
-        frequency: schedule.frequency === "NO_REPETITION" ? "DAILY" : schedule.frequency, 
-        byWeekday: schedule.frequency === "WEEKLY"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
+        ...recurrence,
+        endType: "NEVER",
+        frequency: schedule.frequency === "NO_REPETITION"? "DAILY" : schedule.frequency, 
+        byWeekday: schedule.frequency === "WEEKLY" || schedule.frequency === "NO_REPETITION"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
+        interval: 1,
+        count: 0,
+        createdAt: new Date(),
+        startsAt: schedule.startsAt,
+        endsAt: schedule.startsAt,
+        exceptions: [],
+        type: "SCHEDULE",
         active: schedule.frequency !== "NO_REPETITION",
       })),
     )),

@@ -25,7 +25,7 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
   override component: Type<any> = ScheduleFormComponent;
   override dialogSize: DialogContentVariants["size"] = "xs";
   override dialogAlign: DialogContentVariants["align"] = "center";
-  override closeOnSave: boolean = false;
+  override closeOnSave: boolean = true;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {
     fields: {

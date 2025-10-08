@@ -19,48 +19,65 @@
     </brn-select>
   </div>
 
-  <div class="col-span-12 -mb-1.5 text-sm">
+  <div class="col-span-12 -mb-1.5 text-sm" *ngIf="form.value.frequency !== 'DAILY'">
     Repetir
   </div>
 
-  <div class="col-span-12 flex items-center justify-between">
+  <div class="col-span-12 flex items-center justify-between" *ngIf="form.value.frequency === 'WEEKLY'">
     <div *ngFor="let option of shortWeekdayOptions" (click)="onChangeWeekday(option.value)" class="text-sm w-7 h-7 rounded-full flex items-center justify-center cursor-pointer {{ this.form.value.byWeekday.includes(option.value)? 'bg-violet-100 text-violet-500' : 'bg-slate-100' }}">{{ option.label }}</div>
   </div>
 
-  <div class="col-span-12 flex items-center justify-between">
-    <input type="text" hlmInput value="Mensal no dia 7" readonly="true" />
+  <div class="col-span-12 flex items-center justify-between" *ngIf="form.value.frequency === 'MONTHLY'">
+    <input type="text" hlmInput value="Mensal no dia 7" [readonly]="true" />
   </div>
 
-  <div class="col-span-12 flex items-center justify-between">
-    <input type="text" hlmInput value="Anual no dia 7 de outubro" readonly="true" />
+  <div class="col-span-12 flex items-center justify-between" *ngIf="form.value.frequency === 'YEARLY'">
+    <input type="text" hlmInput value="Anual no dia 7 de outubro" [readonly]="true" />
   </div>
 
   <div class="col-span-12 -mb-1.5 text-sm">
     Termina em
   </div>
 
-  <div class="col-span-4">
-    
-  </div>
+  <hlm-radio-group formControlName="endType" class="col-span-12 grid grid-cols-12 gap-2">
 
-  <div class="col-span-8">
+    <div class="col-span-12 flex items-center min-h-[38px]">
+      <label class="flex items-center gap-3 text-sm" hlmLabel>
+        <hlm-radio value="NEVER">
+          <hlm-radio-indicator indicator />
+        </hlm-radio>
+        Nunca
+      </label>
+    </div>
 
-  </div>
+    <div class="col-span-4 flex items-center min-h-[38px]">
+      <label class="flex items-center gap-3 text-sm" hlmLabel>
+        <hlm-radio value="DATE">
+          <hlm-radio-indicator indicator />
+        </hlm-radio>
+        Em
+      </label>
+    </div>
 
-  <div class="col-span-4">
+    <div class="col-span-8">
+      <hlm-date-picker formControlName="endsAt" [forceSelection]="true" [readonly]="form.value.endType !== 'DATE'">
+        <span>Escolha uma Data</span>
+      </hlm-date-picker>
+    </div>
 
-  </div>
+    <div class="col-span-4 flex items-center min-h-[38px]">
+      <label class="flex items-center gap-3 text-sm" hlmLabel>
+        <hlm-radio value="COUNT">
+          <hlm-radio-indicator indicator />
+        </hlm-radio>
+        Após
+      </label>
+    </div>
 
-  <div class="col-span-8">
+    <div class="col-span-8">
+      <input hlmInput formControlName="count" [readonly]="form.value.endType !== 'COUNT'" [currencyMask]="{ prefix: '', suffix: ' ocorrências', min: 1, precision: 0, max: 100, align: 'left' }"/>
+    </div>
 
-  </div>
-
-  <div class="col-span-4">
-
-  </div>
-
-  <div class="col-span-8">
-
-  </div>
+  </hlm-radio-group>
 
 </form>
