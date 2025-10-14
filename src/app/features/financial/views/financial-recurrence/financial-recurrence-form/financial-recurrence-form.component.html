@@ -1,0 +1,58 @@
+<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+  
+  <div class="hlm-float-label col-span-12">
+    <input hlmInput formControlName="name"/>
+    <label>Nome</label>
+  </div>
+
+  <div class="col-span-12 flex gap-2">
+    <span class="hlm-float-label w-full">
+       <hlm-date-picker formControlName="date" [forceSelection]="true">
+        <span>Escolha uma Data</span>
+      </hlm-date-picker>
+      <label>Data de referência</label>
+    </span>
+    <brn-popover sideOffset="5" class="peer">
+      <button brnPopoverTrigger type="button" hlmBtn hlmBtnIcon="clock-fading" variant="outline" size="icon" [disabled]="processing() || !form.value.recurrenceId"></button>
+      <div hlmPopoverContent class="w-72" *brnPopoverContent="let ctx">
+        <div class="mb-3 col-span-12 xl:col-span-2 -mt-3 -mx-3 px-4 py-2 bg-slate-50 border-b border-slate-200 rounded-t-lg flex items-center justify-between">
+          <span class="text-sm">Recorrência personalizada</span>
+          <i-lucide class="cursor-pointer" name="x" size="14" (click)="ctx.close()"></i-lucide>
+        </div>
+        <div class="px-2">
+          <ng-container [ngTemplateOutlet]="recurrenceFormTemplate" />
+        </div>
+      </div>
+    </brn-popover>
+  </div>
+
+  <div class="hlm-float-label col-span-12">
+    <brn-select formControlName="type" placeholder="Selecione uma Conta Bancária">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of typeOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Tipo</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12">
+    <input hlmInput formControlName="value" [currencyMask]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+    <label>Valor</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
+    <textarea hlmInput rows="7"></textarea>
+    <label>Observação</label>
+  </div>
+
+  <button class="col-span-12 xl:col-span-6" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-6" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form> 
+
+<ng-template #recurrenceFormTemplate>
+  <app-recurrence-form *ngIf="form.value.recurrenceId" [id]="form.value.recurrenceId" />
+</ng-template>

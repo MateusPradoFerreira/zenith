@@ -1,6 +1,6 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, ViewChild } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
-import { BaseFormComponentDirective, event } from '../../../../../common/directives/base-form-component.directive';
+import { BaseFormComponentDirective, event, EventObs } from '../../../../../common/directives/base-form-component.directive';
 import { Schedule, ScheduleFrequency } from '../../../models/schedule.model';
 import { ScheduleFacade } from '../../../facades/schedule.facade';
 import { switchMap, tap } from 'rxjs';
@@ -30,12 +30,18 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
   scheduleCategoryOptions: ScheduleCategory[] = [];
   frequencyOptions: SelectItem<ScheduleFrequency>[] = [];
   colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
+
+  @ViewChild(RecurrenceFormComponent) recurrenceFormComponent: RecurrenceFormComponent;
   
   override $evNgOnInit = event(
     switchMap(() => this.$getScheduleCategoryOptions()),
   );
 
   override $evInitRecord = event(tap(() => this.setFrequencyOptions()));
+
+  override $evNextSumit: EventObs<Schedule, any> = event(tap(() => {
+    if(this.recurrenceFormComponent) this.recurrenceFormComponent.updateUI();
+  }));
 
   override $evInitCreateRecord = event(tap(() => {
     if(this.title()) this.form.controls.title.setValue(this.title());

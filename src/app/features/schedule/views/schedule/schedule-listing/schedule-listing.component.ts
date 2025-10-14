@@ -1,4 +1,4 @@
-import { Component, computed, inject, model, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { ScheduleFacade, ScheduleQueryFacade, ScheduleUseQueryParams, ScheduleUseQueryResponse } from '../../../facades/schedule.facade';

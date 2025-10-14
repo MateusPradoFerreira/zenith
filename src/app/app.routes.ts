@@ -7,6 +7,7 @@ import { FinancialRegistriesPanelComponent } from './features/financial/views/fi
 import { DashboardComponent } from './features/dashboard/views/dashboard/dashboard.component';
 import { InboxListingComponent } from './features/inbox/views/inbox/inbox-listing/inbox-listing.component';
 import { ScheduleListingComponent } from './features/schedule/views/schedule/schedule-listing/schedule-listing.component';
+import { FinancialRecurrenceListingComponent } from './features/financial/views/financial-recurrence/financial-recurrence-listing/financial-recurrence-listing.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: '/dashboard', pathMatch: 'full' },
@@ -18,5 +19,6 @@ export const routes: Routes = [
     { path: "cash-flow", component: CashFlowListingComponent, data: { header: "Fluxo de Caixa" }},
     { path: "registries", component: FinancialRegistriesPanelComponent, data: { header: "Cadastros" } },
     { path: "schedules", component: ScheduleListingComponent, data: { header: "Agenda" } },
+    { path: "financial-recurrences", component: FinancialRecurrenceListingComponent, data: { header: "Recorrência Financeira" } },
   ]},
 ];

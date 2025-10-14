@@ -29,7 +29,7 @@ export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
   override recordSchema: PllFormSchemaConfig<Payable> = {
     fields: {
       id: { value: null },
-      recurrenceId: { value: null },
+      financialRecurrenceId: { value: null },
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       status: { value: "PENDING", validators: [Validators.required], onChange: (value, form) => {
         if(value === "PAID" || value === "CANCELLED") {

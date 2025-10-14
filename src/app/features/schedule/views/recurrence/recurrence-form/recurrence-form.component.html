@@ -28,11 +28,11 @@
   </div>
 
   <div class="col-span-12 flex items-center justify-between" *ngIf="form.value.frequency === 'MONTHLY'">
-    <input type="text" hlmInput value="Mensal no dia 7" [readonly]="true" />
+    <input type="text" hlmInput value="Mensal no dia {{ form.value.startsAt | date : 'd' }}" [readonly]="true" />
   </div>
 
   <div class="col-span-12 flex items-center justify-between" *ngIf="form.value.frequency === 'YEARLY'">
-    <input type="text" hlmInput value="Anual no dia 7 de outubro" [readonly]="true" />
+    <input type="text" hlmInput value="Anual no dia {{ form.value.startsAt | date : 'd' }} de {{ form.value.startsAt | date : 'MMMM' }}" [readonly]="true" />
   </div>
 
   <div class="col-span-12 -mb-1.5 text-sm">

@@ -31,6 +31,8 @@ import { ScheduleMockService } from './features/schedule/services/mock/schedule-
 import { ScheduleCategoryMockService } from './features/schedule/services/mock/schedule-category-mock.service';
 import { RecurrenceService } from './features/schedule/services/recurrence.service';
 import { RecurrenceMockService } from './features/schedule/services/mock/recurrence-mock.service';
+import { FinancialRecurrenceService } from './features/financial/services/financial-recurrence.service';
+import { FinancialRecurrenceMockService } from './features/financial/services/mock/financial-recurrence-mock.service';
 
 registerLocaleData(localePt);
 
@@ -46,6 +48,7 @@ const services: (Provider | EnvironmentProviders)[] = [
   { provide: ScheduleService, useClass: ScheduleMockService },
   { provide: ScheduleCategoryService, useClass: ScheduleCategoryMockService },
   { provide: RecurrenceService, useClass: RecurrenceMockService },
+  { provide: FinancialRecurrenceService, useClass: FinancialRecurrenceMockService },
 ];
 
 const lucideIcons = { Archive, Sheet, Timer, ChevronsUpDown, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown, Hourglass, PanelLeftClose, Eye, EyeOff, Ellipsis, EyeClosed, PanelLeftOpen, AlarmClockPlus, PanelRightDashed, PanelLeftDashed, TrendingUp, TrendingDown, ShoppingCart, Goal, Menu, DollarSign, ChevronDown, ChevronLeft, ChevronRight, ArrowLeftRight, ChevronUp, LogOut, BookOpenText, Headset, Monitor, Sun, MoonStar, CircleFadingArrowUp, Shrimp, Trash2, ListTodo, Check, ListFilter, X, CircleX, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, Table, ArrowDownNarrowWide, ArrowDownUp, ArrowUpDown,  CircleOff, EllipsisVertical, ChevronsDown, PanelLeft, ChartPie, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, LayoutGrid, ClipboardList, FolderOpen, LayoutDashboard, Pin, PinOff };

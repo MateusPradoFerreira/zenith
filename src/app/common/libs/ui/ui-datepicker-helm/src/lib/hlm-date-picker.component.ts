@@ -36,20 +36,8 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 	providers: [HLM_DATE_PICKER_VALUE_ACCESSOR, provideIcons({ lucideCalendar })],
 	template: `
 		<brn-popover sideOffset="5" [state]="popoverState()" (stateChanged)="popoverState.set($event)" class="peer">
-			<!-- <button type="button" [class]="_computedClass()" [disabled]="state().disabled()" brnPopoverTrigger>
-				<ng-icon hlm size="sm" name="lucideCalendar" />
-
-				<span class="truncate">
-					@if (formattedDate(); as formattedDate) {
-						{{ formattedDate }}
-					} @else {
-						<ng-content />
-					}
-				</span>
-			</button> -->
-
 			<div class="flex relative group">
-				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled()" [id]="key" (blur)="_handleBlurInput()"/>
+				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled() || readonly()" [id]="key" (blur)="_handleBlurInput()"/>
 				<button brnPopoverTrigger type="button" [disabled]="state().disabled() || readonly()" class="absolute top-0 right-0 transition-colors disabled:pointer-events-none hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-700 border-y border-r border-slate-200 cursor-pointer bg-background rounded-r-md flex items-center justify-center w-[38px] h-[38px] shrink-0"> <ng-icon hlm size="sm" name="lucideCalendar"/> </button>
 			</div>
 

@@ -24,7 +24,7 @@ import { HlmPinComponent } from '../../common/components/pin.component';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 
-const generalModules = [
+export const GeneralImports = [
 	NgxMaskDirective, 
 	NgxMaskPipe, 
 	HlmTemplateDirective, 
@@ -43,7 +43,7 @@ const generalModules = [
 	CalendarModule
 ];
 
-const spartanUIModules = [
+export const SpartanUIImports = [
 	HlmMenuModule, 
 	HlmTabsModule, 
 	HlmCheckboxModule, 
@@ -65,10 +65,10 @@ const spartanUIModules = [
 
 @NgModule({
 	imports: [ 
-		...generalModules, 
-		...spartanUIModules,
+		...GeneralImports, 
+		...SpartanUIImports,
 	],
-	exports: [ ...generalModules, ...spartanUIModules ],
+	exports: [ ...GeneralImports, ...SpartanUIImports ],
   providers: [CalendarUtils, CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter],
 })
 export class GlobalModule {}

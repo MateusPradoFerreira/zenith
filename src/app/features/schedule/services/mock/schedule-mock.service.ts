@@ -26,6 +26,8 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   override $evInitPost: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.post({
       id: null,
+      scheduleId: schedule.id,
+      financialRecurrenceId: null,
       endType: "NEVER",
       frequency: schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? "WEEKLY" : schedule.frequency, 
       byWeekday: schedule.frequency === "WEEKLY" || schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
@@ -35,7 +37,6 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
       startsAt: schedule.startsAt,
       endsAt: schedule.startsAt,
       exceptions: [],
-      type: "SCHEDULE",
       active: schedule.frequency !== "NO_REPETITION",
     }).pipe(map(recurrence =>({ ...schedule, recurrenceId: recurrence.id })))),
   );
@@ -53,7 +54,6 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
         startsAt: schedule.startsAt,
         endsAt: schedule.startsAt,
         exceptions: [],
-        type: "SCHEDULE",
         active: schedule.frequency !== "NO_REPETITION",
       })),
     )),
