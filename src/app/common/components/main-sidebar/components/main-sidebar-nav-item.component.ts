@@ -12,7 +12,7 @@ import { GlobalModule } from '../../../../core/modules/global-module.module';
       <div class="w-[47px] h-[47px] flex items-center justify-center shrink-0">
         <i-lucide [name]="icon" size="22"></i-lucide>
       </div>
-      <span class="text-[13px] mt-0.5 transition {{ active || hovering? 'opacity-100' : 'opacity-0' }}">{{label}}</span>
+      <span class="text-[13px] mt-0.5 transition {{ active() || hovering()? 'opacity-100' : 'opacity-0' }}">{{label}}</span>
     </a>
   `,
 })
@@ -26,13 +26,8 @@ export class MainSidebarNavItemComponent {
   private state = inject(MainLayoutlState);
   private router: Router = inject(Router);
 
-  active: boolean = false;
-  hovering: boolean = false;
+  active = this.state.active;
+  hovering = this.state.hovering;
 
   isActive = () => !this.to? false : this.router.isActive(this.to, { queryParams: "ignored", fragment: "ignored", matrixParams: "ignored", paths: "subset" });
-
-  ngOnInit() {
-    this.state.active$.subscribe(active => this.active = active);
-    this.state.hovering$.subscribe(hovering => this.hovering = hovering);
-  };
-}
+};

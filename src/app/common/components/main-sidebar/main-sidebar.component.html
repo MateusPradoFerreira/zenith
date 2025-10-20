@@ -1,11 +1,11 @@
-<aside class="z-20 custom-scroll hidden xl:grid absolute overflow-y-hidden hover:overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid-cols-1 grid-rows-[52px_1fr_auto] {{ active || hovering? 'w-64' : 'w-16' }} {{ hovering && !active? 'shadow-lg shadow-slate-600/15' : 'shadow-lg shadow-slate-600/10' }}" (mouseover)="state.setHovering(true)" (mouseleave)="state.setHovering(false)">
+<aside class="z-20 custom-scroll hidden xl:grid absolute overflow-y-hidden hover:overflow-y-auto overflow-x-hidden z-10 h-screen top-0 left-0 transition-all bg-slate-50 border-r border-slate-200 grid-cols-1 grid-rows-[52px_1fr_auto] {{ active() || hovering()? 'w-64' : 'w-16' }} {{ hovering() && !active()? 'shadow-lg shadow-slate-600/15' : 'shadow-lg shadow-slate-600/10' }}" (mouseover)="hovering.set(true)" (mouseleave)="hovering.set(false)">
   <div class="pr-3 flex items-center relative border-b border-slate-200">
     <div class="w-16 h-16 flex items-center justify-center shrink-0">
       <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
     </div>
-    <span class="text-xl transition-all w-full -ml-2 {{ active || hovering? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
-    <button class="w-8 h-8 hover:bg-slate-200/70 shrink-0 flex items-center justify-center rounded-lg cursor-pointer transition-all {{ active || hovering? 'opacity-100' : 'opacity-0' }}" (click)="state.setActive(!active)">
-      <i-lucide [name]="active? 'pin-off' : 'pin'" size="18"></i-lucide>
+    <span class="text-xl transition-all w-full -ml-2 {{ active() || hovering()? 'opacity-100' : 'opacity-0' }}">Zenith_</span>
+    <button class="w-8 h-8 hover:bg-slate-200/70 shrink-0 flex items-center justify-center rounded-lg cursor-pointer transition-all {{ active() || hovering()? 'opacity-100' : 'opacity-0' }}" (click)="active.set(!active())">
+      <i-lucide [name]="active()? 'pin-off' : 'pin'" size="18"></i-lucide>
     </button>
   </div>
   <nav class="p-2 list-none">

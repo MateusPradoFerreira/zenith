@@ -1,10 +1,11 @@
-import { computed, Directive, input, model, OnInit, output, signal } from "@angular/core";
+import { computed, Directive, inject, input, model, OnInit, output, signal } from "@angular/core";
 import { PllFacade, PllID, PllRecordId } from "../../core/lib/pollaris";
 import { PllFormSchema } from "../../core/lib/pollaris/forms";
 import { catchError, map, Observable, of, OperatorFunction, switchMap, tap, throwError } from "rxjs";
-import { injectBrnDialogContext, injectBrnDialogCtx } from "@spartan-ng/brain/dialog";
+import { injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { ClassValue } from "clsx";
 import { hlm } from "@spartan-ng/brain/core";
+import { AuthFacade } from "../../features/auth/facades/auth.facade";
 
 export type EventObs<T = void, TR = any> = (data?: T) => Observable<TR>;
 export const event = <T = void, TR = any>(...operators: OperatorFunction<T, TR>[]) => {
@@ -29,6 +30,11 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
 
   abstract facade: PllFacade<TRecordModel, any>;
   private readonly _context = injectBrnDialogContext();
+  
+  authFacade = inject(AuthFacade);
+
+  authData = this.authFacade.state.userData;
+  isLoggedIn = this.authFacade.state.isLoggedIn;
 
   orgRecord: TRecordModel;
   crrRecord: TRecordModel;

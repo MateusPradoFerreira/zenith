@@ -7,7 +7,7 @@ import { GlobalModule } from '../../../../core/modules/global-module.module';
   selector: 'ms-nav-separator',
   imports: [GlobalModule],
   template: `
-    <div class="text-sm text-zinc-600 overflow-hidden transition-all px-4 {{ active || hovering? 'h-auto pb-2 pt-4 opacity-100' : 'h-0 opacity-0' }}">
+    <div class="text-sm text-zinc-600 overflow-hidden transition-all px-4 {{ active() || hovering()? 'h-auto pb-2 pt-4 opacity-100' : 'h-0 opacity-0' }}">
       {{label}}
     </div>
   `,
@@ -17,11 +17,6 @@ export class MainSidebarNavSeparatorComponent {
 
   state = inject(MainLayoutlState);
 
-  active: boolean = false;
-  hovering: boolean = false;
-
-  ngOnInit() {
-    this.state.active$.subscribe(active => this.active = active);
-    this.state.hovering$.subscribe(hovering => this.hovering = hovering);
-  };
-}
+  active = this.state.active;
+  hovering = this.state.hovering;
+};

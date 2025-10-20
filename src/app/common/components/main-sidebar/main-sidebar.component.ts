@@ -1,28 +1,20 @@
-import { Component, inject, OnInit, WritableSignal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MainLayoutlState } from '../../states/main-layout.state';
 import { MainSidebarNavItemComponent } from './components/main-sidebar-nav-item.component';
 import { MainSidebarNavSeparatorComponent } from './components/main-sidebar-nav-separator.component';
-import { DialogFacade } from '../../facades/dialog.facade';
 import { GlobalModule } from '../../../core/modules/global-module.module';
-import { AuthState, UserData } from '../../states/auth.state';
+import { AuthState } from '../../../features/auth/states/auth.state';
 
 @Component({
   selector: 'app-main-sidebar',
   imports: [GlobalModule, MainSidebarNavItemComponent, MainSidebarNavSeparatorComponent],
   templateUrl: './main-sidebar.component.html',
 })
-export class MainSidebarComponent implements OnInit {
-  private authState: AuthState = inject(AuthState);
-  userData: WritableSignal<UserData> = this.authState.userData;
-
+export class MainSidebarComponent {
+  authState = inject(AuthState);
   state: MainLayoutlState = inject(MainLayoutlState);
-  dialogFacade: DialogFacade = inject(DialogFacade);
 
-  active: boolean = false;
-  hovering: boolean = false;
-
-  ngOnInit() {
-    this.state.active$.subscribe(active => this.active = active);
-    this.state.hovering$.subscribe(hovering => this.hovering = hovering);
-  };
+  userData = this.authState.userData;
+  active = this.state.active;
+  hovering = this.state.hovering;
 };

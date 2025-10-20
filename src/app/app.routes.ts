@@ -8,10 +8,18 @@ import { DashboardComponent } from './features/dashboard/views/dashboard/dashboa
 import { InboxListingComponent } from './features/inbox/views/inbox/inbox-listing/inbox-listing.component';
 import { ScheduleListingComponent } from './features/schedule/views/schedule/schedule-listing/schedule-listing.component';
 import { FinancialRecurrenceListingComponent } from './features/financial/views/financial-recurrence/financial-recurrence-listing/financial-recurrence-listing.component';
+import { AuthLayoutComponent } from './common/layouts/auth-layout/auth-layout.component';
+import { SignInFormComponent } from './features/auth/views/sign-in-form/sign-in-form.component';
+import { SignUpFormComponent } from './features/auth/views/sign-up-form/sign-up-form.component';
+import { authGuard } from './features/auth/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: "", redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: "", component: MainLayoutComponent, children: [
+  { path: "", redirectTo: '/auth/sign-in', pathMatch: 'full' },
+  { path: "auth", component: AuthLayoutComponent, children: [
+    { path: "sign-in", component: SignInFormComponent },
+    { path: "sign-up", component: SignUpFormComponent },
+  ]},
+  { path: "", component: MainLayoutComponent, canActivate: [authGuard], children: [
     { path: "dashboard", component: DashboardComponent, data: { header: "Dashboard" } },
     { path: "inbox", component: InboxListingComponent, data: { header: "Inbox" } }, 
     { path: "payables", component: PayableListingComponent, data: { header: "Despesas" } },

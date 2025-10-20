@@ -1,0 +1,22 @@
+<form class="grid grid-cols-12 gap-3.5 gap-x-2" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+
+  <div class="col-span-12 flex items-center justify-center mb-4">
+    <div class="w-16 h-16 flex items-center justify-center shrink-0">
+      <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
+    </div>
+    <span class="text-xl transition-all -ml-2">Zenith_</span>
+  </div>
+
+  <div class="hlm-float-label col-span-12">
+    <input hlmInput type="email" formControlName="email"/>
+    <label>Email</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12">
+    <input hlmInput type="password" formControlName="password"/>
+    <label>Senha</label>
+  </div>
+
+  <button class="col-span-12" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+
+</form> 

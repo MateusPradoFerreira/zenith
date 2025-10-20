@@ -7,6 +7,7 @@ import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableSelectionActionFc
 import { BaseFormComponentDirective, event, EventObs } from './base-form-component.directive';
 import { hlm } from '@spartan-ng/helm/utils';
 import { ClassValue } from 'clsx';
+import { AuthFacade } from '../../features/auth/facades/auth.facade';
 
 @Directive()
 export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord, TComponent extends BaseFormComponentDirective<any> = BaseFormComponentDirective<any>> implements OnInit {  
@@ -22,6 +23,10 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   abstract queryFacade: PllQueryFacade<TRecordQueryModel, TRecordQueryParams>;
 
   dialogFacade = inject(DialogFacade);
+  authFacade = inject(AuthFacade);
+  
+  authData = this.authFacade.state.userData;
+  isLoggedIn = this.authFacade.state.isLoggedIn;
 
   filter: PllFormSchema<TRecordQueryParams>;
   values = computed(() => this.queryFacade.data()?.data || []);

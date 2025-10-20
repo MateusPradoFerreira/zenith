@@ -1,9 +1,10 @@
 
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../core/modules/global-module.module';
-import { AuthState, UserData } from '../../states/auth.state';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs';
+import { AuthState } from '../../../features/auth/states/auth.state';
+import { UserData } from '../../../features/auth/models/user-data.model';
 
 @Component({
   selector: 'app-main-header',
