@@ -5,7 +5,6 @@ import { SignInData, SignInResponse } from "../models/sign-in-data.model";
 import { environment } from "../../../../environments/environment";
 import { SignUpData } from "../models/sign-up-data.model";
 
-@Injectable({ providedIn: 'root' })
 export class AuthService {
   http = inject(HttpClient);
 

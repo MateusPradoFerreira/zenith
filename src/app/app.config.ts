@@ -1,7 +1,7 @@
-import { ApplicationConfig, EnvironmentProviders, importProvidersFrom, LOCALE_ID, Provider, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, EnvironmentProviders, importProvidersFrom, LOCALE_ID, Provider, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { Bell, Calendar, CalendarRange, HelpCircle, Home, LucideAngularModule, Settings, ChevronsUpDown, BanknoteArrowDown, BanknoteArrowUp, Clock, AlarmClockPlus, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, ClipboardPenLine, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff, Origami, MessagesSquare, MessageSquareMore, MessageCircleMore, Funnel, Plus, FunnelPlus, Search, RefreshCcw, LoaderCircle, RotateCcw, EllipsisVertical, FolderClosed, ChartPie, Archive, PanelLeft, Trash2, CircleOff, Shrimp, ChevronsDown, ArrowDownUp, ListFilter, X, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, ArrowDownNarrowWide, ArrowUpDown, Sheet, LayoutGrid, Table, CircleX, Check, ListTodo, ChevronDown, CircleFadingArrowUp, DollarSign, ShoppingCart, Menu, LogOut, BookOpenText, Headset, Monitor, MoonStar, Sun, Goal, ChevronUp, TrendingUp, TrendingDown, Timer, Hourglass, ArrowLeftRight, PanelRightDashed, PanelLeftDashed, PanelLeftClose, PanelLeftOpen, Eye, EyeClosed, EyeOff, Ellipsis, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown } from 'lucide-angular';
+import { Bell, Calendar, CalendarRange, HelpCircle, Home, LucideAngularModule, Settings, ChevronsUpDown, BanknoteArrowDown, BanknoteArrowUp, Clock, AlarmClockPlus, ClockFading, SquareKanban, PiggyBank, HandCoins, ClipboardList, ClipboardPenLine, FolderOpen, LayoutDashboard, ChevronLeft, ChevronRight, Pin, PinOff, Origami, MessagesSquare, MessageSquareMore, MessageCircleMore, Funnel, Plus, FunnelPlus, Search, RefreshCcw, LoaderCircle, RotateCcw, EllipsisVertical, FolderClosed, ChartPie, Archive, PanelLeft, Trash2, CircleOff, Shrimp, ChevronsDown, ArrowDownUp, ListFilter, X, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, ArrowDownNarrowWide, ArrowUpDown, Sheet, LayoutGrid, Table, CircleX, Check, ListTodo, ChevronDown, CircleFadingArrowUp, DollarSign, ShoppingCart, Menu, LogOut, BookOpenText, Headset, Monitor, MoonStar, Sun, Goal, ChevronUp, TrendingUp, TrendingDown, Timer, Hourglass, ArrowLeftRight, PanelRightDashed, PanelLeftDashed, PanelLeftClose, PanelLeftOpen, Eye, EyeClosed, EyeOff, Ellipsis, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown, Facebook } from 'lucide-angular';
 import { HttpClientModule } from '@angular/common/http';
 import localePt from '@angular/common/locales/pt';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
@@ -33,10 +33,14 @@ import { RecurrenceService } from './features/schedule/services/recurrence.servi
 import { RecurrenceMockService } from './features/schedule/services/mock/recurrence-mock.service';
 import { FinancialRecurrenceService } from './features/financial/services/financial-recurrence.service';
 import { FinancialRecurrenceMockService } from './features/financial/services/mock/financial-recurrence-mock.service';
+import { AuthFacade } from './features/auth/facades/auth.facade';
+import { AuthService } from './features/auth/services/auth.service';
+import { AuthMockService } from './features/auth/services/mock/auth-mock.service';
 
 registerLocaleData(localePt);
 
 const services: (Provider | EnvironmentProviders)[] = [
+  { provide: AuthService, useClass: AuthMockService },
   { provide: InboxService, useClass: InboxMockService },
   { provide: PayableService, useClass: PayableMockService },
   { provide: ReceivableService, useClass: ReceivableMockService },
@@ -51,11 +55,16 @@ const services: (Provider | EnvironmentProviders)[] = [
   { provide: FinancialRecurrenceService, useClass: FinancialRecurrenceMockService },
 ];
 
-const lucideIcons = { Archive, Sheet, Timer, ChevronsUpDown, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown, Hourglass, PanelLeftClose, Eye, EyeOff, Ellipsis, EyeClosed, PanelLeftOpen, AlarmClockPlus, PanelRightDashed, PanelLeftDashed, TrendingUp, TrendingDown, ShoppingCart, Goal, Menu, DollarSign, ChevronDown, ChevronLeft, ChevronRight, ArrowLeftRight, ChevronUp, LogOut, BookOpenText, Headset, Monitor, Sun, MoonStar, CircleFadingArrowUp, Shrimp, Trash2, ListTodo, Check, ListFilter, X, CircleX, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, Table, ArrowDownNarrowWide, ArrowDownUp, ArrowUpDown,  CircleOff, EllipsisVertical, ChevronsDown, PanelLeft, ChartPie, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, LayoutGrid, ClipboardList, FolderOpen, LayoutDashboard, Pin, PinOff };
+export function initAuth(authFacade: AuthFacade) {
+  return async () => await authFacade.validateAuth(); 
+}
+
+const lucideIcons = { Archive, Sheet, Timer, Facebook, ChevronsUpDown, ChevronsDownUp, CalendarArrowUp, CalendarArrowDown, Hourglass, PanelLeftClose, Eye, EyeOff, Ellipsis, EyeClosed, PanelLeftOpen, AlarmClockPlus, PanelRightDashed, PanelLeftDashed, TrendingUp, TrendingDown, ShoppingCart, Goal, Menu, DollarSign, ChevronDown, ChevronLeft, ChevronRight, ArrowLeftRight, ChevronUp, LogOut, BookOpenText, Headset, Monitor, Sun, MoonStar, CircleFadingArrowUp, Shrimp, Trash2, ListTodo, Check, ListFilter, X, CircleX, PencilLine, ArrowUpWideNarrow, ArrowDownWideNarrow, Table, ArrowDownNarrowWide, ArrowDownUp, ArrowUpDown,  CircleOff, EllipsisVertical, ChevronsDown, PanelLeft, ChartPie, FolderClosed, ClipboardPenLine, LoaderCircle, RotateCcw, RefreshCcw, Search, Plus, Funnel, FunnelPlus, Home, MessagesSquare, MessageSquareMore, MessageCircleMore, Origami, Calendar, CalendarRange, Settings, Bell, HelpCircle, BanknoteArrowDown, BanknoteArrowUp, Clock, ClockFading, SquareKanban, PiggyBank, HandCoins, LayoutGrid, ClipboardList, FolderOpen, LayoutDashboard, Pin, PinOff };
 
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: APP_INITIALIZER, useFactory: initAuth, deps: [AuthFacade], multi: true },
     provideRouter(routes), 
     provideEnvironmentNgxMask(),
     importProvidersFrom(HttpClientModule),

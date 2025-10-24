@@ -7,6 +7,10 @@
     <span class="text-xl transition-all -ml-2">Zenith_</span>
   </div>
 
+  <button class="col-span-12" hlmBtn hlmBtnIcon="facebook" variant="soft" [disabled]="processing()">Entrar com o Google</button>
+
+  <button class="col-span-12" hlmBtn hlmBtnIcon="facebook" severity="info" [disabled]="processing()">Entrar com o Facebook</button>
+
   <div class="hlm-float-label col-span-12">
     <input hlmInput type="email" formControlName="email"/>
     <label>Email</label>

@@ -55,7 +55,7 @@
         <i-lucide class="mr-0.5" name="circle-fading-arrow-up" size="22" hlmMenuIcon></i-lucide>
       </button>
       <hlm-menu-separator />
-      <button hlmMenuItem> <i-lucide name="log-out" size="16" hlmMenuIcon></i-lucide> Sair </button>
+      <button hlmMenuItem (click)="authFacade.signOut()"> <i-lucide name="log-out" size="16" hlmMenuIcon></i-lucide> Sair </button>
     </hlm-menu-group>
   </hlm-menu>
 </ng-template>

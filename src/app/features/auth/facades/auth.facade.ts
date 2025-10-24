@@ -2,12 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import { AuthState } from "../states/auth.state";
 import { AuthService } from "../services/auth.service";
 import { SignInData, SignInResponse } from "../models/sign-in-data.model";
-import { delay, Observable, of, tap } from "rxjs";
+import { delay, lastValueFrom, Observable, of, tap } from "rxjs";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { SignUpData } from "../models/sign-up-data.model";
 import { Refiners } from "@pollaris/forms/refiners";
-import { v4 as uuid } from 'uuid';
 import { Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +31,8 @@ export class AuthFacade {
     },
   };
 
-  validateAuth() {
+  async validateAuth() {
+    console.log("VALIDATE-AUTH");
     const token = window.localStorage.getItem("user-token");
 
     if(!token) {
@@ -40,59 +40,32 @@ export class AuthFacade {
       return;
     };
 
-    const response: SignInResponse = {
-      id: uuid(),
-      name: "Mateus do Prado Ferreira",
-      email: "mateuspradoferreira123@gmail.com",
-      avatar: "https://i.pinimg.com/736x/5b/0b/47/5b0b4796c743e493be28c55887d92713.jpg",
-      token: "123",
-    };
-
-    of(response).pipe(
-      delay(500),
-      tap(response => window.localStorage.setItem("user-token", response.token)),
-      tap(response => this.state.userToken.set(response.token)),
-      tap(response => this.state.userData.set(response)),
-    ).subscribe({
-      error: () => this.signOut(),
-    });
-    
-    /* this.service.validateAuth(token).pipe(
-      tap(response => window.localStorage.setItem("user-token", response.token)),
-      tap(response => this.state.userToken.set(response.token)),
-      tap(response => this.state.userData.set(response)),
-    ).subscribe({
-      error: () => this.signOut(),
-    }); */
-  };
-
-  signIn(data: SignInData): Observable<SignInResponse> {
-    const response: SignInResponse = {
-      id: uuid(),
-      name: "Mateus do Prado Ferreira",
-      email: "mateuspradoferreira123@gmail.com",
-      avatar: "https://i.pinimg.com/736x/5b/0b/47/5b0b4796c743e493be28c55887d92713.jpg",
-      token: "123",
-    };
-
-    return of(response).pipe(
-      delay(500),
+    const $req = this.service.validateAuth(token).pipe(
       tap(response => window.localStorage.setItem("user-token", response.token)),
       tap(response => this.state.userToken.set(response.token)),
       tap(response => this.state.userData.set(response)),
     );
 
-    /* return this.service.auth(data).pipe(
+    await lastValueFrom($req).then(() => console.log("VALID-USER-SESSION")).catch(() => this.signOut());
+  };
+
+  signIn(data: SignInData): Observable<SignInResponse> {
+    this.clearAuthData();
+    return this.service.auth(data).pipe(
       tap(response => window.localStorage.setItem("user-token", response.token)),
       tap(response => this.state.userToken.set(response.token)),
       tap(response => this.state.userData.set(response)),
-    ); */
+    );
   };
 
   signOut() {
-    window.localStorage.setItem("user-token", null),
-    this.state.userToken.set(null),
-    this.state.userData.set(null),
+    this.clearAuthData();
     this.router.navigate(["/auth/sign-in"]);
+  };
+
+  clearAuthData() {
+    window.localStorage.removeItem("user-token");
+    this.state.userToken.set(null);
+    this.state.userData.set(null);
   };
 };
