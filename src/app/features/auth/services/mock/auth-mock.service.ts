@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { delay, Observable, of } from "rxjs";
+import { delay, Observable, of, switchMap, tap, throwError } from "rxjs";
 import { AuthService } from "../auth.service";
 import { SignInData, SignInResponse } from "../../models/sign-in-data.model";
 import { SignUpData } from "../../models/sign-up-data.model";
@@ -28,7 +28,14 @@ export class AuthMockService extends AuthService {
       token: "123",
     };
 
-    return of(response).pipe(delay(500));
+    return of(response).pipe(
+      delay(500),
+      switchMap(response => {
+        if(data.email !== response.email) return throwError(() => new Error("Email ou Senha estão Incorretos!"));
+        if(data.password !== "123") return throwError(() => new Error("Email ou Senha estão Incorretos!"));
+        return of(response);
+      }),
+    );
   };
 
   override register(data: SignUpData): Observable<void> {

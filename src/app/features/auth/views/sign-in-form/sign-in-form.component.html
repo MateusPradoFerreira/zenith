@@ -1,26 +1,52 @@
+<div class="absolute top-3 left-3 flex items-center justify-center">
+  <div class="w-16 h-16 flex items-center justify-center shrink-0">
+    <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
+  </div>
+  <span class="text-xl transition-all -ml-2">Zenith_</span>
+</div>
+
 <form class="grid grid-cols-12 gap-3.5 gap-x-2" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
 
-  <div class="col-span-12 flex items-center justify-center mb-4">
-    <div class="w-16 h-16 flex items-center justify-center shrink-0">
-      <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
-    </div>
-    <span class="text-xl transition-all -ml-2">Zenith_</span>
+  <h1 class="col-span-12 text-2xl font-medium text-center">Bem-vindo de Volta!</h1>
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mb-6">Digite seu email e senha para acessar sua conta</p>
+
+  <div class="col-span-12 mb-2 animate-drop-in" hlmAlert variant="destructive" *ngIf="error()">
+    <i-lucide hlmAlertIcon name="triangle-alert" />
+    <p hlmAlertDescription>{{ error() }}</p>
   </div>
 
-  <button class="col-span-12" hlmBtn hlmBtnIcon="facebook" variant="soft" [disabled]="processing()">Entrar com o Google</button>
-
-  <button class="col-span-12" hlmBtn hlmBtnIcon="facebook" severity="info" [disabled]="processing()">Entrar com o Facebook</button>
-
-  <div class="hlm-float-label col-span-12">
-    <input hlmInput type="email" formControlName="email"/>
+  <div class="hlm-float-label col-span-12 mb-2">
+    <input hlmInput type="email" formControlName="email" [readonly]="processing()" />
     <label>Email</label>
   </div>
 
-  <div class="hlm-float-label col-span-12">
-    <input hlmInput type="password" formControlName="password"/>
+  <div class="hlm-float-label col-span-12 mb-2">
+    <input hlmInput type="password" formControlName="password" [readonly]="processing()" />
     <label>Senha</label>
   </div>
 
-  <button class="col-span-12" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+  <div class="col-span-6 mb-2 flex items-center gap-3">
+    <hlm-checkbox />
+    <label class="text-xs text-slate-500">Mantenha-me conectado</label>
+  </div>
+
+  <div class="col-span-6 flex justify-end mb-2">
+    <a class="text-xs text-violet-500 decoration-none cursor-pointer" routerLink="/auth/forgot-password">Esqueceu sua Senha?</a>
+  </div>
+
+  <button class="col-span-12" hlmBtn severity="help" [disabled]="form.invalid || processing()" [loading]="processing()">Continuar</button>
+
+  <div class="col-span-12 flex items-center justify-center gap-4 my-2">
+    <div class="h-0.5 bg-slate-200 w-full"></div>
+    <span class="text-slate-500 text-sm shrink-0">Ou entre com</span>
+    <div class="h-0.5 bg-slate-200 w-full"></div>
+  </div>
+
+  <button class="col-span-6" hlmBtn icon="facebook" position="start" variant="soft" [disabled]="processing()">Google</button>
+
+  <button class="col-span-6" hlmBtn icon="facebook" position="start" severity="info" [disabled]="processing()">Facebook</button>
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mt-4">Não possui uma conta? <a class="text-violet-500 decoration-none cursor-pointer" routerLink="/auth/sign-up">Registre-se Agora!</a> </p>
 
 </form> 

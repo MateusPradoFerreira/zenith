@@ -1,11 +1,12 @@
-import { Directive, computed, input, signal } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, Injector, OnChanges, SimpleChanges, ViewContainerRef, computed, input, signal } from '@angular/core';
 import { hlm } from '@spartan-ng/helm/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ClassValue } from 'clsx';
 import { injectBrnButtonConfig } from './hlm-button.token';
+import { LucideAngularComponent } from 'lucide-angular';
 
 export const buttonVariants = cva(
-	"border border-transparent inline-flex items-center gap-2 cursor-pointer justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none ring-offset-background",
+	"border border-transparent inline-flex relative items-center cursor-pointer justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none ring-offset-background",
 	{
 		variants: {
 			variant: {
@@ -30,10 +31,15 @@ export const buttonVariants = cva(
 				"icon-lg": "h-[38px] w-[38px] p-0 [&_i-lucide]:[&_svg]:w-[24px] shrink-0 [&_i-lucide]:[&_svg]:h-[24px] [&_lucide-angular]:[&_svg]:w-[24px] [&_lucide-angular]:[&_svg]:h-[24px]",
 				"icon-sm": "h-[28px] w-[28px] p-0 [&_i-lucide]:[&_svg]:w-[16px] shrink-0 [&_i-lucide]:[&_svg]:h-[16px] [&_lucide-angular]:[&_svg]:w-[16px] [&_lucide-angular]:[&_svg]:h-[16px]",
 			},
+			space: {
+				default: "gap-2",
+				icon: "",
+			},
 		},
 		defaultVariants: {
 			variant: "default",
 			severity: "primary",
+			space: "default",
 			size: "default",
 		},
 		compoundVariants: [
@@ -77,7 +83,7 @@ export type ButtonVariants = VariantProps<typeof buttonVariants>;
 		"[class]": "_computedClass()",
 	},
 })
-export class HlmButtonDirective {
+export class HlmButtonDirective implements OnChanges {
 	private readonly _config = injectBrnButtonConfig();
 
 	private readonly _additionalClasses = signal<ClassValue>("");
@@ -85,12 +91,52 @@ export class HlmButtonDirective {
 	public readonly userClass = input<ClassValue>("", { alias: "class" });
 
 	protected readonly _computedClass = computed(() =>
-		hlm(buttonVariants({ variant: this.variant(), size: this.size(), severity: this.severity() }), this.userClass(), this._additionalClasses()),
+		hlm(buttonVariants({ variant: this.variant(), size: this.size(), severity: this.severity(), space: ["btn-start", "btn-end"].includes(this.position()) || (this.loading() && !this.icon())? "icon" : "default" }), this.userClass(), this._additionalClasses()),
 	);
 
 	public readonly variant = input<ButtonVariants["variant"]>(this._config.variant);
 	public readonly size = input<ButtonVariants["size"]>(this._config.size);
 	public readonly severity = input<ButtonVariants["severity"]>(this._config.severity);
+
+	public readonly icon = input<string>("");
+	public readonly position = input<"start" | "btn-start" | "end" | "btn-end">("start");
+	public readonly loading = input<boolean>(false);
+
+  private componentRef?: ComponentRef<LucideAngularComponent>;
+
+  constructor(private vcRef: ViewContainerRef, private injector: Injector, private cdr: ChangeDetectorRef) {};
+
+	ngOnChanges(): void {
+    this._createIcon();
+	};
+
+	private _createIcon() {
+		if(!this.icon() && !this.loading()) {
+			if(this.componentRef) this.componentRef.destroy();
+			this.componentRef = null;
+			this.cdr.detectChanges();
+			return;
+		};
+
+		console.log(this.loading(), "teste 2")
+
+    if(!this.componentRef) this.componentRef = this.vcRef.createComponent(LucideAngularComponent, { injector: this.injector });
+    
+    this.componentRef.setInput("name", this.loading()? "loader-circle" : this.icon());
+
+    this.componentRef.setInput("class", hlm(
+      this.loading() && "animate-spin",
+      this.size() === "default" && this.position() === "start" && "-ml-2",
+      this.size() === "default" && this.position() === "end" && "-mr-2",
+      this.position() === "btn-start" && "absolute top-1/2 left-2.5 -translate-y-1/2",
+      this.position() === "btn-end" && "absolute top-1/2 right-2.5 -translate-y-1/2",
+			(this.loading() && !this.icon()) && "absolute top-1/2 left-2.5 -translate-y-1/2 ml-0",
+    ));
+
+    const nativeEl = this.vcRef.element.nativeElement;
+    const iconEl = this.componentRef.location.nativeElement;
+    this.position() === "start" || this.position() === "btn-start"? nativeEl.insertBefore(iconEl, nativeEl.firstChild) : nativeEl.appendChild(iconEl);
+  };
 
 	setClass(classes: string): void {
 		this._additionalClasses.set(classes);

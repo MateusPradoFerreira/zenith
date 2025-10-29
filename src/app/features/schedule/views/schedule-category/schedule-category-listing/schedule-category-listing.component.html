@@ -8,8 +8,8 @@
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
-        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
-        <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
+        <button hlmBtn icon="refresh-ccw" variant="outline" size="icon" [loading]="loading()" (click)="updateUI()"></button>
+        <button hlmBtn icon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
       </ng-container>
     </ng-template>
     <ng-template hlmTemplate="filter" let-ctx>

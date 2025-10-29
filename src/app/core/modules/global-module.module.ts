@@ -23,6 +23,7 @@ import { CalendarA11y, CalendarDateFormatter, CalendarEventTitleFormatter, Calen
 import { HlmPinComponent } from '../../common/components/pin.component';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
+import { HlmAlertModule } from '@spartan-ng/ui-alert-helm';
 
 export const GeneralImports = [
 	NgxMaskDirective, 
@@ -61,6 +62,7 @@ export const SpartanUIImports = [
 	HlmPinComponent,
 	...HlmRadioGroupImports,
 	HlmToasterComponent,
+	HlmAlertModule,
 ];
 
 @NgModule({

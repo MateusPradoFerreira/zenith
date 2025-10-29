@@ -4,12 +4,12 @@ import { PllFormSchema } from "@pollaris/forms";
 import { SignInData } from "../../models/sign-in-data.model";
 import { AuthFacade } from "../../facades/auth.facade";
 import { switchMap } from "rxjs";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   standalone: true,
   selector: 'app-sign-in-form',
-  imports: [GlobalModule],
+  imports: [GlobalModule, RouterLink],
   templateUrl: './sign-in-form.component.html',
 })
 export class SignInFormComponent implements OnInit {
@@ -20,6 +20,7 @@ export class SignInFormComponent implements OnInit {
   router = inject(Router);
 
   processing = signal<boolean>(false);
+  error = signal<string>("");
 
   async ngOnInit() {
     this._configureFormSchema();
@@ -31,9 +32,14 @@ export class SignInFormComponent implements OnInit {
   };
 
   onSubmit() {
+    this.processing.set(true);
+    this.error.set("");
     this.form.handleSubmit().pipe(switchMap(response => this.facade.signIn(response))).subscribe({
       next: () => this.router.navigate(["/dashboard"]),
-      error: error => console.error(error),
+      error: error => {
+        this.processing.set(false);
+        this.error.set(error?.error?.message || error?.message || error);
+      },
     });
   };
 };

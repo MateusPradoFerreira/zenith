@@ -30,16 +30,16 @@
       </ng-template>
       <ng-template hlmTemplate="left-action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
-          <button hlmBtn (click)="sidebarActive.set(!sidebarActive())" [hlmBtnIcon]="sidebarActive()? 'panel-left-close' : 'panel-left-open'" variant="outline" size="icon"></button>
+          <button hlmBtn (click)="sidebarActive.set(!sidebarActive())" [icon]="sidebarActive()? 'panel-left-close' : 'panel-left-open'" variant="outline" size="icon"></button>
           <div class="hlm-button-group">
-            <button hlmBtn (click)="layout.set('calendar')" hlmBtnIcon="calendar" [severity]="layout() === 'calendar'? 'help' : 'primary'" [variant]="layout() === 'calendar'? 'soft' : 'outline'" size="icon"></button>
-            <button hlmBtn (click)="layout.set('table')" hlmBtnIcon="table" [severity]="layout() === 'table'? 'help' : 'primary'" [variant]="layout() === 'table'? 'soft' : 'outline'" size="icon"></button>
+            <button hlmBtn (click)="layout.set('calendar')" icon="calendar" [severity]="layout() === 'calendar'? 'help' : 'primary'" [variant]="layout() === 'calendar'? 'soft' : 'outline'" size="icon"></button>
+            <button hlmBtn (click)="layout.set('table')" icon="table" [severity]="layout() === 'table'? 'help' : 'primary'" [variant]="layout() === 'table'? 'soft' : 'outline'" size="icon"></button>
           </div>
         </ng-container>
       </ng-template>
       <ng-template hlmTemplate="action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
-          <button hlmBtn *ngIf="range() === 'month'" (click)="monthDayOpen.set(!monthDayOpen())" [hlmBtnIcon]="monthDayOpen()? 'calendar-arrow-up' : 'calendar-arrow-down'" variant="outline" size="icon"></button>
+          <button hlmBtn *ngIf="range() === 'month'" (click)="monthDayOpen.set(!monthDayOpen())" [icon]="monthDayOpen()? 'calendar-arrow-up' : 'calendar-arrow-down'" variant="outline" size="icon"></button>
           <div class="hlm-button-group">
             <button hlmBtn (click)="handleChangeRange('day')" [severity]="range() === 'day'? 'help' : 'primary'" [variant]="range() === 'day'? 'soft' : 'outline'">Dia</button>
             <button hlmBtn (click)="handleChangeRange('week')" [severity]="range() === 'week'? 'help' : 'primary'" [variant]="range() === 'week'? 'soft' : 'outline'">Semana</button>
@@ -49,18 +49,18 @@
           <button hlmBtn (click)="onDateChange()" [severity]="isToday()? 'help' : 'primary'" [variant]="isToday()? 'soft' : 'outline'">Hoje</button>
 
           <div class="hlm-button-group shrink-0">
-            <button hlmBtn (click)="handleSetPrevRange()" hlmBtnIcon="chevron-left" variant="outline" size="icon"></button>
+            <button hlmBtn (click)="handleSetPrevRange()" icon="chevron-left" variant="outline" size="icon"></button>
             <brn-popover sideOffset="5" class="peer">
               <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ date() | date : "E dd/MM/YYYY" }}</button>
               <div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
                 <hlm-calendar calendarClass="border-0 rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
               </div>
             </brn-popover>
-            <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
+            <button hlmBtn (click)="handleSetNextRange()" icon="chevron-right" variant="outline" size="icon"></button>
           </div>
 
-          <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
-          <button hlmBtn hlmBtnIcon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
+          <button hlmBtn icon="refresh-ccw" variant="outline" size="icon" [loading]="loading()" (click)="updateUI()"></button>
+          <button hlmBtn icon="plus" variant="soft" severity="help" (click)="handleCreate()">Adicionar Novo</button>
         </ng-container>
       </ng-template>
       <ng-template hlmTemplate="filter" let-ctx>
@@ -79,7 +79,7 @@
     <div>
       <app-schedule-sidebar-session label="Categorais">
         <ng-template hlmTemplate="actions">
-          <button hlmBtn hlmBtnIcon="plus" variant="ghost" size="icon-sm" class="opacity-0 group-hover:opacity-100 transition-all" (click)="handleCreateScheduleCategory()"></button>
+          <button hlmBtn icon="plus" variant="ghost" size="icon-sm" class="opacity-0 group-hover:opacity-100 transition-all" (click)="handleCreateScheduleCategory()"></button>
         </ng-template>
         <div class="grid px-1 mb-4">
           <div class="flex items-center justify-between px-3 py-1 mb-0.5 rounded-md hover:bg-slate-100 cursor-pointer group text-sm" *ngFor="let option of categoryOptions" (click)="toggleScheduleCategorySelection(option.id)">
@@ -88,8 +88,8 @@
               <span [class]="scheduleCategoryIsSelected(option.id)? '' : 'line-through opacity-60 text-slate-600'">{{ option.name }}</span>
             </div>
             <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-              <button hlmBtn [hlmBtnIcon]="scheduleCategoryIsSelected(option.id)? 'eye' : 'eye-off'" variant="ghost" size="icon-sm"></button>
-              <button hlmBtn hlmBtnIcon="ellipsis" variant="ghost" size="icon-sm" (click)="$event.stopPropagation()"></button>
+              <button hlmBtn [icon]="scheduleCategoryIsSelected(option.id)? 'eye' : 'eye-off'" variant="ghost" size="icon-sm"></button>
+              <button hlmBtn icon="ellipsis" variant="ghost" size="icon-sm" (click)="$event.stopPropagation()"></button>
             </div>
           </div>
         </div>
@@ -103,8 +103,8 @@
               <span [class]="scheduleCategoryIsSelected(option.id)? '' : 'line-through opacity-60 text-slate-600'">{{ option.name }}</span>
             </div>
             <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-              <button hlmBtn [hlmBtnIcon]="scheduleCategoryIsSelected(option.id)? 'eye' : 'eye-off'" variant="ghost" size="icon-sm"></button>
-              <button hlmBtn hlmBtnIcon="ellipsis" variant="ghost" size="icon-sm" (click)="$event.stopPropagation()"></button>
+              <button hlmBtn [icon]="scheduleCategoryIsSelected(option.id)? 'eye' : 'eye-off'" variant="ghost" size="icon-sm"></button>
+              <button hlmBtn icon="ellipsis" variant="ghost" size="icon-sm" (click)="$event.stopPropagation()"></button>
             </div>
           </div>
         </div>

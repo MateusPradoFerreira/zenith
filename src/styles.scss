@@ -172,3 +172,22 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@keyframes drop-in {
+  0% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-drop-in {
+  animation: drop-in 0.6s cubic-bezier(.16,.84,.34,1) both;
+}

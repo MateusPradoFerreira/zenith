@@ -75,6 +75,9 @@
       ],
       "@spartan-ng/ui-sonner-helm": [
         ".\\src/app/common/libs/ui/ui-sonner-helm/src/index.ts"
+      ],
+      "@spartan-ng/ui-alert-helm": [
+        ".\\src/app/common/libs/ui/ui-alert-helm/src/index.ts"
       ]
     },
     "strictPropertyInitialization": false,

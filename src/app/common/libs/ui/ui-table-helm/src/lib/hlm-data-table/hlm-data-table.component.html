@@ -2,7 +2,7 @@
   <div class="hlm-button-group shrink-0" *ngIf="hasSelection()">
     <button hlmBtn variant="outline" brnPopoverTrigger>{{ selection().length }} Selecionados</button>
     <ng-container *ngIf="selectionTemplate" [ngTemplateOutlet]="selectionTemplate" />
-    <button hlmBtn size="icon" variant="outline" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="selectionMenu"></button>
+    <button hlmBtn size="icon" variant="outline" icon="ellipsis-vertical" [brnMenuTriggerFor]="selectionMenu"></button>
     <ng-template #selectionMenu>
       <hlm-menu class="w-48">
         <hlm-menu-group>
@@ -32,9 +32,9 @@
 </ng-template>
 
 <ng-template #actionBarTemplate>
-  <button *ngIf="pagination()" hlmBtn [hlmBtnIcon]="this.sort() === 'ASC'? 'arrow-up-down' : 'arrow-down-up'" variant="outline" (click)="handleToggleSort()">Ordenação</button>
+  <button *ngIf="pagination()" hlmBtn [icon]="this.sort() === 'ASC'? 'arrow-up-down' : 'arrow-down-up'" variant="outline" (click)="handleToggleSort()">Ordenação</button>
   <brn-popover *ngIf="filter()">
-    <button hlmBtn hlmBtnIcon="list-filter" variant="outline" brnPopoverTrigger>Filtros</button>
+    <button hlmBtn icon="list-filter" variant="outline" brnPopoverTrigger>Filtros</button>
     <div hlmPopoverContent class="w-64 mt-1" *brnPopoverContent="let ctx">
       <div class="mb-3 col-span-12 xl:col-span-2 -mt-3 -mx-3 px-4 py-2 bg-slate-50 border-b border-slate-200 rounded-t-lg flex items-center justify-between">
         <span class="text-sm">Filtros</span>
@@ -92,7 +92,7 @@
             <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
             <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" (click)="$event.stopPropagation()">
               <span class="flex items-center gap-2">
-                <button hlmBtn size="icon" variant="ghost" hlmBtnIcon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
+                <button hlmBtn size="icon" variant="ghost" icon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
               </span>
               <ng-template #menu>
                 <hlm-menu class="w-48" [items]="actions()[rowData.id]" />

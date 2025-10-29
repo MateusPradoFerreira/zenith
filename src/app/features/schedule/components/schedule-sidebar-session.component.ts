@@ -11,7 +11,7 @@ import { HlmTemplateDirective } from "../../../common/directives/hlm-template.di
       <h2 class="font-medium">{{ label() }}</h2>
       <div class="flex items-center gap-0.5">
         <ng-container *ngIf="actionsTemplate" [ngTemplateOutlet]="actionsTemplate"></ng-container>
-        <button hlmBtn [hlmBtnIcon]="opened()? 'chevron-down' : 'chevron-right'" variant="ghost" size="icon-sm" (click)="handleToggleOpend()"></button>
+        <button hlmBtn [icon]="opened()? 'chevron-down' : 'chevron-right'" variant="ghost" size="icon-sm" (click)="handleToggleOpend()"></button>
       </div>
     </div>
     <ng-content *ngIf="opened()" />

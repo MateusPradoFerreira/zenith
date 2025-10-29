@@ -18,7 +18,7 @@
       <label>Frequência</label>
     </span>
     <brn-popover sideOffset="5" class="peer" *ngIf="form.value.frequency === 'CUSTOM'">
-      <button brnPopoverTrigger type="button" hlmBtn hlmBtnIcon="clock-fading" variant="outline" size="icon" [disabled]="processing() || !form.value.recurrenceId"></button>
+      <button brnPopoverTrigger type="button" hlmBtn icon="clock-fading" variant="outline" size="icon" [disabled]="processing() || !form.value.recurrenceId"></button>
       <div hlmPopoverContent class="w-72" *brnPopoverContent="let ctx">
         <div class="mb-3 col-span-12 xl:col-span-2 -mt-3 -mx-3 px-4 py-2 bg-slate-50 border-b border-slate-200 rounded-t-lg flex items-center justify-between">
           <span class="text-sm">Recorrência personalizada</span>

@@ -16,17 +16,17 @@
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
         <div class="hlm-button-group shrink-0">
-          <button hlmBtn (click)="handleSetPrevRange()" hlmBtnIcon="chevron-left" variant="outline" size="icon"></button>
+          <button hlmBtn (click)="handleSetPrevRange()" icon="chevron-left" variant="outline" size="icon"></button>
           <brn-popover sideOffset="5" class="peer">
             <button class="!rounded-none !border-l-0" brnPopoverTrigger hlmBtn variant="outline">{{ filter.value.date | date : "dd/MM/YYYY" }}</button>
             <div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
               <hlm-calendar calendarClass="border-0 rounded-none" [date]="filter.value.date" (dateChange)="onDateChange($event)"/>
             </div>
           </brn-popover>
-          <button hlmBtn (click)="handleSetNextRange()" hlmBtnIcon="chevron-right" variant="outline" size="icon"></button>
+          <button hlmBtn (click)="handleSetNextRange()" icon="chevron-right" variant="outline" size="icon"></button>
         </div>
 
-        <button hlmBtn hlmBtnIcon="refresh-ccw" variant="outline" size="icon" [hlmBtnLoading]="loading()" (click)="updateUI()"></button>
+        <button hlmBtn icon="refresh-ccw" variant="outline" size="icon" [loading]="loading()" (click)="updateUI()"></button>
       </ng-container>
     </ng-template>
     <ng-template hlmTemplate="filter" let-ctx>
