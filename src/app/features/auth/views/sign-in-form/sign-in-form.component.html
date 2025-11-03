@@ -21,9 +21,10 @@
     <label>Email</label>
   </div>
 
-  <div class="hlm-float-label col-span-12 mb-2">
-    <input hlmInput type="password" formControlName="password" [readonly]="processing()" />
+  <div class="hlm-float-label hlm-input-right-icon col-span-12 mb-2">
+    <input #passwordInput hlmInput type="password" formControlName="password" [readonly]="processing()" />
     <label>Senha</label>
+    <i-lucide class="cursor-pointer" (click)="passwordInput.type = passwordInput.type === 'password'? 'text' : 'password'" [name]="passwordInput.type === 'password'? 'eye-closed' : 'eye'"></i-lucide>
   </div>
 
   <div class="col-span-6 mb-2 flex items-center gap-3">

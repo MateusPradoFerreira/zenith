@@ -1,1 +1,75 @@
-sign-up
+<div class="absolute top-3 left-3 flex items-center justify-center">
+  <div class="w-16 h-16 flex items-center justify-center shrink-0">
+    <i-lucide name="shrimp" size="26" [strokeWidth]="1.5"></i-lucide>
+  </div>
+  <span class="text-xl transition-all -ml-2">Zenith_</span>
+</div>
+
+<form class="grid grid-cols-12 gap-3.5 gap-x-2" [formGroup]="form.form" *ngIf="formReady() && !accountCreated()" (submit)="onSubmit()">
+
+  <h1 class="col-span-12 text-2xl font-medium text-center">Crie sua Conta!</h1>
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mb-6">Preencha com suas informações para criar uma conta</p>
+
+  <div class="col-span-12 mb-2 animate-drop-in" hlmAlert variant="destructive" *ngIf="error()">
+    <i-lucide hlmAlertIcon name="triangle-alert" />
+    <p hlmAlertDescription>{{ error() }}</p>
+  </div>
+
+  <div class="hlm-float-label col-span-12 mb-2">
+    <input hlmInput type="email" formControlName="name" [readonly]="processing()" />
+    <label>Nome</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 mb-2">
+    <input hlmInput type="email" formControlName="email" [readonly]="processing()" />
+    <label>Email</label>
+  </div>
+
+  <div class="hlm-float-label hlm-input-right-icon col-span-12 mb-2">
+    <input #passwordInput hlmInput type="password" formControlName="password" [readonly]="processing()" />
+    <label>Senha</label>
+    <i-lucide class="cursor-pointer" (click)="passwordInput.type = passwordInput.type === 'password'? 'text' : 'password'" [name]="passwordInput.type === 'password'? 'eye-closed' : 'eye'"></i-lucide>
+    <button class="absolute top-1/2 -translate-y-1/2 right-11 text-xs rounded-sm" hlmBtn size="sm" variant="soft-strong" severity="danger" *ngIf="form.value.password && passwordStrong() === 'LOW'">Fraca</button>
+    <button class="absolute top-1/2 -translate-y-1/2 right-11 text-xs rounded-sm" hlmBtn size="sm" variant="soft-strong" severity="warn" *ngIf="form.value.password && passwordStrong() === 'MEDIUM'">Média</button>
+    <button class="absolute top-1/2 -translate-y-1/2 right-11 text-xs rounded-sm" hlmBtn size="sm" variant="soft-strong" severity="success" *ngIf="form.value.password && passwordStrong() === 'STRONG'">Forte</button>
+  </div>
+
+  <div class="hlm-float-label hlm-input-right-icon col-span-12 mb-2">
+    <input #confirmPasswordInput hlmInput type="password" formControlName="confirmPassword" [readonly]="processing()" />
+    <label>Confirmação de Senha</label>
+    <i-lucide class="cursor-pointer" (click)="confirmPasswordInput.type = confirmPasswordInput.type === 'password'? 'text' : 'password'" [name]="confirmPasswordInput.type === 'password'? 'eye-closed' : 'eye'"></i-lucide>
+  </div>
+
+  <div class="col-span-12 mb-2 flex items-center gap-3">
+    <hlm-checkbox />
+    <label class="text-xs text-slate-500">Aceito os <span class="cursor-pointer text-violet-500">Termos de Serviço</span> </label>
+  </div>
+
+  <button class="col-span-12" hlmBtn severity="help" [disabled]="form.invalid || processing()" [loading]="processing()">Criar Minha Conta</button>
+
+  <div class="col-span-12 flex items-center justify-center gap-4 my-2">
+    <div class="h-0.5 bg-slate-200 w-full"></div>
+    <span class="text-slate-500 text-sm shrink-0">Ou entre com</span>
+    <div class="h-0.5 bg-slate-200 w-full"></div>
+  </div>
+
+  <button class="col-span-6" hlmBtn icon="facebook" position="start" variant="soft" [disabled]="processing()">Google</button>
+
+  <button class="col-span-6" hlmBtn icon="facebook" position="start" severity="info" [disabled]="processing()">Facebook</button>
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mt-4">Já possui uma conta? <a class="text-violet-500 decoration-none cursor-pointer" routerLink="/auth/sign-up">Entre Agora!</a> </p>
+
+</form> 
+
+<div class="grid grid-cols-12 gap-3.5 gap-x-2" *ngIf="accountCreated()">
+
+  <h1 class="col-span-12 text-2xl font-medium text-center">Conta criada com sucesso!</h1>
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mb-4">Enviamos um e-mail de confirmação para você. Acesse sua caixa de entrada e confirme seu endereço de e-mail para ativar sua conta.</p>
+  
+  <img class="col-span-12" src="https://cdn.dribbble.com/userupload/42285767/file/original-46dfe3d149a2f505cce9a31b1d96e391.gif" alt="">
+
+  <p class="col-span-12 text-sm text-center text-slate-500 mt-4">Já confirmou seu email? <a class="text-violet-500 decoration-none cursor-pointer" routerLink="/auth/sign-up">Entre Agora!</a> </p>
+
+</div>

@@ -32,6 +32,7 @@ export class SignInFormComponent implements OnInit {
   };
 
   onSubmit() {
+    if(this.form.invalid) return;
     this.processing.set(true);
     this.error.set("");
     this.form.handleSubmit().pipe(switchMap(response => this.facade.signIn(response))).subscribe({

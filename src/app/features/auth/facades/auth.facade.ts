@@ -58,6 +58,10 @@ export class AuthFacade {
     );
   };
 
+  signUp(data: SignUpData): Observable<void> {
+    return this.service.register(data);
+  };
+
   signOut() {
     this.clearAuthData();
     this.router.navigate(["/auth/sign-in"]);

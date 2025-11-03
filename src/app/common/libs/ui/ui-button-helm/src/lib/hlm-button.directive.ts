@@ -13,6 +13,7 @@ export const buttonVariants = cva(
 				default: "bg-zinc-900 text-white hover:bg-zinc-800",
 				outline: "border-slate-200 bg-transparent hover:bg-zinc-900 hover:text-white",
 				soft: "border-slate-200 bg-slate-100 hover:bg-zinc-900 hover:text-white",
+				"soft-strong": "border-transparent bg-slate-100 hover:bg-zinc-900 hover:text-white",
 				text: "bg-slate-100 hover:bg-slate-200/70",
 				ghost: "hover:bg-slate-200/70",
 			},
@@ -56,6 +57,13 @@ export const buttonVariants = cva(
 			{ variant: "soft", severity: "warn", class: "text-amber-500 border-amber-200 bg-amber-50 hover:bg-amber-100 hover:text-amber-500 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
 			{ variant: "soft", severity: "help", class: "text-violet-500 border-violet-200 bg-violet-50 hover:bg-violet-100 hover:text-violet-500 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
 			{ variant: "soft", severity: "danger", class: "text-rose-500 border-rose-200 bg-rose-50 hover:bg-rose-100 hover:text-rose-500 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+
+			{ variant: "soft-strong", severity: "primary", class: "text-zinc-900 bg-slate-100 hover:bg-slate-100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+			{ variant: "soft-strong", severity: "success", class: "text-zinc-900 bg-emerald-100 hover:bg-emerald-500100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+			{ variant: "soft-strong", severity: "info", class: "text-zinc-900 bg-blue-100 hover:bg-blue-100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+			{ variant: "soft-strong", severity: "warn", class: "text-zinc-900 bg-amber-100 hover:bg-amber-100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+			{ variant: "soft-strong", severity: "help", class: "text-zinc-900 bg-violet-100 hover:bg-violet-100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
+			{ variant: "soft-strong", severity: "danger", class: "text-zinc-900 bg-rose-100 hover:bg-rose-100 hover:text-zinc-900 disabled:text-slate-200 disabled:bg-slate-50 disabled:border-slate-200" },
 			
 			{ variant: "text", severity: "primary", class: "text-zinc-900 bg-slate-100 hover:bg-slate-200/70 disabled:text-slate-200 disabled:bg-slate-50" },
 			{ variant: "text", severity: "success", class: "text-emerald-600 bg-emerald-100 hover:bg-emerald-200/70 disabled:text-slate-200 disabled:bg-slate-50" },
@@ -117,8 +125,6 @@ export class HlmButtonDirective implements OnChanges {
 			this.cdr.detectChanges();
 			return;
 		};
-
-		console.log(this.loading(), "teste 2")
 
     if(!this.componentRef) this.componentRef = this.vcRef.createComponent(LucideAngularComponent, { injector: this.injector });
     
