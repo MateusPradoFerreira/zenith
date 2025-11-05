@@ -82,7 +82,7 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
 
   statusOptions = [
     { label: "Todos", value: "ALL" },
-    { label: "A Pagar", value: "TOPAY" },
+    { label: "A Receber", value: "TOPAY" },
     ...ReceivableStatusOptions,
   ];
 

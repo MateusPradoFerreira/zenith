@@ -69,30 +69,22 @@
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-3">
-    <hlm-date-picker formControlName="createdAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="createdAt" [forceSelection]="true" />
     <label>Emissão</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-3">
-    <hlm-date-picker formControlName="dueAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="dueAt" [forceSelection]="true" />
     <label>Vencimento</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-3" *ngIf="form.value.status !== 'CANCELLED'">
-    <hlm-date-picker formControlName="paidAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="paidAt" [forceSelection]="true" />
     <label>Pagamento</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-3" *ngIf="form.value.status === 'CANCELLED'">
-    <hlm-date-picker formControlName="cancelledAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="cancelledAt" [forceSelection]="true" />
     <label>Cancelamento</label>
   </div>
 
@@ -108,8 +100,8 @@
 
   <div class="col-span-12 {{ form.value.status !== 'PAID' && id()? 'xl:col-span-6' : 'xl:col-span-8' }}"></div>
 
-  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" icon="dollar-sign" (click)="pay()">Pagar</button>
-  <button *ngIf="['CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="reopen()">Rabrir</button>
+  <button *ngIf="!['PAID', 'CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="success" type="button" icon="dollar-sign" (click)="pay()" [disabled]="form.invalid || processing()">Pagar</button>
+  <button *ngIf="['CANCELLED'].includes(form.value.status) && id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="reopen()" [disabled]="form.invalid || processing()">Rabrir</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 

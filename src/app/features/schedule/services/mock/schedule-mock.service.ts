@@ -8,6 +8,8 @@ import { event, EventObs } from "../../../../common/directives/base-form-compone
 import moment from "moment";
 import { RecurrenceWeekday } from "../../models/recurrence.model";
 import { RecurrenceMockService } from "./recurrence-mock.service";
+import { PayableMockRepository } from "../../../financial/services/mock/payable-mock.service";
+import { ReceivableMockRepository } from "../../../financial/services/mock/receivable-mock.service";
 
 @Injectable({ providedIn: "root" })
 export class ScheduleMockState extends PllRecordState<Schedule> {};
@@ -22,6 +24,9 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   
   scheduleCategoryMockRepository = inject(ScheduleCategoryMockRepository);
   recurrenceMockService = inject(RecurrenceMockService);
+
+  payableMockRepository = inject(PayableMockRepository);
+  receivableMockRepository = inject(ReceivableMockRepository);
   
   override $evInitPost: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.post({
@@ -71,6 +76,54 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
         color: this.scheduleCategoryMockRepository.state.get(record.categoryId)?.color || "VIOLET",
         type: "SCHEDULE",
       }))})),
+      map(response => ({ ...response, data: [ ...response.data, ...this.payableMockRepository.find({
+        dueAt: { $gte: params.startsAt, $lte: params.endsAt },
+        paidAt: { $eq: null }, 
+        cancelledAt: { $eq: null },
+      }).data.map(payable => {
+        const category = this.scheduleCategoryMockRepository.state.data().find(category => category.type === "PAYABLE");
+        const record: GetAllScheduleByFilterResponse = {
+          id: payable.id,
+          scheduleId: null,
+          recurrenceId: null,
+          categoryId: category?.id || null,
+          category: category?.name || "",
+          color: category?.color || "ROSE",
+          type: "PAYABLE",
+          title: payable.name,
+          frequency: "DAILY",
+          createdAt: payable.createdAt,
+          startsAt: payable.dueAt,
+          endsAt: payable.dueAt,
+          startsAtTime: null,
+          endsAtTime: null,
+        };
+        return record;
+      })]})),
+       map(response => ({ ...response, data: [ ...response.data, ...this.receivableMockRepository.find({
+        dueAt: { $gte: params.startsAt, $lte: params.endsAt },
+        paidAt: { $eq: null }, 
+        cancelledAt: { $eq: null },
+       }).data.map(receivable => {
+        const category = this.scheduleCategoryMockRepository.state.data().find(category => category.type === "RECEIVABLE");
+        const record: GetAllScheduleByFilterResponse = {
+          id: receivable.id,
+          scheduleId: null,
+          recurrenceId: null,
+          categoryId: category?.id || null,
+          category: category?.name || "",
+          color: category?.color || "EMERALD",
+          type: "PAYABLE",
+          title: receivable.name,
+          frequency: "DAILY",
+          createdAt: receivable.createdAt,
+          startsAt: receivable.dueAt,
+          endsAt: receivable.dueAt,
+          startsAtTime: null,
+          endsAtTime: null,
+        };
+        return record;
+      })]})),
     );
   };
 };

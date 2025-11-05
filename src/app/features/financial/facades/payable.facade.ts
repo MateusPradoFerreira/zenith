@@ -36,12 +36,20 @@ export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
           form.controls.dueAt.disable();
           form.controls.createdAt.disable();
           form.controls.value.disable();
+          form.controls.bankAccountId.disable();
+          form.controls.planOfAccountId.disable();
+          form.controls.centerOfCostId.disable();
+          form.controls.secrecyId.disable();
           return;
         };
 
         form.controls.dueAt.enable();
         form.controls.createdAt.enable();
         form.controls.value.enable();
+        form.controls.bankAccountId.enable();
+        form.controls.planOfAccountId.enable();
+        form.controls.centerOfCostId.enable();
+        form.controls.secrecyId.enable();
       }},
       dueAt: { value: new Date(), validators: [Validators.required] },
       paidAt: { value: null, disabled: true },
@@ -53,7 +61,7 @@ export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
       secrecyId: { value: null, validators: [Validators.required] },
       bankAccountId: { value: null, validators: [Validators.required] },
       description: { value: null },
-      docNumber: { value: "0000000000-000", validators: [Validators.required, Validators.min(0)], disabled: true },
+      docNumber: { value: "0000000000", validators: [Validators.required, Validators.min(0)], disabled: true },
       sequence: { value: 0, validators: [Validators.required, Validators.min(0)], disabled: true },
       value: { value: 0, validators: [Validators.required, Validators.min(0)] },
     },

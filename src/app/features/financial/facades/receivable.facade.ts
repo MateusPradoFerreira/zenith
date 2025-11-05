@@ -36,12 +36,20 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormCompon
           form.controls.dueAt.disable();
           form.controls.createdAt.disable();
           form.controls.value.disable();
+          form.controls.bankAccountId.disable();
+          form.controls.planOfAccountId.disable();
+          form.controls.centerOfCostId.disable();
+          form.controls.secrecyId.disable();
           return;
         };
 
         form.controls.dueAt.enable();
         form.controls.createdAt.enable();
         form.controls.value.enable();
+        form.controls.bankAccountId.enable();
+        form.controls.planOfAccountId.enable();
+        form.controls.centerOfCostId.enable();
+        form.controls.secrecyId.enable();
       }},
       dueAt: { value: new Date(), validators: [Validators.required] },
       paidAt: { value: null, disabled: true },

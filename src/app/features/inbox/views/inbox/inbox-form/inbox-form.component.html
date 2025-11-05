@@ -23,30 +23,22 @@
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-4" *ngIf="!['PROCESSED', 'CANCELLED'].includes(form.value.status)">
-    <hlm-date-picker formControlName="createdAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="createdAt" [forceSelection]="true" />
     <label>Emissão</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-4" *ngIf="form.value.status === 'PROCESSED'">
-    <hlm-date-picker formControlName="processedAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="processedAt" [forceSelection]="true" />
     <label>Processamento</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-4" *ngIf="form.value.status === 'CANCELLED'">
-    <hlm-date-picker formControlName="cancelledAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="cancelledAt" [forceSelection]="true" />
     <label>Cancelamento</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-4">
-    <hlm-date-picker formControlName="dueAt" [forceSelection]="true">
-      <span>Escolha uma Data</span>
-    </hlm-date-picker>
+    <hlm-date-picker formControlName="dueAt" [forceSelection]="true" />
     <label>Vencimento</label>
   </div>
 

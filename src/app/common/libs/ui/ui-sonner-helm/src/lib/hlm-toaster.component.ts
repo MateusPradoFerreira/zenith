@@ -31,9 +31,9 @@ export class HlmToasterComponent {
 		transform: booleanAttribute,
 	});
 	public readonly theme = input<ToasterProps['theme']>('light');
-	public readonly position = input<ToasterProps['position']>('bottom-right');
+	public readonly position = input<ToasterProps['position']>('top-right');
 	public readonly hotKey = input<ToasterProps['hotkey']>(['altKey', 'KeyT']);
-	public readonly richColors = input<ToasterProps['richColors'], boolean | string>(false, {
+	public readonly richColors = input<ToasterProps['richColors'], boolean | string>(true, {
 		transform: booleanAttribute,
 	});
 	public readonly expand = input<ToasterProps['expand'], boolean | string>(false, {
@@ -42,7 +42,7 @@ export class HlmToasterComponent {
 	public readonly duration = input<ToasterProps['duration'], number | string>(4000, {
 		transform: numberAttribute,
 	});
-	public readonly visibleToasts = input<ToasterProps['visibleToasts'], number | string>(3, {
+	public readonly visibleToasts = input<ToasterProps['visibleToasts'], number | string>(6, {
 		transform: numberAttribute,
 	});
 	public readonly closeButton = input<ToasterProps['closeButton'], boolean | string>(false, {
@@ -55,6 +55,10 @@ export class HlmToasterComponent {
 			description: 'group-[.toast]:text-muted-foreground',
 			actionButton: 'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
 			cancelButton: 'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
+			success: '!bg-emerald-50 !border-emerald-200 !text-emerald-600',
+			info: '!bg-blue-50 !border-blue-200 !text-blue-600',
+			error: '!bg-rose-50 !border-rose-200 !text-rose-600',
+			warning: '!bg-amber-50 !border-amber-200 !text-amber-600',
 		},
 	});
 	public readonly offset = input<ToasterProps['offset']>(null);

@@ -36,7 +36,7 @@ export class AuthFacade {
     const token = window.localStorage.getItem("user-token");
 
     if(!token) {
-      this.signOut();
+      this.clearAuthData();
       return;
     };
 

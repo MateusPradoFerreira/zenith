@@ -12,10 +12,11 @@ import { AuthLayoutComponent } from './common/layouts/auth-layout/auth-layout.co
 import { SignInFormComponent } from './features/auth/views/sign-in-form/sign-in-form.component';
 import { SignUpFormComponent } from './features/auth/views/sign-up-form/sign-up-form.component';
 import { authGuard } from './features/auth/guards/auth.guard';
+import { authLayoutGuard } from './features/auth/guards/auth-layout.guard';
 
 export const routes: Routes = [
   { path: "", redirectTo: '/auth/sign-in', pathMatch: 'full' },
-  { path: "auth", component: AuthLayoutComponent, children: [
+  { path: "auth", component: AuthLayoutComponent, canActivate: [authLayoutGuard], children: [
     { path: "sign-in", component: SignInFormComponent },
     { path: "sign-up", component: SignUpFormComponent },
   ]},

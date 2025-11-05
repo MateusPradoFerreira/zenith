@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective, event, EventObs } from '../../../../../common/directives/base-form-component.directive';
 import { Payable } from '../../../models/payable.model';
-import { PayableFacade, PayableStatusOptions } from '../../../facades/payable.facade';
+import { PayableFacade } from '../../../facades/payable.facade';
 import { forkJoin, switchMap, tap } from 'rxjs';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import { PllID } from '@pollaris';
@@ -10,6 +10,7 @@ import { SecrecyService } from '../../../services/secrecy.service';
 import { CenterOfCostService } from '../../../services/center-of-cost.service';
 import { PlanOfAccountService } from '../../../services/plan-of-account.service';
 import { BankAccountService } from '../../../services/bank-account.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   standalone: true,
@@ -70,8 +71,13 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
   pay() {
     this.processing.set(true);
     this.facade.handlePay(this.id()).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.error(error),
+      next: () => {
+        toast.success("SUCESSO!", { description: "Registro Pago com Sucesso!" });
+        this.updateUI();
+      },
+      error: error => {
+        toast.error("ERRO!", { description: error?.error?.message || error?.message || error });
+      },
       complete: () => this.processing.set(false),
     });
   };
@@ -79,8 +85,13 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
   reopen() {
     this.processing.set(true),
     this.facade.handleReopen(this.id()).subscribe({
-      next: () => this.updateUI(),
-      error: error => console.error(error),
+      next: () => {
+        toast.success("SUCESSO!", { description: "Registro Reaberto com Sucesso!" });
+        this.updateUI();
+      },
+      error: error => {
+        toast.error("ERRO!", { description: error?.error?.message || error?.message || error });
+      },
       complete: () => this.processing.set(false),
     });
   };

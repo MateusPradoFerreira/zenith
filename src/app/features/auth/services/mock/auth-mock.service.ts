@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class AuthMockService extends AuthService {
+
   override validateAuth(token: string): Observable<SignInResponse>  {
     const response: SignInResponse = {
       id: uuid(),
@@ -16,7 +17,13 @@ export class AuthMockService extends AuthService {
       token: "123",
     };
 
-    return of(response).pipe(delay(500));
+    return of(response).pipe(
+      delay(500),
+      switchMap(response => {
+        if(token !== "123") return throwError(() => new Error("Invalid Token!"));
+        return of(response);
+      }),
+    );
   };
 
   override auth(data: SignInData): Observable<SignInResponse> {
@@ -39,6 +46,13 @@ export class AuthMockService extends AuthService {
   };
 
   override register(data: SignUpData): Observable<void> {
-    return of(null);
+    return of(null).pipe(
+      delay(500),
+      switchMap(response => {
+        if(data.email === "mateuspradoferreira123@gmail.com") return throwError(() => new Error("Já existe uma conta registrada com este email!"));
+        if(data.password !== data.confirmPassword) return throwError(() => new Error("As senhas informadas não coincidem!"));
+        return of(response);
+      }),
+    );
   };
 };

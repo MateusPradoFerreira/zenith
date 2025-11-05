@@ -24,6 +24,7 @@ import { HlmPinComponent } from '../../common/components/pin.component';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 import { HlmAlertModule } from '@spartan-ng/ui-alert-helm';
+import { AutoSelectContentDirective } from '../../common/directives/auto-select-content.directive';
 
 export const GeneralImports = [
 	NgxMaskDirective, 
@@ -41,7 +42,8 @@ export const GeneralImports = [
 	CurrencyPipe,
 	NgTemplateOutlet,
 	NgxCurrencyDirective,
-	CalendarModule
+	CalendarModule,
+	AutoSelectContentDirective,
 ];
 
 export const SpartanUIImports = [

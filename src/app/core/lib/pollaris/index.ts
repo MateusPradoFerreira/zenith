@@ -118,6 +118,17 @@ export abstract class PllRecordRepository<TRecordModel extends PllRecordId> {
     return of(this.state.data().filter(sift(formatedQuery)).length);
   };
 
+  create(data: TRecordModel) {
+    const record = { ...data, id: data.id || uuid() };
+    this.state.insert(record);
+    return record;
+  };
+
+  update(data: TRecordModel) {
+    this.state.update(data);
+    return { ...data };
+  };
+
   private _formatQuery(query?: Query<TRecordModel>): Query<TRecordModel> {
     if(!query) return {} as Query<TRecordModel>;
     return Object.fromEntries(Object.entries(query).filter(([, v]) => v !== undefined)) as Query<TRecordModel>;
@@ -187,18 +198,18 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   };
 
   override post(data: TRecordModel): Observable<TRecordModel> {
-    return of({ ...data, id: data.id || uuid() }).pipe(
+    return of(data).pipe(
       delay(this.delay()), 
       switchMap(response => this.$evInitPost(response).pipe(map(record => record || response))),
-      tap(response => this.repository.state.insert(response)),
+      map(response => this.repository.create(response)),
       switchMap(response => this.$evNextPost(response).pipe(map(() => response))),
     );
   };
 
   override postMany(data: TRecordModel[]): Observable<TRecordModel[]> {
-    return of(data.map(record => ({ ...record, id: record.id || uuid() }))).pipe(
-      delay(this.delay()),
-      tap(response => this.repository.state.insertMany(response)),
+    return from(data).pipe(
+      concatMap(record => this.post(record)),
+      toArray(),
     );
   };
 
@@ -206,7 +217,7 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
     return this.get(data.id).pipe(
       map(response => ({ ...response, ...data })),
       switchMap(response => this.$evInitPut(response).pipe(map(record => record || response))),
-      tap(response => this.repository.state.update(response)),
+      map(response => this.repository.update(response)),
       switchMap(response => this.$evNextPut(response).pipe(map(() => response))),
     );
   };

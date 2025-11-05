@@ -2,7 +2,7 @@
 import { Colors } from "../../../common/types/colors.type";
 import { PllID } from "@pollaris";
 
-export type ScheduleCategoryType = "SCHEDULE" | "PAYABLE" | "RECEIVABLE" | "GOAL";
+export type ScheduleCategoryType = "SCHEDULE" | "PAYABLE" | "RECEIVABLE";
 
 export class ScheduleCategory {
   id: PllID;

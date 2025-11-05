@@ -21,11 +21,11 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
   override state = inject(ScheduleState);
   override service = inject(ScheduleService);
 
-  override header: string = "Categoria";
+  override header: string = "Agendamento";
   override component: Type<any> = ScheduleFormComponent;
   override dialogSize: DialogContentVariants["size"] = "xs";
   override dialogAlign: DialogContentVariants["align"] = "center";
-  override closeOnSave: boolean = true;
+  override closeOnSave: boolean = false;
 
   override recordSchema: PllFormSchemaConfig<Schedule> = {
     fields: {

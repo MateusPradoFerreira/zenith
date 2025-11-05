@@ -78,11 +78,9 @@ export class PllFormSchema<TSchemaModel extends PllRecord> {
   };
 
   handleSubmit() {
-    return this.refine().pipe(
-      tap(() => {
-        if(this.form.invalid) throw new Error("Inválid Form");
-      }),
-    );
+    return this.refine().pipe(tap(() => {
+      if(this.form.invalid) throw new Error("Inválid Form!");
+    }));
   };
 
   private _getControlContext<Key extends keyof PllFormControl<any, TSchemaModel>>(key: Key): { [Tkey in keyof TSchemaModel]: PllFormControl<TSchemaModel[Tkey], TSchemaModel>[Key] } {

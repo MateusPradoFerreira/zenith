@@ -37,7 +37,7 @@ export const HLM_DATE_PICKER_VALUE_ACCESSOR = {
 	template: `
 		<brn-popover sideOffset="5" [state]="popoverState()" (stateChanged)="popoverState.set($event)" class="peer">
 			<div class="flex relative group">
-				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled() || readonly()" [id]="key" (blur)="_handleBlurInput()"/>
+				<input [(ngModel)]="inputDate" [class]="_computedClass()" [disabled]="state().disabled() || readonly()" [readonly]="state().disabled() || readonly()" [id]="key" (blur)="_handleBlurInput()"/>
 				<button brnPopoverTrigger type="button" [disabled]="state().disabled() || readonly()" class="absolute top-0 right-0 transition-colors disabled:pointer-events-none hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-700 border-y border-r border-slate-200 cursor-pointer bg-background rounded-r-md flex items-center justify-center w-[38px] h-[38px] shrink-0"> <ng-icon hlm size="sm" name="lucideCalendar"/> </button>
 			</div>
 
@@ -63,7 +63,7 @@ export class HlmDatePickerComponent<T> implements AfterViewInit {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
 		hlm(
-			'w-full inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors border border-slate-200 bg-background h-[38px] px-4 py-2 w-full cursor-pointer justify-start text-left font-normal',
+			'peer w-full inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors border border-slate-200 bg-background h-[38px] px-4 py-2 w-full cursor-pointer justify-start text-left font-normal',
 			'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
 			'disabled:pointer-events-none disabled:bg-slate-50 disabled:text-slate-700',
 			'[&_ng-icon]:pointer-events-none [&_ng-icon]:shrink-0',

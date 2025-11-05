@@ -6,6 +6,8 @@ import { injectBrnDialogContext } from "@spartan-ng/brain/dialog";
 import { ClassValue } from "clsx";
 import { hlm } from "@spartan-ng/brain/core";
 import { AuthFacade } from "../../features/auth/facades/auth.facade";
+import { toast } from 'ngx-sonner';
+import { errorHandler } from "../operators/error-handler.operator";
 
 export type EventObs<T = void, TR = any> = (data?: T) => Observable<TR>;
 export const event = <T = void, TR = any>(...operators: OperatorFunction<T, TR>[]) => {
@@ -65,9 +67,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   updateUI() {
-    this.$updateUI().subscribe({
-      error: error => console.error(error),
-    });
+    this.$updateUI().pipe(errorHandler()).subscribe();
   };
 
   $updateUI(): Observable<TRecordModel> {
@@ -112,9 +112,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   onSubmit(config: BaseFormSubmitConfig = {}) {
-    this.handleSubmit(config).subscribe({
-      error: error => console.error(error),
-    });
+    this.handleSubmit(config).pipe(errorHandler()).subscribe();
   };
 
   handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
@@ -122,14 +120,16 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
     return this.form.handleSubmit().pipe(
       switchMap(response => this.$evInitSumit(response).pipe(map(() => response))),
       switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
-      tap(response => console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response)),
-      tap(response => this.id.set(response.id)),
-      tap(response => this.orgRecord = response),
-      tap(response => this.crrRecord = response),
-      switchMap(response => this.$populateForm(response)),
+      tap(response => { 
+        console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response);
+        toast.success("SUCESSO!", { description: this.id()? "Registro Atualizado com Sucesso!" : "Registro Inserido com Sucesso!" });
+        this.id.set(response.id);
+        this.orgRecord = response;
+        this.crrRecord = response;
+      }),
+      switchMap(() => this.$updateUI()),
       switchMap(response => this.$evNextSumit(response).pipe(tap(() => this.onNextSumit.emit(response)))),
-      tap(() => ([true, false].includes(closeOnSave)? closeOnSave : this.closeOnSave()) && this._context.close(this.crrRecord))
-    ).pipe(
+      tap(() => ([true, false].includes(closeOnSave)? closeOnSave : this.closeOnSave()) && this._context.close(this.crrRecord)),
       tap(() => this.processing.set(false)),
       catchError(error => {
         this.processing.set(false);

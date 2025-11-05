@@ -8,6 +8,7 @@ import { BaseFormComponentDirective, event, EventObs } from './base-form-compone
 import { hlm } from '@spartan-ng/helm/utils';
 import { ClassValue } from 'clsx';
 import { AuthFacade } from '../../features/auth/facades/auth.facade';
+import { errorHandler } from '../operators/error-handler.operator';
 
 @Directive()
 export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord, TComponent extends BaseFormComponentDirective<any> = BaseFormComponentDirective<any>> implements OnInit {  
@@ -48,9 +49,8 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
     this.$evNgOnInit().pipe(
       switchMap(() => this.$evInitFilter()),
       switchMap(() => this.$updateUI()),
-    ).subscribe({
-      error: error => console.error(error),
-    });
+      errorHandler(),
+    ).subscribe();
   };
 
   private _configureFilterSchema() {
