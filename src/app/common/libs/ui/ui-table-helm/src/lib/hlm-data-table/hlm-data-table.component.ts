@@ -64,7 +64,6 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   pagination = input<boolean>(true);
   multiselect = input<boolean>(false);
   colHeader = input<boolean>(true);
-  emptyMessOnTbBody = input<boolean>(true);
   showEmptyMessOnTbBody = input<boolean>(true);
   showEmptyIconOnTbBody = input<boolean>(true);
   emptyIconOnTbBody = input<string>("search");
@@ -195,5 +194,10 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   handleEmitOnInputSearch() {
     clearTimeout(this.queryTimeout);
     this.queryTimeout = setTimeout(() => this.onInputSearch.emit(this.query()), 500);
+  };
+
+  isMobile() {
+    if(window.innerWidth < 1280) return true;
+    return false;
   };
 };

@@ -19,12 +19,12 @@
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
         <div class="hlm-float-label col-span-2">
-          <hlm-date-picker formControlName="startsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()" />
+          <hlm-date-picker formControlName="startsAt" class="w-46" [forceSelection]="true" (changed)="updateUI()" />
           <label>Início</label>
         </div>
 
         <div class="hlm-float-label col-span-2">
-          <hlm-date-picker formControlName="endsAt" class="w-42" [forceSelection]="true" (changed)="updateUI()" />
+          <hlm-date-picker formControlName="endsAt" class="w-46" [forceSelection]="true" (changed)="updateUI()" />
           <label>Fim</label>
         </div>
 

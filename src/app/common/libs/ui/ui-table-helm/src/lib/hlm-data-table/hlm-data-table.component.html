@@ -46,14 +46,14 @@
   <ng-container *ngTemplateOutlet="actionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
 </ng-template>
 
-<div class="px-4 py-2 hidden xl:flex items-center gap-2" *ngIf="showHeader()">
+<div class="px-4 py-2 hidden xl:flex items-center gap-2" *ngIf="showHeader() && !isMobile()">
   <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
   <ng-container *ngTemplateOutlet="selectionButtonTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
   <ng-container *ngTemplateOutlet="actionBarTemplate"></ng-container>
 </div>
 
-<div class="px-4 py-2 flex xl:hidden flex-col gap-2" *ngIf="showHeader()">
+<div class="px-4 py-2 flex xl:hidden flex-col gap-2" *ngIf="showHeader() && isMobile()">
   <div class="flex gap-2" *ngIf="leftActionTemplate">
     <ng-container *ngTemplateOutlet="leftActionTemplate; context: { hasSelection: hasSelection() }"></ng-container>
   </div>
@@ -100,7 +100,7 @@
             </hlm-td>
           </hlm-trow>
         </ng-container>
-        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && (!emptyMessOnTbBody()? false : !tableBodyTemplate)">
+        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && !tableBodyTemplate">
           <hlm-td class="w-full flex justify-center flex-col">
             <div class="border border-slate-200/30 p-5 rounded-4xl {{ showEmptyMessOnTbBody()? 'mb-5' : '' }}" *ngIf="showEmptyIconOnTbBody()">
               <div class="border border-slate-200/50 p-5 rounded-4xl">

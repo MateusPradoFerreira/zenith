@@ -40,6 +40,23 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   sidebarActive = model<boolean>(true);
   monthDayOpen = model<boolean>(false);
 
+  allDatesInRange = computed<Date[]>(() => {
+    const date = moment(this.date());
+    const range = this.range();
+    const dates: Date[] = [];
+
+    const start = moment(date).startOf(range);
+    const end = moment(date).endOf(range);
+
+    const current = start.clone();
+    while (current.isSameOrBefore(end, "day")) {
+      dates.push(current.clone().toDate());
+      current.add(1, "day");
+    }
+
+    return dates;
+  });
+
   dayIsClicked: boolean = false;
   dayClickTimeout: NodeJS.Timeout;
   categoryTimeout: NodeJS.Timeout;

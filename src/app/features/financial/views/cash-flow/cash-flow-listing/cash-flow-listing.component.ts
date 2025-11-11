@@ -6,7 +6,7 @@ import { GetAllCashFlowByFilterParams } from '../../../services/cash-flow.servic
 import { CashFlowFacade, CashFlowQueryFacade } from '../../../facades/cash-flow.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { forkJoin, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
 import moment from 'moment';
 import { PllID, PllPaginatedResponse } from '@pollaris';
 import { CashFlowTreeTrowComponent } from '../../../components/cash-flow-tree-trow.component';
@@ -16,6 +16,7 @@ import { SecrecyService } from '../../../services/secrecy.service';
 import { CenterOfCostService } from '../../../services/center-of-cost.service';
 import { PlanOfAccountService } from '../../../services/plan-of-account.service';
 import { BankAccountService } from '../../../services/bank-account.service';
+import { nextErrorHandler } from '../../../../../common/operators/error-handler.operator';
 
 @Component({
   standalone: true,
@@ -38,11 +39,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
   planOfAccountOptions: SelectItem<PllID>[] = [];
   bankAccountOptions: SelectItem<PllID>[] = [];
 
-  payableValues = computed(() => this.values().find(cf => cf.type === "PAYABLE_MARK")?.values.map(val => val * -1) || []);
-  toPayValues = computed(() => this.values().find(cf => cf.type === "PAYABLE_MARK")?.values.map(val => val * -1? (val * -1 / 2) * 0.3 : 0).reverse() || []);
-  receivableValues = computed(() => this.values().find(cf => cf.type === "RECEIVABLE_MARK")?.values  || []);
-  rendValues = computed(() => this.values().find(cf => cf.type === "RECEIVABLE_MARK")?.values.map(val => val? (val / 2) * 0.1 : 0)  || []);
-
   override $evNgOnInit: EventObs<void> = event(switchMap(() => forkJoin({
     a: this.$getSecrecyOptions(),
     b: this.$getCenterOfCostOptions(),
@@ -58,26 +54,45 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
       { header: "", class: "flex-1" },
       ...periods.values.map(period => ({ header: moment(period).format("MMM YY"), class: "w-29 justify-end" })),
     ]);
+    this.getGraphValues();
   }));
+
+  async getGraphValues() {
+    this.filter.refine().pipe(switchMap(filters => this.facade.service.getGraphValues(filters))).subscribe({
+      
+    });
+  };
 
   $getSecrecyOptions = () => this.secrecyService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.secrecyOptions.unshift({ label: "Todos", value: null });
+  }), nextErrorHandler({
+    header: "ERRO AO BUSCAR TÍTULOS!",
+    next: () => this.secrecyOptions = [{ label: "Todos", value: null }],
   }));
 
   $getCenterOfCostOptions = () => this.centerOfCostService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.centerOfCostOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.centerOfCostOptions.unshift({ label: "Todos", value: null });
+  }), nextErrorHandler({
+    header: "ERRO AO BUSCAR CENTROS DE CUSTO!",
+    next: () => this.centerOfCostOptions = [{ label: "Todos", value: null }],
   }));
 
   $getPlanOfAccountOptions = () => this.planOfAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.planOfAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.planOfAccountOptions.unshift({ label: "Todos", value: null });
+  }), nextErrorHandler({
+    header: "ERRO AO BUSCAR PLANOS DE CONTA!",
+    next: () => this.planOfAccountOptions = [{ label: "Todos", value: null }],
   }));
 
   $getBankAccountOptions = () => this.bankAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.bankAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.bankAccountOptions.unshift({ label: "Todas", value: null });
+  }), nextErrorHandler({
+    header: "ERRO AO BUSCAR CONTAS BANCÁRIAS!",
+    next: () => this.bankAccountOptions = [{ label: "Todas", value: null }],
   }));
 
   onInputSearch(query: string) {

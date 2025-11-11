@@ -124,4 +124,8 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
 
     return of({ data: flow, pagination: null }).pipe();
   };
+
+    getGraphValues(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+      return this.getAllByFilter(params);
+    };
 };

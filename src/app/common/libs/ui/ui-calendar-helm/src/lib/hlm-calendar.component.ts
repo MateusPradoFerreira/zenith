@@ -20,6 +20,7 @@ import { injectDateAdapter } from '@spartan-ng/brain/date-time';
 import { buttonVariants } from '@spartan-ng/ui-button-helm';
 import { HlmIconDirective } from '@spartan-ng/ui-icon-helm';
 import type { ClassValue } from 'clsx';
+import moment from 'moment';
 
 @Component({
 	selector: 'hlm-calendar',
@@ -94,7 +95,7 @@ import type { ClassValue } from 'clsx';
 							@for (date of week; track dateAdapter.getTime(date)) {
 								<td
 									brnCalendarCell
-									class="data-[selected]:data-[outside]:bg-accent/50 data-[selected]:bg-accent relative h-9 w-9 p-0 text-center text-sm focus-within:relative focus-within:z-20 first:data-[selected]:rounded-l-md last:data-[selected]:rounded-r-md [&:has([aria-selected].day-range-end)]:rounded-r-md"
+									class="{{ isAccended(date)? 'bg-slate-100' : '' }} rounded-lg data-[selected]:data-[outside]:bg-accent/50 data-[selected]:bg-accent relative h-9 w-9 p-0 text-center text-sm focus-within:relative focus-within:z-20 first:data-[selected]:rounded-l-md last:data-[selected]:rounded-r-md [&:has([aria-selected].day-range-end)]:rounded-r-md"
 								>
 									<button brnCalendarCellButton [date]="date" [class]="btnClass">
 										{{ dateAdapter.getDate(date) }}
@@ -147,6 +148,8 @@ export class HlmCalendarComponent<T> {
 	/** Access the calendar directive */
 	private readonly _calendar = viewChild.required(BrnCalendarDirective);
 
+	public readonly accentedDates = input<Date[]>([]);
+
 	/** Get the heading for the current month and year */
 	protected heading = computed(() =>
 		this.i18n.formatHeader(
@@ -155,11 +158,17 @@ export class HlmCalendarComponent<T> {
 		),
 	);
 
+	isAccended(date: Date) {
+		if(!this.accentedDates()?.length) return false;
+		if(this.accentedDates().map(dt => moment(dt).format("DD-MM-YYYY")).includes(moment(date).format("DD-MM-YYYY"))) return true;
+		return false;
+	};
+
 	protected readonly btnClass = hlm(
 		buttonVariants({ variant: 'ghost' }),
 		'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
 		'data-[outside]:text-muted-foreground data-[outside]:opacity-50 data-[outside]:aria-selected:bg-accent/50 data-[outside]:aria-selected:text-muted-foreground data-[outside]:aria-selected:opacity-30',
-		'data-[today]:bg-slate-100 data-[today]:text-accent-foreground',
+		'data-[today]:bg-violet-200/50 data-[today]:text-accent-foreground',
 		'data-[selected]:bg-violet-100 data-[selected]:text-violet-500 data-[selected]:hover:bg-violet-100 data-[selected]:hover:text-violet-500 data-[selected]:focus:bg-violet-100 data-[selected]:focus:text-violet-500',
 		'data-[disabled]:text-muted-foreground data-[disabled]:opacity-50',
 	);

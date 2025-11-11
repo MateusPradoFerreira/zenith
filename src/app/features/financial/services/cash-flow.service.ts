@@ -26,4 +26,10 @@ export class CashFlowService extends PllRestService<CashFlow> {
       ...params,
     }});
   };
+
+  getGraphValues({ date, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}/graphs`, { params: {
+      ...params,
+    }});
+  };
 };

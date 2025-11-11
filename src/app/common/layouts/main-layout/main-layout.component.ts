@@ -19,4 +19,5 @@ export class MainLayoutComponent {
   userData = this.authState.userData;
   isLoggedIn = this.authState.isLoggedIn;
   active = this.state.active;
+  hovering = this.state.hovering;
 };

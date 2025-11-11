@@ -7,10 +7,10 @@
     </ng-template>
     <ng-template hlmTemplate="prev-body" let-rowData>
       <div class="grid grid-cols-12 gap-2 px-4 pb-2">
-        <app-cash-flow-chart-card label="Receita Total" [values]="receivableValues()" class="col-span-3" />
-        <app-cash-flow-chart-card label="Rendimento Total" [values]="rendValues()" class="col-span-3" />
-        <app-cash-flow-chart-card label="Despesa Total" [values]="payableValues()" class="col-span-3" />
-        <app-cash-flow-chart-card label="Á Pagar" [values]="toPayValues()" class="col-span-3" />
+        <app-cash-flow-chart-card label="Receita Total" [values]="[0]" class="col-span-3" />
+        <app-cash-flow-chart-card label="Rendimento Total" [values]="[0]" class="col-span-3" />
+        <app-cash-flow-chart-card label="Despesa Total" [values]="[0]" class="col-span-3" />
+        <app-cash-flow-chart-card label="Á Pagar" [values]="[0]" class="col-span-3" />
       </div>
     </ng-template>
     <ng-template hlmTemplate="action">

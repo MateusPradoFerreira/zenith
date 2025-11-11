@@ -1,7 +1,7 @@
 <div [class]="styleClass()">
   <ng-container [ngTemplateOutlet]="sidebar" />
   <div class="transition-all {{ this.sidebarActive()? 'pl-[296px]' : '' }}">
-    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [emptyMessOnTbBody]="true" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
+    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
       <ng-template hlmTemplate="layout-body">
         <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.height() }">
           <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" (hourSegmentClicked)="dayClicked($event.date, true, true)" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" (eventTimesChanged)="eventTimesChanged($event)" [refresh]="calendarRefresh" />
@@ -10,23 +10,26 @@
         </div>
       </ng-template>
       <ng-template hlmTemplate="table-body">
-        <ng-container *ngFor="let group of groupedValues()">
-          <hlm-trow class="overflow-hidden bg-slate-50">
-            <hlm-td class="flex-1 justify-between">
-              <span>{{ group.date | date : "EEEE" }}</span>
-              <span>{{ group.date | date : "dd 'de' MMMM 'de' YYYY" }}</span>
-            </hlm-td>
-          </hlm-trow>
-          <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden" (click)="handleUpdateRecord(rowData)">
-            <hlm-td class="flex-1">
-              <hlm-pin [color]="rowData.color" class="w-1 h-6 mr-3" />
-              {{ rowData.title }}
-            </hlm-td>
-            <hlm-td class="flex-1" *ngIf="rowData.startsAtTime">{{ rowData.startsAtTime }} {{ rowData.endsAtTime && rowData.endsAtTime !== rowData.startsAtTime? " - " + rowData.endsAtTime : "" }}</hlm-td>
-            <hlm-td class="flex-1" *ngIf="!rowData.startsAtTime">Dia Todo</hlm-td>
-            <hlm-td class="flex-1">{{ rowData.category }}</hlm-td>
-          </hlm-trow>
+        <ng-container *ngIf="groupedValues().length">
+          <ng-container *ngFor="let group of groupedValues()">
+            <hlm-trow class="overflow-hidden bg-slate-50">
+              <hlm-td class="flex-1 justify-between">
+                <span>{{ group.date | date : "EEEE" }}</span>
+                <span>{{ group.date | date : "dd 'de' MMMM 'de' YYYY" }}</span>
+              </hlm-td>
+            </hlm-trow>
+            <hlm-trow *ngFor="let rowData of group.values" class="cursor-pointer overflow-hidden" (click)="handleUpdateRecord(rowData)">
+              <hlm-td class="flex-1">
+                <hlm-pin [color]="rowData.color" class="w-1 h-6 mr-3" />
+                {{ rowData.title }}
+              </hlm-td>
+              <hlm-td class="flex-1" *ngIf="rowData.startsAtTime">{{ rowData.startsAtTime }} {{ rowData.endsAtTime && rowData.endsAtTime !== rowData.startsAtTime? " - " + rowData.endsAtTime : "" }}</hlm-td>
+              <hlm-td class="flex-1" *ngIf="!rowData.startsAtTime">Dia Todo</hlm-td>
+              <hlm-td class="flex-1">{{ rowData.category }}</hlm-td>
+            </hlm-trow>
+          </ng-container>
         </ng-container>
+        <ng-container *ngIf="!groupedValues().length" [ngTemplateOutlet]="emptyMessage" />
       </ng-template>
       <ng-template hlmTemplate="left-action">
         <ng-container [formGroup]="filter.form" *ngIf="filter">
@@ -65,6 +68,30 @@
       </ng-template>
       <ng-template hlmTemplate="filter" let-ctx>
         <div class="grid grid-cols-2 gap-3 gap-x-2" [formGroup]="filter.form" *ngIf="filter">
+          <div class="hlm-float-label col-span-2">
+            <brn-select formControlName="categoryIds" placeholder="Selecione uma Categoria" [multiple]="true">
+              <hlm-select-trigger>
+                <hlm-select-value />
+              </hlm-select-trigger>
+              <hlm-select-content>
+                <hlm-option *ngFor="let option of categoryOptions" [value]="option.id"><hlm-pin [color]="option.color" class="mr-2" /> {{ option.name }}</hlm-option>
+              </hlm-select-content>
+            </brn-select>
+            <label>Categoria</label>
+          </div>
+
+          <div class="hlm-float-label col-span-2">
+            <brn-select formControlName="categoryIds" placeholder="Selecione outros Registros" [multiple]="true">
+              <hlm-select-trigger>
+                <hlm-select-value />
+              </hlm-select-trigger>
+              <hlm-select-content>
+                <hlm-option *ngFor="let option of otherCategoryOptions" [value]="option.id"><hlm-pin [color]="option.color" class="mr-2" /> {{ option.name }}</hlm-option>
+              </hlm-select-content>
+            </brn-select>
+            <label>Outros Registros</label>
+          </div>
+
           <button hlmBtn variant="text" (click)="handleClearFilters()">Limpar</button>
           <button hlmBtn variant="soft" severity="help" [disabled]="filter.invalid" (click)="handleApplyFilters(); ctx.close()">Aplicar</button>
         </div>
@@ -75,7 +102,7 @@
 
 <ng-template #sidebar>
   <div class="w-[296px] bg-white border-r border-slate-200 overflow-y-auto custom-scroll gap-2 z-10 absolute h-full transition-all {{ sidebarActive()? 'left-0' : 'left-[-296px]' }}">
-    <hlm-calendar calendarClass="border-0 rounded-none" [date]="date()" (dateChange)="onDateChange($event)"/>
+    <hlm-calendar calendarClass="border-0 rounded-none" [date]="date()" [accentedDates]="allDatesInRange()" (dateChange)="onDateChange($event)"/>
     <div>
       <app-schedule-sidebar-session label="Categorais" [opened]="true">
         <ng-template hlmTemplate="actions">
@@ -112,4 +139,24 @@
 
     </div>
   </div>
+</ng-template>
+
+<ng-template #emptyMessage>
+  <hlm-trow class="hover:bg-transparent mr-1.5 h-full">
+    <hlm-td class="w-full flex justify-center flex-col">
+      <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
+        <div class="border border-slate-200/50 p-5 rounded-4xl">
+          <div class="border border-slate-200 p-8 rounded-4xl">
+            <i-lucide name="calendar"></i-lucide>
+          </div>
+        </div>
+      </div>
+      <span class="text-base font-medium">
+        OOPS! Nenhum registro encontrado!
+      </span>
+      <div class="text-sm">
+        Não tem nada para ser visualizado com os filtros selecionados! 
+      </div>
+    </hlm-td>
+  </hlm-trow>
 </ng-template>
