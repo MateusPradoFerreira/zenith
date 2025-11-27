@@ -11,7 +11,7 @@ export type GetAllFinancialRecurrenceByFilterParams = {
 @Injectable()
 export class FinancialRecurrenceService extends PllRestService<FinancialRecurrence> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "secrecy";
+  override pathRoute: string = "financial-recurrences";
 
   getAllByFilter({ status }: GetAllFinancialRecurrenceByFilterParams): Observable<PllPaginatedResponse<FinancialRecurrence>> {
     return this.http.get<PllPaginatedResponse<FinancialRecurrence>>(`${this.baseRoute}/${this.pathRoute}`, { params: {

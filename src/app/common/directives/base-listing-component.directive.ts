@@ -1,7 +1,7 @@
-import { computed, Directive, inject, input, OnInit, signal } from '@angular/core';
-import { PllFacade, PllPaginatedResponse, PllQueryFacade, PllRecord, PllRecordId } from '@pollaris';
+import { computed, Directive, inject, input, model, OnInit, signal } from '@angular/core';
+import { PllFacade, PllPaginatedResponse, PllPagination, PllQueryFacade, PllRecord, PllRecordId } from '@pollaris';
 import { PllFormSchema } from '@pollaris/forms';
-import { Observable, switchMap, tap } from 'rxjs';
+import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableSelectionActionFc } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { BaseFormComponentDirective, event, EventObs } from './base-form-component.directive';
@@ -23,6 +23,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   abstract facade: PllFacade<any>;
   abstract queryFacade: PllQueryFacade<TRecordQueryModel, TRecordQueryParams>;
 
+
   dialogFacade = inject(DialogFacade);
   authFacade = inject(AuthFacade);
   
@@ -30,8 +31,8 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   isLoggedIn = this.authFacade.state.isLoggedIn;
 
   filter: PllFormSchema<TRecordQueryParams>;
-  values = computed(() => this.queryFacade.data()?.data || []);
-  pagination = computed(() => this.queryFacade.data().pagination);
+  values = model<TRecordQueryModel[]>([]);
+  pagination = model<PllPagination>(null);
 
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
@@ -50,7 +51,9 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
       switchMap(() => this.$evInitFilter()),
       switchMap(() => this.$updateUI()),
       errorHandler(),
-    ).subscribe();
+    ).subscribe({
+      error: () => this.loading.set(false),
+    });
   };
 
   private _configureFilterSchema() {
@@ -67,7 +70,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
 
   updateUI() {
     this.$updateUI().subscribe({
-      error: error => console.error(error),
+      error: () => this.loading.set(false),
     });
   };
 
@@ -76,9 +79,15 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
     return this.filter.handleSubmit().pipe(
       tap(response => console.log("FILTERS", response)),
       switchMap(params => this.queryFacade.useQuery(params)),
-      tap(response => console.log("UPDATE-UI", response)),
+      tap(response => this.values.set(response.data)),
+      tap(response => this.pagination.set(response.pagination)),
+      tap(response => console.log("UPDATE-UI", response.data)),
       tap(() => this.loading.set(false)),
       switchMap(response => this.$evUpdateUI(response)),
+      catchError(error => {
+        this.loading.set(false);
+        return throwError(error);
+      }),
     );
   };
 

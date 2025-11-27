@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { SignInData, SignInResponse } from "../models/sign-in-data.model";
 import { environment } from "../../../../environments/environment";
@@ -11,15 +11,15 @@ export class AuthService {
   baseRoute: string = environment.apiUrl;
   pathRoute: string = "auth";
 
+  auth(data: SignInData): Observable<SignInResponse> {
+    return this.http.post<SignInResponse>(`${this.baseRoute}/${this.pathRoute}/sign-in`, data);
+  };
+
+  register(data: SignUpData): Observable<SignInResponse> {
+    return this.http.post<SignInResponse>(`${this.baseRoute}/${this.pathRoute}/sign-up`, data);
+  };
+
   validateAuth(token: string): Observable<SignInResponse>  {
     return this.http.post<SignInResponse>(`${this.baseRoute}/${this.pathRoute}/validate-auth`, { token });
-  };
-
-  auth(data: SignInData): Observable<SignInResponse> {
-    return this.http.post<SignInResponse>(`${this.baseRoute}/${this.pathRoute}/auth`, data);
-  };
-
-  register(data: SignUpData): Observable<void> {
-    return this.http.post<void>(`${this.baseRoute}/${this.pathRoute}/register`, data);
   };
 };

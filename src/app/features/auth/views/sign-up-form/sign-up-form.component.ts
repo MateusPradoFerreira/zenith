@@ -20,7 +20,6 @@ export class SignUpFormComponent implements OnInit {
   router = inject(Router);
 
   processing = signal<boolean>(false);
-  accountCreated = signal<boolean>(false);
   error = signal<string>("");
 
   async ngOnInit() {
@@ -37,13 +36,10 @@ export class SignUpFormComponent implements OnInit {
     this.processing.set(true);
     this.error.set("");
     this.form.handleSubmit().pipe(switchMap(response => this.facade.signUp(response))).subscribe({
-      next: () => {
-        this.processing.set(false);
-        this.accountCreated.set(true);
-      },
+      next: () => this.router.navigate(["/dashboard"]),
       error: error => {
         this.processing.set(false);
-        this.error.set(error?.error?.message || error?.message || error);
+        this.error.set(error?.error?.message?.message || error?.error?.message || error?.message || error);
       },
     });
   };

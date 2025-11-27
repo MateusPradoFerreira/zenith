@@ -1,6 +1,6 @@
 import { PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Secrecy } from "../models/secrecy.model";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Injectable } from "@angular/core";
 
@@ -11,11 +11,11 @@ export type GetAllSecrecyByFilterParams = {
 @Injectable()
 export class SecrecyService extends PllRestService<Secrecy> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "secrecy";
+  override pathRoute: string = "secrecies";
 
   getAllByFilter({ status }: GetAllSecrecyByFilterParams): Observable<PllPaginatedResponse<Secrecy>> {
-    return this.http.get<PllPaginatedResponse<Secrecy>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<Secrecy[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
-    }});
+    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
   };
 };

@@ -1,6 +1,6 @@
 import { PllID, PllPaginatedResponse, PllRestService } from "@pollaris";
 import { Payable, PayableStatus } from "../models/payable.model";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import moment from "moment";
 import { Injectable } from "@angular/core";
@@ -25,10 +25,12 @@ export type GetAllPayableByFilterResponse = Payable & {
 @Injectable()
 export class PayableService extends PllRestService<Payable> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "payable";
+  override pathRoute: string = "payables";
 
   getAllByFilter({ startsAt, endsAt, ...params }: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllPayableByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params });
+    return this.http.get<GetAllPayableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
+      params 
+    }).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
   };
 
   pay(id: PllID): Observable<Payable> {

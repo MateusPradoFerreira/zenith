@@ -61,7 +61,7 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormCompon
       secrecyId: { value: null, validators: [Validators.required] },
       bankAccountId: { value: null, validators: [Validators.required] },
       description: { value: null },
-      docNumber: { value: "0000000000-000", validators: [Validators.required, Validators.min(0)], disabled: true },
+      docNumber: { value: "0000000000", validators: [Validators.required, Validators.min(0)], disabled: true },
       sequence: { value: 0, validators: [Validators.required, Validators.min(0)], disabled: true },
       value: { value: 0, validators: [Validators.required, Validators.min(0)] },
     },

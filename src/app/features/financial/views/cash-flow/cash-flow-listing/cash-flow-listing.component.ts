@@ -49,7 +49,7 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
   override $evUpdateUI: EventObs<PllPaginatedResponse<CashFlow>> = event(tap(response => {
     if(!response.data.length) return;
     const periods = response.data.shift();
-    this.queryFacade.data.set(response);
+    this.values.set(response.data);
     this.columns.set([
       { header: "", class: "flex-1" },
       ...periods.values.map(period => ({ header: moment(period).format("MMM YY"), class: "w-29 justify-end" })),
@@ -67,7 +67,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.secrecyOptions.unshift({ label: "Todos", value: null });
   }), nextErrorHandler({
-    header: "ERRO AO BUSCAR TÍTULOS!",
     next: () => this.secrecyOptions = [{ label: "Todos", value: null }],
   }));
 
@@ -75,7 +74,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     this.centerOfCostOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.centerOfCostOptions.unshift({ label: "Todos", value: null });
   }), nextErrorHandler({
-    header: "ERRO AO BUSCAR CENTROS DE CUSTO!",
     next: () => this.centerOfCostOptions = [{ label: "Todos", value: null }],
   }));
 
@@ -83,7 +81,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     this.planOfAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.planOfAccountOptions.unshift({ label: "Todos", value: null });
   }), nextErrorHandler({
-    header: "ERRO AO BUSCAR PLANOS DE CONTA!",
     next: () => this.planOfAccountOptions = [{ label: "Todos", value: null }],
   }));
 
@@ -91,7 +88,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     this.bankAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.bankAccountOptions.unshift({ label: "Todas", value: null });
   }), nextErrorHandler({
-    header: "ERRO AO BUSCAR CONTAS BANCÁRIAS!",
     next: () => this.bankAccountOptions = [{ label: "Todas", value: null }],
   }));
 

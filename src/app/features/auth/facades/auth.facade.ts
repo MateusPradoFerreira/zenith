@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { AuthState } from "../states/auth.state";
 import { AuthService } from "../services/auth.service";
 import { SignInData, SignInResponse } from "../models/sign-in-data.model";
-import { delay, lastValueFrom, Observable, of, tap } from "rxjs";
+import { lastValueFrom, Observable, tap } from "rxjs";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { SignUpData } from "../models/sign-up-data.model";
@@ -14,6 +14,8 @@ export class AuthFacade {
   state = inject(AuthState);
   service = inject(AuthService);
   router = inject(Router);
+
+  defaultAvatar: string = "https://i.pinimg.com/736x/88/d0/c6/88d0c6df5a9ce8a683a397cce2e5ab94.jpg";
 
   signInSchema: PllFormSchemaConfig<SignInData> = {
     fields: {
@@ -43,7 +45,7 @@ export class AuthFacade {
     const $req = this.service.validateAuth(token).pipe(
       tap(response => window.localStorage.setItem("user-token", response.token)),
       tap(response => this.state.userToken.set(response.token)),
-      tap(response => this.state.userData.set(response)),
+      tap(({ token, ...response}) => this.state.userData.set({ ...response, avatar: response.avatar || this.defaultAvatar })),
     );
 
     await lastValueFrom($req).then(() => console.log("VALID-USER-SESSION")).catch(() => this.signOut());
@@ -54,12 +56,16 @@ export class AuthFacade {
     return this.service.auth(data).pipe(
       tap(response => window.localStorage.setItem("user-token", response.token)),
       tap(response => this.state.userToken.set(response.token)),
-      tap(response => this.state.userData.set(response)),
+      tap(({ token, ...response}) => this.state.userData.set({ ...response, avatar: response.avatar || this.defaultAvatar })),
     );
   };
 
-  signUp(data: SignUpData): Observable<void> {
-    return this.service.register(data);
+  signUp(data: SignUpData): Observable<SignInResponse> {
+    return this.service.register(data).pipe(
+      tap(response => window.localStorage.setItem("user-token", response.token)),
+      tap(response => this.state.userToken.set(response.token)),
+      tap(({ token, ...response}) => this.state.userData.set({ ...response, avatar: response.avatar || this.defaultAvatar })),
+    );
   };
 
   signOut() {

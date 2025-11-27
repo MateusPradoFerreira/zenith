@@ -354,15 +354,8 @@ export abstract class PllQueryFacade<TRecordQueryModel extends PllRecordId, TRec
   abstract queryFn: (params: TRecordQueryParams) => Observable<PllPaginatedResponse<TRecordQueryModel>>;
 
   abstract filterSchema: PllFormSchemaConfig<TRecordQueryParams>;
-
-  data = signal<PllPaginatedResponse<TRecordQueryModel>>({ data: [], pagination: null });
-  clearDataBeforeUseQuery: boolean = false;
   
   useQuery(params: TRecordQueryParams): Observable<PllPaginatedResponse<TRecordQueryModel>> {
-    if(this.clearDataBeforeUseQuery) this.data.set({ data: [], pagination: null });
-    return this.queryFn(params).pipe(
-      tap(response => this.data.set(response)),
-      catchError(error => throwError(error)),
-    );
+    return this.queryFn(params).pipe(catchError(error => throwError(error)));
   };
 };

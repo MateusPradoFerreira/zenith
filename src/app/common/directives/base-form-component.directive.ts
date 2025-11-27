@@ -67,7 +67,9 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   updateUI() {
-    this.$updateUI().pipe(errorHandler()).subscribe();
+    this.$updateUI().pipe(errorHandler()).subscribe({
+      error: () => this.loading.set(false),
+    });
   };
 
   $updateUI(): Observable<TRecordModel> {
@@ -112,10 +114,10 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   onSubmit(config: BaseFormSubmitConfig = {}) {
-    this.handleSubmit(config).pipe(errorHandler()).subscribe();
+    this.$handleSubmit(config).pipe(errorHandler(true)).subscribe();
   };
 
-  handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
+  $handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
     this.processing.set(true);
     return this.form.handleSubmit().pipe(
       switchMap(response => this.$evInitSumit(response).pipe(map(() => response))),

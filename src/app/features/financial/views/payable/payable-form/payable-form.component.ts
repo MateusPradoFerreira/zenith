@@ -11,6 +11,7 @@ import { CenterOfCostService } from '../../../services/center-of-cost.service';
 import { PlanOfAccountService } from '../../../services/plan-of-account.service';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { toast } from 'ngx-sonner';
+import { nextErrorHandler } from '../../../../../common/operators/error-handler.operator';
 
 @Component({
   standalone: true,
@@ -50,19 +51,19 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
 
   $getSecrecyOptions = () => this.secrecyService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }));
+  }), nextErrorHandler({}));
 
   $getCenterOfCostOptions = () => this.centerOfCostService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.centerOfCostOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }));
+  }), nextErrorHandler({}));
 
   $getPlanOfAccountOptions = () => this.planOfAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.planOfAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }));
+  }), nextErrorHandler({}));
 
   $getBankAccountOptions = () => this.bankAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.bankAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }));
+  }), nextErrorHandler({}));
 
   formatSequence(number: number): string {
     return number.toString().padStart(4, '0');
@@ -76,7 +77,7 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
         this.updateUI();
       },
       error: error => {
-        toast.error("ERRO!", { description: error?.error?.message || error?.message || error });
+        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message || error?.message || error });
       },
       complete: () => this.processing.set(false),
     });
@@ -90,7 +91,7 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
         this.updateUI();
       },
       error: error => {
-        toast.error("ERRO!", { description: error?.error?.message || error?.message || error });
+        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message || error?.message || error });
       },
       complete: () => this.processing.set(false),
     });
