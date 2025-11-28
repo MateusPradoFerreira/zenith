@@ -17,9 +17,9 @@
     </brn-popover>
   </div>
 
-  <div class="col-span-12 xl:col-span-8 flex items-center">
-    <hlm-checkbox id="active-field" class="mr-2" formControlName="active" *ngIf="form.value.type === 'SCHEDULE'"/>
-    <label for="active-field" *ngIf="form.value.type === 'SCHEDULE'">Ativo</label>
+  <div class="col-span-12 xl:col-span-8 flex items-center gap-2">
+    <hlm-checkbox id="active-field" formControlName="active" *ngIf="form.value.type === 'SCHEDULE'"/>
+    <label for="active-field" class="text-sm text-slate-600" *ngIf="form.value.type === 'SCHEDULE'">Ativo</label>
   </div>
 
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>

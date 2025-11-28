@@ -17,9 +17,9 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
   override state = inject(ScheduleCategoryState);
   override service = inject(ScheduleCategoryService);
 
-  override header: string = "Categoria";
+  override header: string = "Categoria de Agendamento";
   override component: Type<any> = ScheduleCategoryFormComponent;
-  override dialogSize: DialogContentVariants["size"] = "sm";
+  override dialogSize: DialogContentVariants["size"] = "md";
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = true;
 

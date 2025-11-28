@@ -39,7 +39,7 @@ export class SignUpFormComponent implements OnInit {
       next: () => this.router.navigate(["/dashboard"]),
       error: error => {
         this.processing.set(false);
-        this.error.set(error?.error?.message?.message || error?.error?.message || error?.message || error);
+        this.error.set(error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error);
       },
     });
   };

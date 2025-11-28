@@ -77,7 +77,7 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
         this.updateUI();
       },
       error: error => {
-        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message || error?.message || error });
+        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error });
       },
       complete: () => this.processing.set(false),
     });
@@ -91,7 +91,7 @@ export class PayableFormComponent extends BaseFormComponentDirective<Payable> {
         this.updateUI();
       },
       error: error => {
-        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message || error?.message || error });
+        toast.error("ERRO!", { description: error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error });
       },
       complete: () => this.processing.set(false),
     });

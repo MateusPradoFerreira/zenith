@@ -5,7 +5,10 @@
     <label>Nome</label>
   </div>
 
-  <div class="col-span-12 xl:col-span-8"></div>
+  <div class="col-span-12 xl:col-span-8 flex items-center gap-2">
+    <hlm-checkbox id="active-field" formControlName="active" />
+    <label for="active-field" class="text-sm text-slate-600">Ativo</label>
+  </div>
 
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
   <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
