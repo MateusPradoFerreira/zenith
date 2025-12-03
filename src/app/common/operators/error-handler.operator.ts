@@ -8,7 +8,12 @@ export function errorHandler<T>(showWarning: boolean = false): OperatorFunction<
       const message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
 
       if(error?.status && error.status >= 400 && error.status < 500 && showWarning) {
-        toast.warning("ATENÇÃO!", { description: message });
+        if (error.status === 400 && error?.error?.message?.errors) {
+          const errors = error?.error?.message?.errors;
+          for (let error of errors) {
+            for (let err of Object.values(error.constraints)) toast.warning("ATENÇÃO!", { description: err as string });
+          };
+        } else toast.warning("ATENÇÃO!", { description: message });
       } else {
         toast.error("ERRO!", { description: message });
       };
