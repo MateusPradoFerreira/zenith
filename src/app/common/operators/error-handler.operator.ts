@@ -5,7 +5,8 @@ import { toast } from 'ngx-sonner';
 export function errorHandler<T>(showWarning: boolean = false): OperatorFunction<T, T> {
   return (source$) => source$.pipe(
     catchError(error => {
-      const message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
+      let message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
+      if (message.includes("Cannot GET")) message = "Rota não implementada!";
 
       if(error?.status && error.status >= 400 && error.status < 500 && showWarning) {
         if (error.status === 400 && error?.error?.message?.errors) {

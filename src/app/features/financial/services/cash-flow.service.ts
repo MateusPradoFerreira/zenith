@@ -5,7 +5,7 @@ import { environment } from "../../../../environments/environment";
 import { Injectable } from "@angular/core";
 import moment from "moment";
 
-export type GetAllCashFlowByFilterParams = {
+export type CashFlowViewParams = {
   centerOfCostId?: PllID | null;
   planOfAccountId?: PllID | null;
   secrecyId?: PllID | null;
@@ -14,21 +14,21 @@ export type GetAllCashFlowByFilterParams = {
   date: Date;
 };
 
-export type GetAllCashFlowByFilterResponse = CashFlow;
+export type CashFlowViewResponse = CashFlow;
 
 @Injectable()
 export class CashFlowService extends PllRestService<CashFlow> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "cash-flow";
 
-  getAllByFilter({ date, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}`, { params: {
+  getAllByFilter({ date, ...params }: CashFlowViewParams): Observable<PllPaginatedResponse<CashFlowViewResponse>> {
+    return this.http.get<PllPaginatedResponse<CashFlowViewResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}`, { params: {
       ...params,
     }});
   };
 
-  getGraphValues({ date, ...params }: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllCashFlowByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}/graphs`, { params: {
+  getGraphValues({ date, ...params }: CashFlowViewParams): Observable<PllPaginatedResponse<CashFlowViewResponse>> {
+    return this.http.get<PllPaginatedResponse<CashFlowViewResponse>>(`${this.baseRoute}/${this.pathRoute}/date/${moment(date).format("YYYY-MM-DD")}/graphs`, { params: {
       ...params,
     }});
   };

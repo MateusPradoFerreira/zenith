@@ -4,12 +4,12 @@ import { PlanOfAccount } from "../models/plan-of-account.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllPlanOfAccountByFilterParams, PlanOfAccountService } from "../services/plan-of-account.service";
+import { PlanOfAccountViewParams, PlanOfAccountService } from "../services/plan-of-account.service";
 import { PlanOfAccountState } from "../states/plan-of-account.state";
 import { PlanOfAccountFormComponent } from "../views/plan-of-account/plan-of-account-form/plan-of-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type PlanOfAccountUseQueryParams = GetAllPlanOfAccountByFilterParams;
+export type PlanOfAccountUseQueryParams = PlanOfAccountViewParams;
 export type PlanOfAccountUseQueryResponse = PlanOfAccount;
 
 @Injectable({ providedIn: "root" })

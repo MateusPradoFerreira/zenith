@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { BankAccount } from "../../models/bank-account.model";
-import { GetAllBankAccountByFilterParams, BankAccountService } from "../bank-account.service";
+import { BankAccountViewParams, BankAccountService } from "../bank-account.service";
 import { delay, Observable } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 
@@ -15,7 +15,7 @@ export class BankAccountMockRepository extends PllRecordRepository<BankAccount> 
 export class BankAccountMockService extends PllMockRestService<BankAccount> implements BankAccountService {
   override repository = inject(BankAccountMockRepository);
 
-  getAllByFilter(params: GetAllBankAccountByFilterParams): Observable<PllPaginatedResponse<BankAccount>> {
+  getAllByFilter(params: BankAccountViewParams): Observable<PllPaginatedResponse<BankAccount>> {
     return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));

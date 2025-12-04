@@ -4,12 +4,12 @@ import { ScheduleCategory } from "../models/schedule-category.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "../services/schedule-category.service";
+import { ScheduleCategoryViewParams, ScheduleCategoryService } from "../services/schedule-category.service";
 import { ScheduleCategoryState } from "../states/schedule-category.state";
 import { ScheduleCategoryFormComponent } from "../views/schedule-category/schedule-category-form/schedule-category-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type ScheduleCategoryUseQueryParams = GetAllScheduleCategoryByFilterParams;
+export type ScheduleCategoryUseQueryParams = ScheduleCategoryViewParams;
 export type ScheduleCategoryUseQueryResponse = ScheduleCategory;
 
 @Injectable({ providedIn: "root" })

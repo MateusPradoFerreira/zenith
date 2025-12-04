@@ -2,13 +2,13 @@ import { inject, Injectable, Type } from "@angular/core";
 import { PllFacade, PllQueryFacade } from "@pollaris";
 import { CashFlow } from "../models/cash-flow.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
-import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "../services/cash-flow.service";
+import { CashFlowViewParams, CashFlowViewResponse, CashFlowService } from "../services/cash-flow.service";
 import { CashFlowState } from "../states/cash-flow.state";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
-export type CashFlowUseQueryParams = GetAllCashFlowByFilterParams;
-export type CashFlowUseQueryResponse = GetAllCashFlowByFilterResponse;
+export type CashFlowUseQueryParams = CashFlowViewParams;
+export type CashFlowUseQueryResponse = CashFlowViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class CashFlowFacade extends PllFacade<CashFlow> {

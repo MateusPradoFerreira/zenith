@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { Schedule } from "../../models/schedule.model";
-import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../schedule.service";
+import { ScheduleViewParams, ScheduleViewResponse, ScheduleService } from "../schedule.service";
 import { delay, map, Observable, of, switchMap, tap } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import { ScheduleCategoryMockRepository } from "./schedule-category-mock.service";
@@ -31,8 +31,6 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
   override $evInitPost: EventObs<Schedule> = event(
     switchMap(schedule => this.recurrenceMockService.post({
       id: null,
-      scheduleId: schedule.id,
-      financialRecurrenceId: null,
       endType: "NEVER",
       frequency: schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? "WEEKLY" : schedule.frequency, 
       byWeekday: schedule.frequency === "WEEKLY" || schedule.frequency === "NO_REPETITION" || schedule.frequency === "CUSTOM"? [moment(schedule.startsAt).format("dd").toUpperCase() as RecurrenceWeekday] : [],
@@ -41,7 +39,6 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
       createdAt: new Date(),
       startsAt: schedule.startsAt,
       endsAt: schedule.startsAt,
-      exceptions: [],
       active: schedule.frequency !== "NO_REPETITION",
     }).pipe(map(recurrence =>({ ...schedule, recurrenceId: recurrence.id })))),
   );
@@ -58,20 +55,19 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
         createdAt: new Date(),
         startsAt: schedule.startsAt,
         endsAt: schedule.startsAt,
-        exceptions: [],
         active: schedule.frequency !== "NO_REPETITION",
       })),
     )),
   );
 
-  getAllByFilter(params: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<GetAllScheduleByFilterResponse>> {
+  getAllByFilter(params: ScheduleViewParams): Observable<PllPaginatedResponse<ScheduleViewResponse>> {
     return this.repository.$find({
       startsAt: { $lte: params.endsAt },
       endsAt: { $gte: params.startsAt },
       ...(!params?.categoryIds || !params.categoryIds.length? {} : { categoryId: { $in: params?.categoryIds }}),
     }).pipe(
       delay(this.delay()),
-      map(response => ({ ...response, data: this.merge<Schedule, GetAllScheduleByFilterResponse>(response.data, record => ({
+      map(response => ({ ...response, data: this.merge<Schedule, ScheduleViewResponse>(response.data, record => ({
         category: this.scheduleCategoryMockRepository.state.get(record.categoryId)?.name || "",
         color: this.scheduleCategoryMockRepository.state.get(record.categoryId)?.color || "VIOLET",
         type: "SCHEDULE",
@@ -82,7 +78,7 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
         cancelledAt: { $eq: null },
       }).data.map(payable => {
         const category = this.scheduleCategoryMockRepository.state.data().find(category => category.type === "PAYABLE");
-        const record: GetAllScheduleByFilterResponse = {
+        const record: ScheduleViewResponse = {
           id: payable.id,
           scheduleId: null,
           recurrenceId: null,
@@ -106,7 +102,7 @@ export class ScheduleMockService extends PllMockRestService<Schedule> implements
         cancelledAt: { $eq: null },
        }).data.map(receivable => {
         const category = this.scheduleCategoryMockRepository.state.data().find(category => category.type === "RECEIVABLE");
-        const record: GetAllScheduleByFilterResponse = {
+        const record: ScheduleViewResponse = {
           id: receivable.id,
           scheduleId: null,
           recurrenceId: null,

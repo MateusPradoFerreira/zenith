@@ -4,7 +4,7 @@ import { Schedule } from "../models/schedule.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllScheduleByFilterParams, GetAllScheduleByFilterResponse, ScheduleService } from "../services/schedule.service";
+import { ScheduleViewParams, ScheduleViewResponse, ScheduleService } from "../services/schedule.service";
 import { ScheduleState } from "../states/schedule.state";
 import { ScheduleFormComponent } from "../views/schedule/schedule-form/schedule-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
@@ -13,8 +13,8 @@ import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
 import { colors } from "../../../common/types/colors.type";
 
-export type ScheduleUseQueryParams = GetAllScheduleByFilterParams;
-export type ScheduleUseQueryResponse = GetAllScheduleByFilterResponse;
+export type ScheduleUseQueryParams = ScheduleViewParams;
+export type ScheduleUseQueryResponse = ScheduleViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
@@ -57,7 +57,7 @@ export class ScheduleQueryFacade extends PllQueryFacade<ScheduleUseQueryResponse
     },
   };
 
-  handleRemapEvents(schedules: GetAllScheduleByFilterResponse[]): CalendarEvent[] {
+  handleRemapEvents(schedules: ScheduleViewResponse[]): CalendarEvent[] {
     const events: CalendarEvent[] = schedules.map(schedule => ({
       id: schedule.id,
       title: schedule.title,

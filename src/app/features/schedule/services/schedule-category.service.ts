@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { Injectable } from "@angular/core";
 
-export type GetAllScheduleCategoryByFilterParams = {
+export type ScheduleCategoryViewParams = {
   status?: "ACTIVE" | "INACTIVE" | "ALL";
   type?: ScheduleCategoryType | "ALL";
 };
@@ -14,7 +14,7 @@ export class ScheduleCategoryService extends PllRestService<ScheduleCategory> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "schedule-category";
 
-  getAllByFilter(params: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
+  getAllByFilter(params: ScheduleCategoryViewParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
     return this.http.get<PllPaginatedResponse<ScheduleCategory>>(`${this.baseRoute}/${this.pathRoute}`, { params });
   };
 };

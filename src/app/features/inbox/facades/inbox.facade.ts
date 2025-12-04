@@ -4,7 +4,7 @@ import { Inbox } from "../models/inbox.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllInboxByFilterParams, InboxService } from "../services/inbox.service";
+import { InboxViewParams, InboxService } from "../services/inbox.service";
 import { InboxState } from "../states/inbox.state";
 import { InboxFormComponent } from "../views/inbox/inbox-form/inbox-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
@@ -12,7 +12,7 @@ import { Observable, tap } from "rxjs";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 
-export type InboxUseQueryParams = GetAllInboxByFilterParams;
+export type InboxUseQueryParams = InboxViewParams;
 export type InboxUseQueryResponse = Inbox;
 
 @Injectable({ providedIn: "root" })

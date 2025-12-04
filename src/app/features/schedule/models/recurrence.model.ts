@@ -6,8 +6,6 @@ export type RecurrenceEndType = "DATE" | "COUNT" | "NEVER";
 
 export class Recurrence {
   id: PllID;
-  scheduleId: PllID;
-  financialRecurrenceId: PllID;
   endType: RecurrenceEndType;
   frequency: RecurrenceFrequency;
   byWeekday: RecurrenceWeekday[];
@@ -16,7 +14,6 @@ export class Recurrence {
   createdAt: Date;
   startsAt: Date;
   endsAt: Date;
-  exceptions: Date[];
   active: boolean;
 
   constructor(props: Partial<Recurrence>) {

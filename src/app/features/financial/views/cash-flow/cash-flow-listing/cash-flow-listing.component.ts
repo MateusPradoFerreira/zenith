@@ -2,7 +2,7 @@ import { Component, computed, inject, signal, WritableSignal } from '@angular/co
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { CashFlow } from '../../../models/cash-flow.model';
-import { GetAllCashFlowByFilterParams } from '../../../services/cash-flow.service';
+import { CashFlowViewParams } from '../../../services/cash-flow.service';
 import { CashFlowFacade, CashFlowQueryFacade } from '../../../facades/cash-flow.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
@@ -24,7 +24,7 @@ import { nextErrorHandler } from '../../../../../common/operators/error-handler.
   imports: [GlobalModule, HlmDataTableComponent, CashFlowTreeTrowComponent, CashFlowChartCardComponent],
   templateUrl: './cash-flow-listing.component.html',
 })
-export class CashFlowListingComponent extends BaseRecordListingComponentDirective<CashFlow, GetAllCashFlowByFilterParams> {
+export class CashFlowListingComponent extends BaseRecordListingComponentDirective<CashFlow, CashFlowViewParams> {
   override facade = inject(CashFlowFacade);
   override queryFacade = inject(CashFlowQueryFacade);
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([]);

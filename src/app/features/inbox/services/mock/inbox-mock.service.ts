@@ -1,6 +1,6 @@
 import { PllID, PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { Inbox, InboxStatus } from "../../models/inbox.model";
-import { GetAllInboxByFilterParams, InboxService } from "../inbox.service";
+import { InboxViewParams, InboxService } from "../inbox.service";
 import { delay, map, Observable, switchMap } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import moment from "moment";
@@ -19,7 +19,7 @@ export class InboxMockService extends PllMockRestService<Inbox> implements Inbox
 
   protected override $evGet: EventObs<Inbox, Inbox> = event(map(record => ({ ...record, status: this._transformStatus(record) })));
 
-  getAllByFilter(params: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
+  getAllByFilter(params: InboxViewParams): Observable<PllPaginatedResponse<Inbox>> {
     const yesterday = moment().subtract(1, "day").toDate();
     return this.repository.$find({
       priority: !params.priority || params.priority === "ALL"? undefined : params.priority,

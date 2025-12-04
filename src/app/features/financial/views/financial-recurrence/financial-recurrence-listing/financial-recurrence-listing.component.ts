@@ -18,6 +18,8 @@ export class FinancialRecurrenceListingComponent extends BaseRecordListingCompon
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "Nome", class: "flex-1" },
+    { header: "Tipo", class: "w-42" },
+    { header: "Valor", class: "w-36 justify-end" },
   ]);
 
   statusOptions: SelectItem<"ALL" | "ACTIVE" | "INACTIVE">[] = [

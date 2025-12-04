@@ -4,12 +4,12 @@ import { FinancialRecurrence } from "../models/financial-recurrence.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllFinancialRecurrenceByFilterParams, FinancialRecurrenceService } from "../services/financial-recurrence.service";
+import { FinancialRecurrenceViewParams, FinancialRecurrenceService } from "../services/financial-recurrence.service";
 import { FinancialRecurrenceState } from "../states/financial-recurrence.state";
 import { FinancialRecurrenceFormComponent } from "../views/financial-recurrence/financial-recurrence-form/financial-recurrence-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type FinancialRecurrenceUseQueryParams = GetAllFinancialRecurrenceByFilterParams;
+export type FinancialRecurrenceUseQueryParams = FinancialRecurrenceViewParams;
 export type FinancialRecurrenceUseQueryResponse = FinancialRecurrence;
 
 @Injectable({ providedIn: "root" })

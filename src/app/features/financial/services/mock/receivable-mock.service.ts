@@ -1,6 +1,6 @@
 import { PllID, PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { Receivable, ReceivableStatus } from "../../models/receivable.model";
-import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "../receivable.service";
+import { ReceivableViewParams, ReceivableViewResponse, ReceivableService } from "../receivable.service";
 import { delay, map, Observable, of, switchMap, throwError } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import moment from "moment";
@@ -47,7 +47,7 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
     );
   };
 
-  getAllByFilter(params: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
+  getAllByFilter(params: ReceivableViewParams): Observable<PllPaginatedResponse<ReceivableViewResponse>> {
     const yesterday = moment().subtract(1, "day").toDate();
     return this.repository.$find({
       centerOfCostId: params.centerOfCostId || undefined,
@@ -66,7 +66,7 @@ export class ReceivableMockService extends PllMockRestService<Receivable> implem
       ...(params?.status === "TOPAY"? { paidAt: { $eq: null }, cancelledAt: { $eq: null } } : {}),
     }).pipe(
       delay(this.delay()),
-      map(response => ({ ...response, data: this.merge<Receivable, GetAllReceivableByFilterResponse>(response.data, record => ({
+      map(response => ({ ...response, data: this.merge<Receivable, ReceivableViewResponse>(response.data, record => ({
         centerOfCost: this.centerOfCostMockRepository.state.get(record.centerOfCostId)?.name || "",
         planOfAccount: this.planOfAccountMockRepository.state.get(record.planOfAccountId)?.name || "",
         secrecy: this.secrecyMockRepository.state.get(record.secrecyId)?.name || "",

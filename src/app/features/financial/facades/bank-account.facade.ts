@@ -4,12 +4,12 @@ import { BankAccount } from "../models/bank-account.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllBankAccountByFilterParams, BankAccountService } from "../services/bank-account.service";
+import { BankAccountViewParams, BankAccountService } from "../services/bank-account.service";
 import { BankAccountState } from "../states/bank-account.state";
 import { BankAccountFormComponent } from "../views/bank-account/bank-account-form/bank-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type BankAccountUseQueryParams = GetAllBankAccountByFilterParams;
+export type BankAccountUseQueryParams = BankAccountViewParams;
 export type BankAccountUseQueryResponse = BankAccount;
 
 @Injectable({ providedIn: "root" })

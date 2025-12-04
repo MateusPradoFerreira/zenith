@@ -2,6 +2,8 @@
   <hlm-data-table [offsetHeight]="offsetHeight()" header="Títulos" [values]="values()" [columns]="columns()" (onSelect)="handleUpdate($event)" [actionFn]="actionFn" [selectionActionFn]="selectionActionFn">
     <ng-template hlmTemplate="row" let-rowData>
       <hlm-td class="truncate flex-1">{{ rowData.name }}</hlm-td>
+      <hlm-td class="truncate w-42">{{ rowData.type === 'PAYABLE'? 'Despesa' : "Receita" }}</hlm-td>
+      <hlm-td class="truncate w-36 justify-end">{{ rowData.value | currency: "BRL" }}</hlm-td>
     </ng-template>
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">

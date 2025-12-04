@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { CashFlow } from "../../models/cash-flow.model";
-import { GetAllCashFlowByFilterParams, GetAllCashFlowByFilterResponse, CashFlowService } from "../cash-flow.service";
+import { CashFlowViewParams, CashFlowViewResponse, CashFlowService } from "../cash-flow.service";
 import { Observable, of } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import { PayableMockRepository } from "./payable-mock.service";
@@ -24,7 +24,7 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
   receivableMockRepository = inject(ReceivableMockRepository);
   bankAccountMockRepository = inject(BankAccountMockRepository);
 
-  getAllByFilter(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+  getAllByFilter(params: CashFlowViewParams): Observable<PllPaginatedResponse<CashFlowViewResponse>> {
     const flow: CashFlow[] = [];
 
     const periodStartsAt = moment(params.date).startOf("year");
@@ -125,7 +125,7 @@ export class CashFlowMockService extends PllMockRestService<CashFlow> implements
     return of({ data: flow, pagination: null }).pipe();
   };
 
-    getGraphValues(params: GetAllCashFlowByFilterParams): Observable<PllPaginatedResponse<GetAllCashFlowByFilterResponse>> {
+    getGraphValues(params: CashFlowViewParams): Observable<PllPaginatedResponse<CashFlowViewResponse>> {
       return this.getAllByFilter(params);
     };
 };

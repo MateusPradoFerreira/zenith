@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { FinancialRecurrence } from "../../models/financial-recurrence.model";
-import { GetAllFinancialRecurrenceByFilterParams, FinancialRecurrenceService } from "../financial-recurrence.service";
+import { FinancialRecurrenceViewParams, FinancialRecurrenceService } from "../financial-recurrence.service";
 import { delay, map, Observable, switchMap } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import { event, EventObs } from "../../../../common/directives/base-form-component.directive";
@@ -22,8 +22,6 @@ export class FinancialRecurrenceMockService extends PllMockRestService<Financial
   override $evInitPost: EventObs<FinancialRecurrence> = event(
     switchMap(financialRecurrence => this.recurrenceMockService.post({
       id: null,
-      scheduleId: financialRecurrence.id,
-      financialRecurrenceId: null,
       endType: "NEVER",
       frequency: "MONTHLY", 
       byWeekday: [],
@@ -32,12 +30,11 @@ export class FinancialRecurrenceMockService extends PllMockRestService<Financial
       createdAt: new Date(),
       startsAt: financialRecurrence.createdAt,
       endsAt: financialRecurrence.createdAt,
-      exceptions: [],
       active: true,
     }).pipe(map(recurrence =>({ ...financialRecurrence, recurrenceId: recurrence.id })))),
   );
 
-  getAllByFilter(params: GetAllFinancialRecurrenceByFilterParams): Observable<PllPaginatedResponse<FinancialRecurrence>> {
+  getAllByFilter(params: FinancialRecurrenceViewParams): Observable<PllPaginatedResponse<FinancialRecurrence>> {
     return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
     }).pipe(delay(this.delay()));

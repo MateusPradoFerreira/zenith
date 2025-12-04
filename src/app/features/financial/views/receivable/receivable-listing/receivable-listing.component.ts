@@ -25,7 +25,7 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "N° Doc.", class: "w-44" },
-    { header: "Title", class: "flex-1" },
+    { header: "Nome", class: "flex-1" },
     { header: "Conta Bancária", class: "w-42" },
     { header: "Centro de Custo", class: "w-42" },
     { header: "Plano de Conta", class: "w-42" },

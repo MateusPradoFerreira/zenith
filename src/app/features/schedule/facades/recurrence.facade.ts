@@ -24,8 +24,6 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
   override recordSchema: PllFormSchemaConfig<Recurrence> = {
     fields: {
       id: { value: null },
-      scheduleId: { value: null },
-      financialRecurrenceId: { value: null },
       endType: { value: "NEVER", validators: [Validators.required] },
       frequency: { value: "DAILY", validators: [Validators.required] },
       byWeekday: { value: [] },
@@ -34,7 +32,6 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
       createdAt: { value: moment().toDate() },
       startsAt: { value: moment().toDate() },
       endsAt: { value: moment().toDate() },
-      exceptions: { value: [] },
       active: { value: true },
     },
   };

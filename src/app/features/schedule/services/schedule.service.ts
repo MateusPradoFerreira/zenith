@@ -7,13 +7,13 @@ import { Injectable } from "@angular/core";
 import { Colors } from "../../../common/types/colors.type";
 import { ScheduleCategoryType } from "../models/schedule-category.model";
 
-export type GetAllScheduleByFilterParams = {
+export type ScheduleViewParams = {
   categoryIds?: PllID[];
   startsAt: Date;
   endsAt: Date;
 };
 
-export type GetAllScheduleByFilterResponse = Schedule & {
+export type ScheduleViewResponse = Schedule & {
   category: string;
   type: ScheduleCategoryType;
   color: Colors;
@@ -24,8 +24,8 @@ export class ScheduleService extends PllRestService<Schedule> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "schedule";
 
-  getAllByFilter({ startsAt, endsAt, categoryIds }: GetAllScheduleByFilterParams): Observable<PllPaginatedResponse<GetAllScheduleByFilterResponse>> {
-    return this.http.get<PllPaginatedResponse<GetAllScheduleByFilterResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params: {
+  getAllByFilter({ startsAt, endsAt, categoryIds }: ScheduleViewParams): Observable<PllPaginatedResponse<ScheduleViewResponse>> {
+    return this.http.get<PllPaginatedResponse<ScheduleViewResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params: {
       categoryIds: categoryIds? categoryIds.join(",") : "",
     }});
   };

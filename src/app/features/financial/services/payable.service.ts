@@ -5,7 +5,7 @@ import { environment } from "../../../../environments/environment";
 import moment from "moment";
 import { Injectable } from "@angular/core";
 
-export type GetAllPayableByFilterParams = {
+export type PayableViewParams = {
   status?: PayableStatus | "TOPAY" | "ALL";
   centerOfCostId?: PllID | null;
   planOfAccountId?: PllID | null;
@@ -15,7 +15,7 @@ export type GetAllPayableByFilterParams = {
   endsAt: Date;
 };
 
-export type GetAllPayableByFilterResponse = Payable & {
+export type PayableViewResponse = Payable & {
   bankAccount: string;
   centerOfCost: string;
   planOfAccount: string;
@@ -27,8 +27,8 @@ export class PayableService extends PllRestService<Payable> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "payables";
 
-  getAllByFilter({ startsAt, endsAt, ...params }: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
-    return this.http.get<GetAllPayableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
+  getAllByFilter({ startsAt, endsAt, ...params }: PayableViewParams): Observable<PllPaginatedResponse<PayableViewResponse>> {
+    return this.http.get<PayableViewResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
       params 
     }).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
   };

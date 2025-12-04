@@ -1,6 +1,6 @@
 import { PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { ScheduleCategory } from "../../models/schedule-category.model";
-import { GetAllScheduleCategoryByFilterParams, ScheduleCategoryService } from "../schedule-category.service";
+import { ScheduleCategoryViewParams, ScheduleCategoryService } from "../schedule-category.service";
 import { delay, Observable } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 
@@ -15,7 +15,7 @@ export class ScheduleCategoryMockRepository extends PllRecordRepository<Schedule
 export class ScheduleCategoryMockService extends PllMockRestService<ScheduleCategory> implements ScheduleCategoryService {
   override repository = inject(ScheduleCategoryMockRepository);
 
-  getAllByFilter(params: GetAllScheduleCategoryByFilterParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
+  getAllByFilter(params: ScheduleCategoryViewParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
     return this.repository.$find({
       active: !params.status || params.status === "ALL"? undefined : params.status === "ACTIVE"? true : false,
       type: !params.type || params.type === "ALL"? undefined : params.type,

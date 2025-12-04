@@ -4,7 +4,7 @@ import { Payable } from "../models/payable.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "../services/payable.service";
+import { PayableViewParams, PayableViewResponse, PayableService } from "../services/payable.service";
 import { PayableState } from "../states/payable.state";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { PayableFormComponent } from "../views/payable/payable-form/payable-form.component";
@@ -13,8 +13,8 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 import { Starters } from "@pollaris/forms/starters";
 
-export type PayableUseQueryParams = GetAllPayableByFilterParams;
-export type PayableUseQueryResponse = GetAllPayableByFilterResponse;
+export type PayableUseQueryParams = PayableViewParams;
+export type PayableUseQueryResponse = PayableViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {

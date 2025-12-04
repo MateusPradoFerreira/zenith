@@ -4,7 +4,7 @@ import { Receivable } from "../models/receivable.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllReceivableByFilterParams, GetAllReceivableByFilterResponse, ReceivableService } from "../services/receivable.service";
+import { ReceivableViewParams, ReceivableViewResponse, ReceivableService } from "../services/receivable.service";
 import { ReceivableState } from "../states/receivable.state";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { ReceivableFormComponent } from "../views/receivable/receivable-form/receivable-form.component";
@@ -12,8 +12,8 @@ import { Observable, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
-export type ReceivableUseQueryParams = GetAllReceivableByFilterParams;
-export type ReceivableUseQueryResponse = GetAllReceivableByFilterResponse;
+export type ReceivableUseQueryParams = ReceivableViewParams;
+export type ReceivableUseQueryResponse = ReceivableViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormComponent> {

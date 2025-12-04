@@ -28,8 +28,8 @@
       <button hlmMenuItem class="bg-white hover:bg-white active:bg-white focus:bg-white overflow-hidden">
         <img class="w-10 h-10 object-cover rounded-md border border-slate-200 shrink-0 cursor-pointer mr-2" [src]="userData().avatar" alt="profile-picture">
         <div class="w-full text-left overflow-hidden">
-          <div class="font-medium truncate">Mateus do Prado</div>
-          <div class="text-xs text-slate-500 truncate">{{ "mateuspradoferreira123@gmail.com" }}</div>
+          <div class="font-medium truncate">{{userData().name}}</div>
+          <div class="text-xs text-slate-500 truncate">{{userData().email}}</div>
         </div>
       </button>
       <hlm-menu-separator />

@@ -2,7 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { Inbox } from '../../../models/inbox.model';
-import { GetAllInboxByFilterParams } from '../../../services/inbox.service';
+import { InboxViewParams } from '../../../services/inbox.service';
 import { InboxFacade, InboxPriorityOptions, InboxQueryFacade, InboxStatusOptions } from '../../../facades/inbox.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { PllID } from '@pollaris';
@@ -13,7 +13,7 @@ import { PllID } from '@pollaris';
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './inbox-listing.component.html',
 })
-export class InboxListingComponent extends BaseRecordListingComponentDirective<Inbox, GetAllInboxByFilterParams> {
+export class InboxListingComponent extends BaseRecordListingComponentDirective<Inbox, InboxViewParams> {
   override facade = inject(InboxFacade);
   override queryFacade = inject(InboxQueryFacade);
 

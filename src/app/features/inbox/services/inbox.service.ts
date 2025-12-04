@@ -5,7 +5,7 @@ import { environment } from "../../../../environments/environment";
 import moment from "moment";
 import { Injectable } from "@angular/core";
 
-export type GetAllInboxByFilterParams = {
+export type InboxViewParams = {
   status?: InboxStatus | "TOMAKE" | "ALL";
   priority?: InboxPriority | "ALL";
   startsAt: Date;
@@ -17,7 +17,7 @@ export class InboxService extends PllRestService<Inbox> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "inbox";
 
-  getAllByFilter({ startsAt, endsAt, ...params }: GetAllInboxByFilterParams): Observable<PllPaginatedResponse<Inbox>> {
+  getAllByFilter({ startsAt, endsAt, ...params }: InboxViewParams): Observable<PllPaginatedResponse<Inbox>> {
     return this.http.get<PllPaginatedResponse<Inbox>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params });
   };
 

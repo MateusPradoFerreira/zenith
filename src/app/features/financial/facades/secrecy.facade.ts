@@ -4,12 +4,12 @@ import { Secrecy } from "../models/secrecy.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
 import { Refiners } from "@pollaris/forms/refiners";
-import { GetAllSecrecyByFilterParams, SecrecyService } from "../services/secrecy.service";
+import { SecrecyViewParams, SecrecyService } from "../services/secrecy.service";
 import { SecrecyState } from "../states/secrecy.state";
 import { SecrecyFormComponent } from "../views/secrecy/secrecy-form/secrecy-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type SecrecyUseQueryParams = GetAllSecrecyByFilterParams;
+export type SecrecyUseQueryParams = SecrecyViewParams;
 export type SecrecyUseQueryResponse = Secrecy;
 
 @Injectable({ providedIn: "root" })

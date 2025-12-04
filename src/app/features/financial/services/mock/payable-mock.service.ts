@@ -1,6 +1,6 @@
 import { PllID, PllMockRestService, PllPaginatedResponse, PllRecordRepository, PllRecordState } from "@pollaris";
 import { Payable, PayableStatus } from "../../models/payable.model";
-import { GetAllPayableByFilterParams, GetAllPayableByFilterResponse, PayableService } from "../payable.service";
+import { PayableViewParams, PayableViewResponse, PayableService } from "../payable.service";
 import { delay, map, Observable, of, switchMap, throwError } from "rxjs";
 import { inject, Injectable } from "@angular/core";
 import moment from "moment";
@@ -47,7 +47,7 @@ export class PayableMockService extends PllMockRestService<Payable> implements P
     );
   };
 
-  getAllByFilter(params: GetAllPayableByFilterParams): Observable<PllPaginatedResponse<GetAllPayableByFilterResponse>> {
+  getAllByFilter(params: PayableViewParams): Observable<PllPaginatedResponse<PayableViewResponse>> {
     const yesterday = moment().subtract(1, "day").toDate();
     return this.repository.$find({
       centerOfCostId: params.centerOfCostId || undefined,
@@ -66,7 +66,7 @@ export class PayableMockService extends PllMockRestService<Payable> implements P
       ...(params?.status === "TOPAY"? { paidAt: { $eq: null }, cancelledAt: { $eq: null } } : {}),
     }).pipe(
       delay(this.delay()),
-      map(response => ({ ...response, data: this.merge<Payable, GetAllPayableByFilterResponse>(response.data, record => ({
+      map(response => ({ ...response, data: this.merge<Payable, PayableViewResponse>(response.data, record => ({
         centerOfCost: this.centerOfCostMockRepository.state.get(record.centerOfCostId)?.name || "",
         planOfAccount: this.planOfAccountMockRepository.state.get(record.planOfAccountId)?.name || "",
         secrecy: this.secrecyMockRepository.state.get(record.secrecyId)?.name || "",

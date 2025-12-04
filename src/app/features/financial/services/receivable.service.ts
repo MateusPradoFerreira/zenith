@@ -5,7 +5,7 @@ import { environment } from "../../../../environments/environment";
 import moment from "moment";
 import { Injectable } from "@angular/core";
 
-export type GetAllReceivableByFilterParams = {
+export type ReceivableViewParams = {
   status?: ReceivableStatus | "TOPAY" | "ALL";
   centerOfCostId?: PllID | null;
   planOfAccountId?: PllID | null;
@@ -15,7 +15,7 @@ export type GetAllReceivableByFilterParams = {
   endsAt: Date;
 };
 
-export type GetAllReceivableByFilterResponse = Receivable & {
+export type ReceivableViewResponse = Receivable & {
   bankAccount: string;
   centerOfCost: string;
   planOfAccount: string;
@@ -27,8 +27,8 @@ export class ReceivableService extends PllRestService<Receivable> {
   override baseRoute: string = environment.apiUrl;
   override pathRoute: string = "receivables";
 
-  getAllByFilter({ startsAt, endsAt, ...params }: GetAllReceivableByFilterParams): Observable<PllPaginatedResponse<GetAllReceivableByFilterResponse>> {
-    return this.http.get<GetAllReceivableByFilterResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
+  getAllByFilter({ startsAt, endsAt, ...params }: ReceivableViewParams): Observable<PllPaginatedResponse<ReceivableViewResponse>> {
+    return this.http.get<ReceivableViewResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
       params 
     }).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
   };
