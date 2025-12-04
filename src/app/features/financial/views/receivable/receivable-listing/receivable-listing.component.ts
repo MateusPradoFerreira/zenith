@@ -1,8 +1,8 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { ReceivableFacade, ReceivableQueryFacade, ReceivableStatusOptions, ReceivableUseQueryParams, ReceivableUseQueryResponse } from '../../../facades/receivable.facade';
-import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
+import { ReceivableFacade, ReceivableQueryFacade, ReceivableStatusOptions, ReceivableUQP, ReceivableUQR } from '../../../facades/receivable.facade';
+import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { ReceivableFormComponent } from '../receivable-form/receivable-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
@@ -19,7 +19,7 @@ import { PllID } from '@pollaris';
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './receivable-listing.component.html',
 })
-export class ReceivableListingComponent extends BaseRecordListingComponentDirective<ReceivableUseQueryResponse, ReceivableUseQueryParams, ReceivableFormComponent> {
+export class ReceivableListingComponent extends BaseRecordListingComponentDirective<ReceivableUQR, ReceivableUQP, ReceivableFormComponent> {
   override facade = inject(ReceivableFacade);
   override queryFacade = inject(ReceivableQueryFacade);
   
@@ -35,12 +35,17 @@ export class ReceivableListingComponent extends BaseRecordListingComponentDirect
     { header: "Vencimento", class: "w-36" },
   ]);
 
-  override actionFn: HlmDataTableActionFc<ReceivableUseQueryResponse> = (data: ReceivableUseQueryResponse) => ([
+  override actionFn: HlmDataTableActionFc<ReceivableUQR> = (data: ReceivableUQR) => ([
     { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
     { icon: "dollar-sign", label: "Receber", command: () => this.handlePay(data.id), visible: data.status !== "PAID" },
     { separator: true, visible: data.status !== "PAID" },
     { icon: "circle-x", label: "Cancelar", command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" && data.status !== "PAID" },
     { icon: "check", label: "Reabrir", command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
+    { icon: "trash-2", label: "Excluir", command: () => this.handleDelete(data) },
+  ]);
+
+  override selectionActionFn: HlmDataTableSelectionActionFc<ReceivableUQR> = (data: ReceivableUQR[]) => ([
+    { icon: "trash-2", label: "Excluir", command: () => this.handleDeleteMany(data) },
   ]);
 
   secrecyService = inject(SecrecyService);

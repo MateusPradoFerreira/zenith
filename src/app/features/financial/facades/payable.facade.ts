@@ -13,8 +13,8 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 import { Starters } from "@pollaris/forms/starters";
 
-export type PayableUseQueryParams = PayableViewParams;
-export type PayableUseQueryResponse = PayableViewResponse;
+export type PayableUQP = PayableViewParams;
+export type PayableUQR = PayableViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
@@ -82,11 +82,11 @@ export class PayableFacade extends PllFacade<Payable, PayableFormComponent> {
 };
 
 @Injectable({ providedIn: "root" })
-export class PayableQueryFacade extends PllQueryFacade<PayableUseQueryResponse, PayableUseQueryParams> {
+export class PayableQueryFacade extends PllQueryFacade<PayableUQR, PayableUQP> {
   override service = inject(PayableService);
-  override queryFn = (params: PayableUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: PayableUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<PayableUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<PayableUQP> = {
     fields: {
       status: { value: "TOPAY" },
       centerOfCostId: { value: null },

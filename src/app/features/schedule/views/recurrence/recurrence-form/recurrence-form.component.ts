@@ -24,5 +24,6 @@ export class RecurrenceFormComponent extends BaseFormComponentDirective<Recurren
       weekdays = weekdays.filter(val => val !== weekday);
     } else weekdays.push(weekday);
     this.form.controls.byWeekday.setValue(weekdays);
+    this.onSubmit({ closeOnSave: false });
   };
 };

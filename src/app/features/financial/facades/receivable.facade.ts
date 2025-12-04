@@ -12,8 +12,8 @@ import { Observable, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
-export type ReceivableUseQueryParams = ReceivableViewParams;
-export type ReceivableUseQueryResponse = ReceivableViewResponse;
+export type ReceivableUQP = ReceivableViewParams;
+export type ReceivableUQR = ReceivableViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormComponent> {
@@ -81,11 +81,11 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormCompon
 };
 
 @Injectable({ providedIn: "root" })
-export class ReceivableQueryFacade extends PllQueryFacade<ReceivableUseQueryResponse, ReceivableUseQueryParams> {
+export class ReceivableQueryFacade extends PllQueryFacade<ReceivableUQR, ReceivableUQP> {
   override service = inject(ReceivableService);
-  override queryFn = (params: ReceivableUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: ReceivableUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<ReceivableUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<ReceivableUQP> = {
     fields: {
       status: { value: "TOPAY" },
       centerOfCostId: { value: null },

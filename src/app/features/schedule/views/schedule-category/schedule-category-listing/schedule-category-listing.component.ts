@@ -1,7 +1,7 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { ScheduleCategoryFacade, ScheduleCategoryQueryFacade, ScheduleCategoryUseQueryParams, ScheduleCategoryUseQueryResponse } from '../../../facades/schedule-category.facade';
+import { ScheduleCategoryFacade, ScheduleCategoryQueryFacade, ScheduleCategoryUQP, ScheduleCategoryUQR } from '../../../facades/schedule-category.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { ScheduleCategoryFormComponent } from '../schedule-category-form/schedule-category-form.component';
 
@@ -11,7 +11,7 @@ import { ScheduleCategoryFormComponent } from '../schedule-category-form/schedul
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './schedule-category-listing.component.html',
 })
-export class ScheduleCategoryListingComponent extends BaseRecordListingComponentDirective<ScheduleCategoryUseQueryResponse, ScheduleCategoryUseQueryParams, ScheduleCategoryFormComponent> {
+export class ScheduleCategoryListingComponent extends BaseRecordListingComponentDirective<ScheduleCategoryUQR, ScheduleCategoryUQP, ScheduleCategoryFormComponent> {
   override facade = inject(ScheduleCategoryFacade);
   override queryFacade = inject(ScheduleCategoryQueryFacade);
 

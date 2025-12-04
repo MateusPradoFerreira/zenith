@@ -12,8 +12,8 @@ import { Observable, tap } from "rxjs";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 
-export type InboxUseQueryParams = InboxViewParams;
-export type InboxUseQueryResponse = Inbox;
+export type InboxUQP = InboxViewParams;
+export type InboxUQR = Inbox;
 
 @Injectable({ providedIn: "root" })
 export class InboxFacade extends PllFacade<Inbox, InboxFormComponent> {
@@ -61,11 +61,11 @@ export class InboxFacade extends PllFacade<Inbox, InboxFormComponent> {
 };
 
 @Injectable({ providedIn: "root" })
-export class InboxQueryFacade extends PllQueryFacade<InboxUseQueryResponse, InboxUseQueryParams> {
+export class InboxQueryFacade extends PllQueryFacade<InboxUQR, InboxUQP> {
   override service = inject(InboxService);
-  override queryFn = (params: InboxUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: InboxUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<InboxUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<InboxUQP> = {
     fields: {
       status: { value: "TOMAKE" },
       priority: { value: "ALL" },

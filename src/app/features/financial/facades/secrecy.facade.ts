@@ -9,8 +9,8 @@ import { SecrecyState } from "../states/secrecy.state";
 import { SecrecyFormComponent } from "../views/secrecy/secrecy-form/secrecy-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type SecrecyUseQueryParams = SecrecyViewParams;
-export type SecrecyUseQueryResponse = Secrecy;
+export type SecrecyUQP = SecrecyViewParams;
+export type SecrecyUQR = Secrecy;
 
 @Injectable({ providedIn: "root" })
 export class SecrecyFacade extends PllFacade<Secrecy, SecrecyFormComponent> {
@@ -33,11 +33,11 @@ export class SecrecyFacade extends PllFacade<Secrecy, SecrecyFormComponent> {
 };
 
 @Injectable({ providedIn: "root" })
-export class SecrecyQueryFacade extends PllQueryFacade<SecrecyUseQueryResponse, SecrecyUseQueryParams> {
+export class SecrecyQueryFacade extends PllQueryFacade<SecrecyUQR, SecrecyUQP> {
   override service = inject(SecrecyService);
-  override queryFn = (params: SecrecyUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: SecrecyUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<SecrecyUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<SecrecyUQP> = {
     fields: {
       status: { value: "ACTIVE" },
     },

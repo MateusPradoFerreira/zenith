@@ -75,6 +75,8 @@
     <div class="col-span-8">
       <input hlmInput formControlName="count" [readonly]="form.value.endType !== 'COUNT'" [currencyMask]="{ prefix: '', suffix: ' ocorrências', min: 1, precision: 0, max: 100, align: 'left' }"/>
     </div>
+    
+    <button class="col-span-12" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 
   </hlm-radio-group>
 

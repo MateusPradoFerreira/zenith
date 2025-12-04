@@ -1,8 +1,8 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { PayableFacade, PayableQueryFacade, PayableStatusOptions, PayableUseQueryParams, PayableUseQueryResponse } from '../../../facades/payable.facade';
-import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
+import { PayableFacade, PayableQueryFacade, PayableStatusOptions, PayableUQP, PayableUQR } from '../../../facades/payable.facade';
+import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableComponent, HlmDataTableSelectionActionFc } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { PllID } from '@pollaris';
 import { PayableFormComponent } from '../payable-form/payable-form.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
@@ -19,7 +19,7 @@ import { BankAccountService } from '../../../services/bank-account.service';
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './payable-listing.component.html',
 })
-export class PayableListingComponent extends BaseRecordListingComponentDirective<PayableUseQueryResponse, PayableUseQueryParams, PayableFormComponent> {
+export class PayableListingComponent extends BaseRecordListingComponentDirective<PayableUQR, PayableUQP, PayableFormComponent> {
   override facade = inject(PayableFacade);
   override queryFacade = inject(PayableQueryFacade);
   
@@ -35,12 +35,17 @@ export class PayableListingComponent extends BaseRecordListingComponentDirective
     { header: "Vencimento", class: "w-36" },
   ]);
 
-  override actionFn: HlmDataTableActionFc<PayableUseQueryResponse> = (data: PayableUseQueryResponse) => ([
+  override actionFn: HlmDataTableActionFc<PayableUQR> = (data: PayableUQR) => ([
     { icon: "pencil-line", label: "Editar", command: () => this.handleUpdate(data) },
     { icon: "dollar-sign", label: "Pagar", command: () => this.handlePay(data.id), visible: data.status !== "PAID" },
     { separator: true, visible: data.status !== "PAID" },
     { icon: "circle-x", label: "Cancelar", command: () => this.handleCancel(data.id), visible: data.status !== "CANCELLED" && data.status !== "PAID" },
     { icon: "check", label: "Reabrir", command: () => this.handleReopen(data.id), visible: data.status === "CANCELLED" },
+    { icon: "trash-2", label: "Excluir", command: () => this.handleDelete(data) },
+  ]);
+
+  override selectionActionFn: HlmDataTableSelectionActionFc<PayableUQR> = (data: PayableUQR[]) => ([
+    { icon: "trash-2", label: "Excluir", command: () => this.handleDeleteMany(data) },
   ]);
 
   secrecyService = inject(SecrecyService);

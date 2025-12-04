@@ -9,6 +9,7 @@ import { hlm } from '@spartan-ng/helm/utils';
 import { ClassValue } from 'clsx';
 import { AuthFacade } from '../../features/auth/facades/auth.facade';
 import { errorHandler } from '../operators/error-handler.operator';
+import { toast } from 'ngx-sonner';
 
 @Directive()
 export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord, TComponent extends BaseFormComponentDirective<any> = BaseFormComponentDirective<any>> implements OnInit {  
@@ -69,7 +70,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   };
 
   updateUI() {
-    this.$updateUI().subscribe({
+    this.$updateUI().pipe(errorHandler()).subscribe({
       error: () => this.loading.set(false),
     });
   };
@@ -100,10 +101,29 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   };
 
   handleDelete(rowData: TRecordQueryModel) {
-    this.facade.openToDelete(rowData.id).subscribe(() => this.updateUI());
+    this.facade.openToDelete(rowData.id).pipe(errorHandler()).subscribe({
+      next: () => {
+        toast.success("SUCESSO!", { description: "Registro Excluido com Sucesso!" });
+        this.updateUI()
+        this.processing.set(false);
+      },
+      error: () => {
+        this.processing.set(false);
+      },
+    });
   };
 
   handleDeleteMany(data: TRecordQueryModel[]) {
-    this.facade.openToDeleteMany(data.map(record => record.id)).subscribe(() => this.updateUI());
+    this.processing.set(true);
+    this.facade.openToDeleteMany(data.map(record => record.id)).pipe(errorHandler()).subscribe({
+      next: () => {
+        toast.success("SUCESSO!", { description: "Registro Excluido com Sucesso!" });
+        this.updateUI()
+        this.processing.set(false);
+      },
+      error: () => {
+        this.processing.set(false);
+      },
+    });
   };
 };

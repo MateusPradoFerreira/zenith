@@ -9,8 +9,8 @@ import { FinancialRecurrenceState } from "../states/financial-recurrence.state";
 import { FinancialRecurrenceFormComponent } from "../views/financial-recurrence/financial-recurrence-form/financial-recurrence-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type FinancialRecurrenceUseQueryParams = FinancialRecurrenceViewParams;
-export type FinancialRecurrenceUseQueryResponse = FinancialRecurrence;
+export type FinancialRecurrenceUQP = FinancialRecurrenceViewParams;
+export type FinancialRecurrenceUQR = FinancialRecurrence;
 
 @Injectable({ providedIn: "root" })
 export class FinancialRecurrenceFacade extends PllFacade<FinancialRecurrence, FinancialRecurrenceFormComponent> {
@@ -39,11 +39,11 @@ export class FinancialRecurrenceFacade extends PllFacade<FinancialRecurrence, Fi
 };
 
 @Injectable({ providedIn: "root" })
-export class FinancialRecurrenceQueryFacade extends PllQueryFacade<FinancialRecurrenceUseQueryResponse, FinancialRecurrenceUseQueryParams> {
+export class FinancialRecurrenceQueryFacade extends PllQueryFacade<FinancialRecurrenceUQR, FinancialRecurrenceUQP> {
   override service = inject(FinancialRecurrenceService);
-  override queryFn = (params: FinancialRecurrenceUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: FinancialRecurrenceUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<FinancialRecurrenceUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<FinancialRecurrenceUQP> = {
     fields: {
       status: { value: "ACTIVE" },
     },

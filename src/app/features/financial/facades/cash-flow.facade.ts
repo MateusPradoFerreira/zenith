@@ -7,8 +7,8 @@ import { CashFlowState } from "../states/cash-flow.state";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 
-export type CashFlowUseQueryParams = CashFlowViewParams;
-export type CashFlowUseQueryResponse = CashFlowViewResponse;
+export type CashFlowUQP = CashFlowViewParams;
+export type CashFlowUQR = CashFlowViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class CashFlowFacade extends PllFacade<CashFlow> {
@@ -25,11 +25,11 @@ export class CashFlowFacade extends PllFacade<CashFlow> {
 };
 
 @Injectable({ providedIn: "root" })
-export class CashFlowQueryFacade extends PllQueryFacade<CashFlowUseQueryResponse, CashFlowUseQueryParams> {
+export class CashFlowQueryFacade extends PllQueryFacade<CashFlowUQR, CashFlowUQP> {
   override service = inject(CashFlowService);
-  override queryFn = (params: CashFlowUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: CashFlowUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<CashFlowUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<CashFlowUQP> = {
     fields: {
       centerOfCostId: { value: null },
       planOfAccountId: { value: null },

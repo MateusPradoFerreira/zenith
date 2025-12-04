@@ -9,8 +9,8 @@ import { ScheduleCategoryState } from "../states/schedule-category.state";
 import { ScheduleCategoryFormComponent } from "../views/schedule-category/schedule-category-form/schedule-category-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type ScheduleCategoryUseQueryParams = ScheduleCategoryViewParams;
-export type ScheduleCategoryUseQueryResponse = ScheduleCategory;
+export type ScheduleCategoryUQP = ScheduleCategoryViewParams;
+export type ScheduleCategoryUQR = ScheduleCategory;
 
 @Injectable({ providedIn: "root" })
 export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, ScheduleCategoryFormComponent> {
@@ -37,11 +37,11 @@ export class ScheduleCategoryFacade extends PllFacade<ScheduleCategory, Schedule
 };
 
 @Injectable({ providedIn: "root" })
-export class ScheduleCategoryQueryFacade extends PllQueryFacade<ScheduleCategoryUseQueryResponse, ScheduleCategoryUseQueryParams> {
+export class ScheduleCategoryQueryFacade extends PllQueryFacade<ScheduleCategoryUQR, ScheduleCategoryUQP> {
   override service = inject(ScheduleCategoryService);
-  override queryFn = (params: ScheduleCategoryUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: ScheduleCategoryUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<ScheduleCategoryUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<ScheduleCategoryUQP> = {
     fields: {
       status: { value: "ACTIVE" },
       type: { value: "ALL" },

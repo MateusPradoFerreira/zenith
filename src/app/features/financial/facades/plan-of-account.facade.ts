@@ -9,8 +9,8 @@ import { PlanOfAccountState } from "../states/plan-of-account.state";
 import { PlanOfAccountFormComponent } from "../views/plan-of-account/plan-of-account-form/plan-of-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type PlanOfAccountUseQueryParams = PlanOfAccountViewParams;
-export type PlanOfAccountUseQueryResponse = PlanOfAccount;
+export type PlanOfAccountUQP = PlanOfAccountViewParams;
+export type PlanOfAccountUQR = PlanOfAccount;
 
 @Injectable({ providedIn: "root" })
 export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccountFormComponent> {
@@ -33,11 +33,11 @@ export class PlanOfAccountFacade extends PllFacade<PlanOfAccount, PlanOfAccountF
 };
 
 @Injectable({ providedIn: "root" })
-export class PlanOfAccountQueryFacade extends PllQueryFacade<PlanOfAccountUseQueryResponse, PlanOfAccountUseQueryParams> {
+export class PlanOfAccountQueryFacade extends PllQueryFacade<PlanOfAccountUQR, PlanOfAccountUQP> {
   override service = inject(PlanOfAccountService);
-  override queryFn = (params: PlanOfAccountUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: PlanOfAccountUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<PlanOfAccountUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<PlanOfAccountUQP> = {
     fields: {
       status: { value: "ACTIVE" },
     },

@@ -9,8 +9,8 @@ import { CenterOfCostState } from "../states/center-of-cost.state";
 import { CenterOfCostFormComponent } from "../views/center-of-cost/center-of-cost-form/center-of-cost-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type CenterOfCostUseQueryParams = CenterOfCostViewParams;
-export type CenterOfCostUseQueryResponse = CenterOfCost;
+export type CenterOfCostUQP = CenterOfCostViewParams;
+export type CenterOfCostUQR = CenterOfCost;
 
 @Injectable({ providedIn: "root" })
 export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCostFormComponent> {
@@ -33,11 +33,11 @@ export class CenterOfCostFacade extends PllFacade<CenterOfCost, CenterOfCostForm
 };
 
 @Injectable({ providedIn: "root" })
-export class CenterOfCostQueryFacade extends PllQueryFacade<CenterOfCostUseQueryResponse, CenterOfCostUseQueryParams> {
+export class CenterOfCostQueryFacade extends PllQueryFacade<CenterOfCostUQR, CenterOfCostUQP> {
   override service = inject(CenterOfCostService);
-  override queryFn = (params: CenterOfCostUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: CenterOfCostUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<CenterOfCostUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<CenterOfCostUQP> = {
     fields: {
       status: { value: "ACTIVE" },
     },

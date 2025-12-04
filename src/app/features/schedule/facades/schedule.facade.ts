@@ -13,8 +13,8 @@ import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
 import { colors } from "../../../common/types/colors.type";
 
-export type ScheduleUseQueryParams = ScheduleViewParams;
-export type ScheduleUseQueryResponse = ScheduleViewResponse;
+export type ScheduleUQP = ScheduleViewParams;
+export type ScheduleUQR = ScheduleViewResponse;
 
 @Injectable({ providedIn: "root" })
 export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
@@ -45,11 +45,11 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
 };
 
 @Injectable({ providedIn: "root" })
-export class ScheduleQueryFacade extends PllQueryFacade<ScheduleUseQueryResponse, ScheduleUseQueryParams> {
+export class ScheduleQueryFacade extends PllQueryFacade<ScheduleUQR, ScheduleUQP> {
   override service = inject(ScheduleService);
-  override queryFn = (params: ScheduleUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: ScheduleUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<ScheduleUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<ScheduleUQP> = {
     fields: {
       categoryIds: { value: [] },
       startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required] },

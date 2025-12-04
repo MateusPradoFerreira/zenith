@@ -9,8 +9,8 @@ import { BankAccountState } from "../states/bank-account.state";
 import { BankAccountFormComponent } from "../views/bank-account/bank-account-form/bank-account-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 
-export type BankAccountUseQueryParams = BankAccountViewParams;
-export type BankAccountUseQueryResponse = BankAccount;
+export type BankAccountUQP = BankAccountViewParams;
+export type BankAccountUQR = BankAccount;
 
 @Injectable({ providedIn: "root" })
 export class BankAccountFacade extends PllFacade<BankAccount, BankAccountFormComponent> {
@@ -33,11 +33,11 @@ export class BankAccountFacade extends PllFacade<BankAccount, BankAccountFormCom
 };
 
 @Injectable({ providedIn: "root" })
-export class BankAccountQueryFacade extends PllQueryFacade<BankAccountUseQueryResponse, BankAccountUseQueryParams> {
+export class BankAccountQueryFacade extends PllQueryFacade<BankAccountUQR, BankAccountUQP> {
   override service = inject(BankAccountService);
-  override queryFn = (params: BankAccountUseQueryParams) => this.service.getAllByFilter(params);
+  override queryFn = (params: BankAccountUQP) => this.service.getAllByFilter(params);
 
-  override filterSchema: PllFormSchemaConfig<BankAccountUseQueryParams> = {
+  override filterSchema: PllFormSchemaConfig<BankAccountUQP> = {
     fields: {
       status: { value: "ACTIVE" },
     },

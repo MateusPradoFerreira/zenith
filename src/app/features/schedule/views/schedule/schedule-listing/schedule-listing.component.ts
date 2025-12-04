@@ -1,7 +1,7 @@
 import { Component, computed, inject, model } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
-import { ScheduleFacade, ScheduleQueryFacade, ScheduleUseQueryParams, ScheduleUseQueryResponse } from '../../../facades/schedule.facade';
+import { ScheduleFacade, ScheduleQueryFacade, ScheduleUQP, ScheduleUQR } from '../../../facades/schedule.facade';
 import { HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import moment from 'moment';
 import { ClassValue } from 'clsx';
@@ -22,7 +22,7 @@ import { ReceivableFacade } from '../../../../financial/facades/receivable.facad
   imports: [GlobalModule, HlmDataTableComponent, ScheduleSidebarSessionComponent],
   templateUrl: './schedule-listing.component.html',
 })
-export class ScheduleListingComponent extends BaseRecordListingComponentDirective<ScheduleUseQueryResponse, ScheduleUseQueryParams> {
+export class ScheduleListingComponent extends BaseRecordListingComponentDirective<ScheduleUQR, ScheduleUQP> {
   override facade = inject(ScheduleFacade);
   override queryFacade = inject(ScheduleQueryFacade);
 
@@ -63,9 +63,9 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
 
   calendarRefresh = new Subject<void>();
 
-  groupedValues = computed<{ date: Date, values: ScheduleUseQueryResponse[] }[]>(() => {
+  groupedValues = computed<{ date: Date, values: ScheduleUQR[] }[]>(() => {
     if(this.layout() === "calendar") return [];
-    const groups: Record<string, ScheduleUseQueryResponse[]> = {};
+    const groups: Record<string, ScheduleUQR[]> = {};
     for (const item of this.values()) {
       const day = moment(item.startsAt).startOf("day").format("YYYY-MM-DD");
       if (!groups[day]) groups[day] = [];
@@ -90,7 +90,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     a: this.$getScheduleCategoryOptions(),
   })));
 
-  override $evUpdateUI = event<PllPaginatedResponse<ScheduleUseQueryResponse>>(tap(() => this.handleRemapEvents()));
+  override $evUpdateUI = event<PllPaginatedResponse<ScheduleUQR>>(tap(() => this.handleRemapEvents()));
 
   getScheduleCategoryOptions() {
     this.$getScheduleCategoryOptions().subscribe({
@@ -146,7 +146,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     this.categoryTimeout = setTimeout(() => this.updateUI(), 300);
   };
 
-  handleUpdateRecord(rowData: ScheduleUseQueryResponse) {
+  handleUpdateRecord(rowData: ScheduleUQR) {
     console.log(rowData)
     switch (rowData.type) {
       case "PAYABLE": 

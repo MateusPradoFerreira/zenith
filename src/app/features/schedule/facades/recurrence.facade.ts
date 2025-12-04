@@ -1,5 +1,5 @@
 import { inject, Injectable, Type } from "@angular/core";
-import { PllFacade } from "@pollaris";
+import { PllFacade, PllID } from "@pollaris";
 import { Recurrence, RecurrenceFrequency, RecurrenceWeekday } from "../models/recurrence.model";
 import { PllFormSchemaConfig } from "@pollaris/forms";
 import { Validators } from "@angular/forms";
@@ -9,6 +9,7 @@ import { RecurrenceFormComponent } from "../views/recurrence/recurrence-form/rec
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
+import { Observable, tap } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormComponent> {
@@ -34,6 +35,10 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
       endsAt: { value: moment().toDate() },
       active: { value: true },
     },
+  };
+
+  handleGenerate(id: PllID): Observable<void> {
+    return this.dialogFacade.confirmRequest(this.service.generateOne(id), "Gerar registros da semana?", "info");
   };
 };
 
