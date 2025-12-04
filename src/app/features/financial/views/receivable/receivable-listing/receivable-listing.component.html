@@ -9,7 +9,7 @@
       <hlm-td class="truncate w-36 justify-end">{{ rowData.value | currency: "BRL" }}</hlm-td>
       <hlm-td class="truncate w-36">
         <button hlmBtn size="sm" variant="soft" severity="warn" *ngIf="rowData.status === 'PENDING'">Pendente</button>
-        <button hlmBtn size="sm" variant="soft" severity="success" *ngIf="rowData.status === 'PAID'">Pago</button>
+        <button hlmBtn size="sm" variant="soft" severity="success" *ngIf="rowData.status === 'PAID'">Recebido</button>
         <button hlmBtn size="sm" variant="soft" severity="danger" *ngIf="rowData.status === 'OVERDUE'">Vencido</button>
         <button hlmBtn size="sm" variant="soft" severity="danger" *ngIf="rowData.status === 'CANCELLED'">Cancelado</button>
       </hlm-td>

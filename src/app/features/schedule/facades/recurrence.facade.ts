@@ -38,7 +38,7 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
   };
 
   handleGenerate(id: PllID): Observable<void> {
-    return this.dialogFacade.confirmRequest(this.service.generateOne(id), "Gerar registros da semana?", "info");
+    return this.dialogFacade.confirmRequest(this.service.generateOne(id), "Gerar registros do mês atual?", "info");
   };
 };
 

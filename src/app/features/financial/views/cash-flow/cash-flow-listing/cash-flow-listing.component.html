@@ -4,6 +4,7 @@
       <ng-container *ngFor="let rowData of values()">
         <app-cash-flow-tree-trow [data]="rowData"/>
       </ng-container>
+      <ng-container *ngIf="!values().length" [ngTemplateOutlet]="emptyMessage" />
     </ng-template>
     <ng-template hlmTemplate="prev-body" let-rowData>
       <div class="grid grid-cols-12 gap-2 px-4 pb-2">
@@ -85,3 +86,23 @@
     </ng-template>
   </hlm-data-table>
 </div>
+
+<ng-template #emptyMessage>
+  <hlm-trow class="hover:bg-transparent mr-1.5 h-full">
+    <hlm-td class="w-full flex justify-center flex-col mb-32">
+      <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
+        <div class="border border-slate-200/50 p-5 rounded-4xl">
+          <div class="border border-slate-200 p-8 rounded-4xl">
+            <i-lucide name="dollar-sign"></i-lucide>
+          </div>
+        </div>
+      </div>
+      <span class="text-base font-medium">
+        OOPS! Nenhum registro encontrado!
+      </span>
+      <div class="text-sm">
+        Não tem nada para ser visualizado com os filtros selecionados! 
+      </div>
+    </hlm-td>
+  </hlm-trow>
+</ng-template>

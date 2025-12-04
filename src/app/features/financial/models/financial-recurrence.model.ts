@@ -5,6 +5,10 @@ export type FinancialRecurrenceType = "PAYABLE" | "RECEIVABLE";
 export class FinancialRecurrence {
   id: PllID;
   recurrenceId: PllID;
+  centerOfCostId: string;
+  planOfAccountId: string;
+  secrecyId: string;
+  bankAccountId: string;
   name: string;
   value: number;
   type: FinancialRecurrenceType;

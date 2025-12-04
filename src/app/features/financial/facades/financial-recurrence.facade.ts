@@ -19,7 +19,7 @@ export class FinancialRecurrenceFacade extends PllFacade<FinancialRecurrence, Fi
 
   override header: string = "Recorrência Financeira";
   override component: Type<any> = FinancialRecurrenceFormComponent;
-  override dialogSize: DialogContentVariants["size"] = "xs";
+  override dialogSize: DialogContentVariants["size"] = "lg";
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = false;
 
@@ -27,6 +27,10 @@ export class FinancialRecurrenceFacade extends PllFacade<FinancialRecurrence, Fi
     fields: {
       id: { value: null },
       recurrenceId: { value: null },
+      centerOfCostId: { value: null, validators: [Validators.required] },
+      planOfAccountId: { value: null, validators: [Validators.required] },
+      secrecyId: { value: null, validators: [Validators.required] },
+      bankAccountId: { value: null, validators: [Validators.required] },
       type: { value: "PAYABLE", validators: [Validators.required] },
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       value: { value: 0, validators: [Validators.required, Validators.min(0)] },

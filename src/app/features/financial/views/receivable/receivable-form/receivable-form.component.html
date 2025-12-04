@@ -16,7 +16,7 @@
   </div>
 
   <button *ngIf="form.value.status === 'PENDING'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="warn">Pendente</button>
-  <button *ngIf="form.value.status === 'PAID'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="success">Pago</button>
+  <button *ngIf="form.value.status === 'PAID'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="success">Recebido</button>
   <button *ngIf="form.value.status === 'OVERDUE'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="danger">Vencido</button>
   <button *ngIf="form.value.status === 'CANCELLED'" class="col-span-12 xl:col-span-3" type="button" hlmBtn variant="soft" severity="danger">Cancelado</button>
 
@@ -94,7 +94,7 @@
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-12">
-    <input hlmInput formControlName="description"/>
+    <textarea hlmInput rows="3"></textarea>
     <label>Observação</label>
   </div>
 

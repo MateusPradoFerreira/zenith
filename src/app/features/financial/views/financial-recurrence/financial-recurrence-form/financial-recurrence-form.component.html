@@ -1,11 +1,28 @@
 <form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
   
-  <div class="hlm-float-label col-span-12">
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
     <input hlmInput formControlName="name"/>
     <label>Nome</label>
   </div>
+  
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <input hlmInput formControlName="value" [currencyMask]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+    <label>Valor</label>
+  </div>
 
-  <div class="col-span-12 flex gap-2">
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="type" placeholder="Selecione uma Conta Bancária">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of typeOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Tipo</label>
+  </div>
+
+  <div class="col-span-12 flex gap-2 xl:col-span-3">
     <span class="hlm-float-label w-full">
        <hlm-date-picker formControlName="date" [forceSelection]="true" />
       <label>Data de referência</label>
@@ -24,30 +41,67 @@
     </brn-popover>
   </div>
 
-  <div class="hlm-float-label col-span-12">
-    <brn-select formControlName="type" placeholder="Selecione uma Conta Bancária">
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="bankAccountId" placeholder="Selecione uma Conta Bancária">
       <hlm-select-trigger>
         <hlm-select-value />
       </hlm-select-trigger>
       <hlm-select-content>
-        <hlm-option *ngFor="let option of typeOptions" [value]="option.value">{{ option.label }}</hlm-option>
+        <hlm-option *ngFor="let option of bankAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
       </hlm-select-content>
     </brn-select>
-    <label>Tipo</label>
+    <label>Conta Bancária</label>
+  </div>
+  
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="centerOfCostId" placeholder="Selecione um Centro de Custo">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of centerOfCostOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Centro de Custo</label>
   </div>
 
-  <div class="hlm-float-label col-span-12">
-    <input hlmInput formControlName="value" [currencyMask]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
-    <label>Valor</label>
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="planOfAccountId" placeholder="Selecione um Plano de Conta">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of planOfAccountOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Plano de Conta</label>
+  </div>
+
+  <div class="hlm-float-label col-span-12 xl:col-span-3">
+    <brn-select formControlName="secrecyId" placeholder="Selecione um Título">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of secrecyOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Título</label>
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-12">
-    <textarea hlmInput rows="7"></textarea>
+    <textarea hlmInput rows="3"></textarea>
     <label>Observação</label>
   </div>
 
-  <button class="col-span-12 xl:col-span-6" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
-  <button class="col-span-12 xl:col-span-6" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
+  <div class="col-span-12 {{ id()? 'xl:col-span-6' : 'xl:col-span-8' }} flex items-center gap-2">
+    <hlm-checkbox id="active-field" formControlName="active" />
+    <label for="active-field" class="text-sm text-slate-600">Ativo</label>
+  </div>
+
+  <button *ngIf="id()" class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="info" type="button" (click)="generate()" [disabled]="form.invalid || processing()">Gerar Registros</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <button class="col-span-12 xl:col-span-2" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 
 </form> 
 

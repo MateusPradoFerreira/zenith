@@ -6,9 +6,9 @@ export function errorHandler<T>(showWarning: boolean = false): OperatorFunction<
   return (source$) => source$.pipe(
     catchError(error => {
       let message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
-      if (message.includes("Cannot GET")) message = "Rota não implementada!";
+      if (message.includes("Cannot GET") || message.includes("Cannot POST") || message.includes("Cannot PUT")) message = "Rota não Implementada!";
 
-      if(error?.status && error.status >= 400 && error.status < 500 && showWarning) {
+      if(error?.status && error.status >= 400 && error.status < 500 && showWarning && message !== "Rota não Implementada!") {
         if (error.status === 400 && error?.error?.message?.errors) {
           const errors = error?.error?.message?.errors;
           for (let error of errors) {
@@ -32,7 +32,9 @@ type NextErrorHandlerData = {
 export function nextErrorHandler<T>({ header, next }: NextErrorHandlerData): OperatorFunction<T, T> {
   return (source$) => source$.pipe(
     catchError(error => {
-      const message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
+      let message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
+      if (message.includes("Cannot GET") || message.includes("Cannot POST") || message.includes("Cannot PUT")) message = "Rota não Implementada!";
+
       toast.error(header || "ERRO!", { description: message });
       if(next) next(error);
       return of(null);
