@@ -14,8 +14,8 @@ export class CenterOfCostService extends PllRestService<CenterOfCost> {
   override pathRoute: string = "centers-of-cost";
 
   getAllByFilter({ status }: CenterOfCostViewParams): Observable<PllPaginatedResponse<CenterOfCost>> {
-    return this.http.get<CenterOfCost[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<CenterOfCost>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
-    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    }});
   };
 };

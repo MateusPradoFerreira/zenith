@@ -28,9 +28,9 @@ export class ReceivableService extends PllRestService<Receivable> {
   override pathRoute: string = "receivables";
 
   getAllByFilter({ startsAt, endsAt, ...params }: ReceivableViewParams): Observable<PllPaginatedResponse<ReceivableViewResponse>> {
-    return this.http.get<ReceivableViewResponse[]>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
+    return this.http.get<PllPaginatedResponse<ReceivableViewResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { 
       params 
-    }).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    });
   };
 
   pay(id: PllID): Observable<Receivable> {

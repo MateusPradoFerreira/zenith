@@ -14,8 +14,8 @@ export class FinancialRecurrenceService extends PllRestService<FinancialRecurren
   override pathRoute: string = "financial-recurrences";
 
   getAllByFilter({ status }: FinancialRecurrenceViewParams): Observable<PllPaginatedResponse<FinancialRecurrence>> {
-    return this.http.get<FinancialRecurrence[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<FinancialRecurrence>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
-    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    }});
   };
 };

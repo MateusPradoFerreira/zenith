@@ -22,7 +22,7 @@ export type ScheduleViewResponse = Schedule & {
 @Injectable()
 export class ScheduleService extends PllRestService<Schedule> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "schedule";
+  override pathRoute: string = "schedules";
 
   getAllByFilter({ startsAt, endsAt, categoryIds }: ScheduleViewParams): Observable<PllPaginatedResponse<ScheduleViewResponse>> {
     return this.http.get<PllPaginatedResponse<ScheduleViewResponse>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params: {

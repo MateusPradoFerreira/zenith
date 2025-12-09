@@ -14,8 +14,8 @@ export class PlanOfAccountService extends PllRestService<PlanOfAccount> {
   override pathRoute: string = "plans-of-account";
 
   getAllByFilter({ status }: PlanOfAccountViewParams): Observable<PllPaginatedResponse<PlanOfAccount>> {
-    return this.http.get<PlanOfAccount[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<PlanOfAccount>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
-    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    }});
   };
 };

@@ -14,8 +14,8 @@ export class BankAccountService extends PllRestService<BankAccount> {
   override pathRoute: string = "bank-accounts";
 
   getAllByFilter({ status }: BankAccountViewParams): Observable<PllPaginatedResponse<BankAccount>> {
-    return this.http.get<BankAccount[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
+    return this.http.get<PllPaginatedResponse<BankAccount>>(`${this.baseRoute}/${this.pathRoute}`, { params: {
       status,
-    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    }});
   };
 };

@@ -12,7 +12,7 @@ export type ScheduleCategoryViewParams = {
 @Injectable()
 export class ScheduleCategoryService extends PllRestService<ScheduleCategory> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "schedule-category";
+  override pathRoute: string = "schedule-categories";
 
   getAllByFilter(params: ScheduleCategoryViewParams): Observable<PllPaginatedResponse<ScheduleCategory>> {
     return this.http.get<PllPaginatedResponse<ScheduleCategory>>(`${this.baseRoute}/${this.pathRoute}`, { params });

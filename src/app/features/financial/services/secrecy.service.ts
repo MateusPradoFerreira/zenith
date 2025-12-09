@@ -14,8 +14,6 @@ export class SecrecyService extends PllRestService<Secrecy> {
   override pathRoute: string = "secrecies";
 
   getAllByFilter({ status }: SecrecyViewParams): Observable<PllPaginatedResponse<Secrecy>> {
-    return this.http.get<Secrecy[]>(`${this.baseRoute}/${this.pathRoute}`, { params: {
-      status,
-    }}).pipe(map(response => ({ data: response, pagination: { page: 1, size: 100, sort: "ASC", total: response.length }})));
+    return this.http.get<PllPaginatedResponse<Secrecy>>(`${this.baseRoute}/${this.pathRoute}`, { params: { status }});
   };
 };
