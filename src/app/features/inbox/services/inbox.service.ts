@@ -15,7 +15,7 @@ export type InboxViewParams = {
 @Injectable()
 export class InboxService extends PllRestService<Inbox> {
   override baseRoute: string = environment.apiUrl;
-  override pathRoute: string = "inbox";
+  override pathRoute: string = "inboxes";
 
   getAllByFilter({ startsAt, endsAt, ...params }: InboxViewParams): Observable<PllPaginatedResponse<Inbox>> {
     return this.http.get<PllPaginatedResponse<Inbox>>(`${this.baseRoute}/${this.pathRoute}/startsAt/${moment(startsAt).format("YYYY-MM-DD")}/endsAt/${moment(endsAt).format("YYYY-MM-DD")}`, { params });
