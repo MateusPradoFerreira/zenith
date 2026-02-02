@@ -52,7 +52,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
     while (current.isSameOrBefore(end, "day")) {
       dates.push(current.clone().toDate());
       current.add(1, "day");
-    }
+    };
 
     return dates;
   });
