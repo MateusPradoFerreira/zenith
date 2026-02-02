@@ -39,6 +39,7 @@ export class ScheduleListingComponent extends BaseRecordListingComponentDirectiv
   layout = model<"table" | "calendar">("calendar");
   sidebarActive = model<boolean>(true);
   monthDayOpen = model<boolean>(false);
+  teste = model<boolean>(false);
 
   allDatesInRange = computed<Date[]>(() => {
     const date = moment(this.date());
