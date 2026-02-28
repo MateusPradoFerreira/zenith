@@ -96,7 +96,7 @@
                 <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
               </hlm-td>
               <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
-              <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" (click)="$event.stopPropagation()">
+              <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" [truncate]="false" (click)="$event.stopPropagation()">
                 <span class="flex items-center gap-2">
                   <button hlmBtn size="icon" variant="ghost" icon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
                 </span>

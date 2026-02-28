@@ -26,6 +26,7 @@ import { PllID } from '@pollaris';
 export class ReceivableListingComponent extends BaseRecordListingComponentDirective<ReceivableUQR, ReceivableUQP, ReceivableFormComponent> {
   override facade = inject(ReceivableFacade);
   override queryFacade = inject(ReceivableQueryFacade);
+  override cacheKey: string = "receivable-listing";
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "N° Doc.", class: "w-44" },

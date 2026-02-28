@@ -26,6 +26,7 @@ import { BankAccountService } from '../../../services/bank-account.service';
 export class PayableListingComponent extends BaseRecordListingComponentDirective<PayableUQR, PayableUQP, PayableFormComponent> {
   override facade = inject(PayableFacade);
   override queryFacade = inject(PayableQueryFacade);
+  override cacheKey: string = "payable-listing";
   
   override columns: WritableSignal<HlmDataTableColumn[]> = signal([
     { header: "N° Doc.", class: "w-44" },
