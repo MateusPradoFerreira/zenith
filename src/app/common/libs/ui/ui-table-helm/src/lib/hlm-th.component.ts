@@ -35,14 +35,15 @@ import type { ClassValue } from 'clsx';
 })
 export class HlmThComponent {
 	private readonly _columnDef? = inject(BrnColumnDefComponent, { optional: true });
-	public readonly truncate = input(false, { transform: booleanAttribute });
+	public readonly truncate = input(true, { transform: booleanAttribute });
 
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
 		hlm(
-			'flex text-[13px] flex-none py-2.5 px-4 text-sm border-l border-slate-200/70 flex-none items-center font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
+			'min-w-0 flex text-[13px] flex-none py-2.5 px-4 text-sm border-l border-slate-200/70 items-center font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
 			this._columnDef?.class(),
 			this.userClass(),
+			this.truncate? 'overflow-hidden' : '',
 		),
 	);
 }

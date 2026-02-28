@@ -9,6 +9,10 @@ import { SelectItem } from '../../../../../common/types/select-item.type';
 @Component({
   standalone: true,
   selector: 'app-center-of-cost-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './center-of-cost-listing.component.html',
 })

@@ -15,6 +15,10 @@ import { RecurrenceWeekdayOptions } from '../../../facades/recurrence.facade';
 @Component({
   standalone: true,
   selector: 'app-schedule-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, RecurrenceFormComponent],
   templateUrl: './schedule-form.component.html',
 })

@@ -7,6 +7,10 @@ import { PlanOfAccountFacade } from '../../../facades/plan-of-account.facade';
 @Component({
   standalone: true,
   selector: 'app-plan-of-account-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './plan-of-account-form.component.html',
 })

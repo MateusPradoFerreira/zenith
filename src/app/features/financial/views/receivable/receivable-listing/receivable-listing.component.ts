@@ -16,6 +16,10 @@ import { PllID } from '@pollaris';
 @Component({
   standalone: true,
   selector: 'app-receivable-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './receivable-listing.component.html',
 })

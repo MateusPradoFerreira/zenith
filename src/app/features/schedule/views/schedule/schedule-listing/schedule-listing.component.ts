@@ -19,6 +19,10 @@ import { ReceivableFacade } from '../../../../financial/facades/receivable.facad
 @Component({
   standalone: true,
   selector: 'app-schedule-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent, ScheduleSidebarSessionComponent],
   templateUrl: './schedule-listing.component.html',
 })

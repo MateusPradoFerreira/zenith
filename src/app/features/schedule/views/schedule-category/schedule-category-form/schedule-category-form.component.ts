@@ -8,6 +8,10 @@ import { Colors, colors } from '../../../../../common/types/colors.type';
 @Component({
   standalone: true,
   selector: 'app-schedule-category-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './schedule-category-form.component.html',
 })

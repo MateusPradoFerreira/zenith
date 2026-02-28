@@ -13,6 +13,10 @@ import { toast } from 'ngx-sonner';
 @Component({
   standalone: true,
   selector: 'app-financial-recurrence-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './financial-recurrence-listing.component.html',
 })

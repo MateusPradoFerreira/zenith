@@ -8,11 +8,16 @@ import { ClassValue } from 'clsx';
 @Component({
   standalone: true,
   selector: 'app-recurrence-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './recurrence-form.component.html',
 })
 export class RecurrenceFormComponent extends BaseFormComponentDirective<Recurrence> {
-  override readonly baseUserClass = signal<ClassValue>("grid grid-cols-12 gap-3.5 gap-x-2");
+  override readonly baseUserClass = signal<ClassValue>("");
+  override readonly baseFormClass = signal<ClassValue>("grid grid-cols-12 gap-3.5 gap-x-2");
   override facade = inject(RecurrenceFacade);
 
   shortWeekdayOptions = RecurrenceShortWeekdayOptions;

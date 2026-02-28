@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseRecordListingComponentDirective } from '../../../../../common/directives/base-listing-component.directive';
 import { CashFlow } from '../../../models/cash-flow.model';
@@ -6,11 +6,10 @@ import { CashFlowViewParams } from '../../../services/cash-flow.service';
 import { CashFlowFacade, CashFlowQueryFacade } from '../../../facades/cash-flow.facade';
 import { HlmDataTableColumn, HlmDataTableComponent } from '../../../../../common/libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
+import { forkJoin, switchMap, tap } from 'rxjs';
 import moment from 'moment';
 import { PllID, PllPaginatedResponse } from '@pollaris';
 import { CashFlowTreeTrowComponent } from '../../../components/cash-flow-tree-trow.component';
-import { CashFlowChartCardComponent } from '../../../components/cash-flow-chart-card.component';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import { SecrecyService } from '../../../services/secrecy.service';
 import { CenterOfCostService } from '../../../services/center-of-cost.service';
@@ -21,7 +20,11 @@ import { nextErrorHandler } from '../../../../../common/operators/error-handler.
 @Component({
   standalone: true,
   selector: 'app-cash-flow-listing',
-  imports: [GlobalModule, HlmDataTableComponent, CashFlowTreeTrowComponent, CashFlowChartCardComponent],
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
+  imports: [GlobalModule, HlmDataTableComponent, CashFlowTreeTrowComponent],
   templateUrl: './cash-flow-listing.component.html',
 })
 export class CashFlowListingComponent extends BaseRecordListingComponentDirective<CashFlow, CashFlowViewParams> {
@@ -54,7 +57,7 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
       { header: "", class: "flex-1" },
       ...periods.values.map(period => ({ header: moment(period).format("MMM YY"), class: "w-29 justify-end" })),
     ]);
-    this.getGraphValues();
+    /* this.getGraphValues(); */
   }));
 
   async getGraphValues() {

@@ -7,6 +7,10 @@ import { BankAccountFacade } from '../../../facades/bank-account.facade';
 @Component({
   standalone: true,
   selector: 'app-bank-account-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './bank-account-form.component.html',
 })

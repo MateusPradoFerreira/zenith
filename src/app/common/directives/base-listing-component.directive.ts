@@ -14,16 +14,13 @@ import { toast } from 'ngx-sonner';
 @Directive()
 export abstract class BaseRecordListingComponentDirective<TRecordQueryModel extends PllRecordId, TRecordQueryParams extends PllRecord, TComponent extends BaseFormComponentDirective<any> = BaseFormComponentDirective<any>> implements OnInit {  
   public readonly userClass = input<ClassValue>("", { alias: "class" });
-	protected readonly _computedClass = computed(() =>
-		hlm("", this.userClass()),
-	);
+  public readonly baseUserClass = signal<ClassValue>("block overflow-hidden h-full");
+  protected readonly _computedClass = computed(() => hlm(this.baseUserClass(), this.userClass()));
 
   isDialog = input<boolean>(false);
-  offsetHeight = input<number>(0);
   
   abstract facade: PllFacade<any>;
   abstract queryFacade: PllQueryFacade<TRecordQueryModel, TRecordQueryParams>;
-
 
   dialogFacade = inject(DialogFacade);
   authFacade = inject(AuthFacade);

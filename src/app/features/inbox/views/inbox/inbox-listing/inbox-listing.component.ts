@@ -10,6 +10,10 @@ import { PllID } from '@pollaris';
 @Component({
   standalone: true,
   selector: 'app-inbox-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './inbox-listing.component.html',
 })

@@ -1,4 +1,4 @@
-<form [class]="_computedClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
+<form [class]="_computedFormClass()" [formGroup]="form.form" *ngIf="formReady()" (submit)="onSubmit()">
 
   <div class="hlm-float-label col-span-12 xl:col-span-8">
     <input hlmInput formControlName="title"/>

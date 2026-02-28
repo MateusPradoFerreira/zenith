@@ -9,6 +9,10 @@ import { SelectItem } from '../../../../../common/types/select-item.type';
 @Component({
   standalone: true,
   selector: 'app-secrecy-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './secrecy-listing.component.html',
 })

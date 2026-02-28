@@ -67,9 +67,7 @@ export type DialogContentVariants = VariantProps<typeof dialogContentVariants>;
     	<h1 class="{{ align === 'center'? 'text-md' : 'text-lg' }} font-medium">{{header}}</h1>
 		</header>
 
-		<main>
-			<ng-template #container></ng-template>
-		</main>
+		<ng-template #container></ng-template>
 
 		<button brnDialogClose hlm class="cursor-pointer">
 			<span class="sr-only">Close</span>

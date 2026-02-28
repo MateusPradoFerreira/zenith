@@ -14,12 +14,20 @@ export type HlmDataTableSelectionActionFc<TModel> = (data: TModel[]) => HlmDataT
 
 @Component({
   selector: 'hlm-data-table',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './hlm-data-table.component.html',
 })
 export class HlmDataTableComponent implements OnInit, AfterContentInit {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
-  protected readonly _computedClass = computed(() => hlm("border-t border-slate-200 h-full", this.userClass()));
+  protected readonly _computedClass = computed(() => hlm(
+    "block h-full overflow-hidden grid grid-cols-1", 
+    this.showHeader() && this.prevBodyTemplate? "grid-rows-[auto_auto_1fr]" : this.showHeader() && !this.prevBodyTemplate? "grid-rows-[auto_1fr]" : "grid-rows-[1fr]",
+    this.userClass(),
+  ));
 
   header = input<string>();
   showHeader = input<boolean>(true);
@@ -98,17 +106,7 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   onPaginate = output<{ page: number, size: number }>();
   onInputSearch = output<string>();
 
-  scroll = model<"scroll" | "auto">("scroll");
-  offsetHeight = model<number>();
-  fixedHeight = model<number>();
-  autoHeight = model<boolean>(false);
-  height = signal("auto");
-  heightNb = signal(0);
-
-  offsetEffect = effect(() => {
-    this.offsetHeight();
-    this.setHeight();
-  });
+  hasColHeader = computed(() => this.colHeader() && this.columns()?.length);
 
   @ContentChildren(HlmTemplateDirective) templates!: QueryList<HlmTemplateDirective>;
   
@@ -127,23 +125,6 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   @ViewChild("table", { static: true }) tableTemplate: TemplateRef<any>;
   @ViewChild("grid", { static: true }) gridTemplate: TemplateRef<any>;
   body = signal<TemplateRef<any>>(null);
-
-  @HostListener('window:resize')
-  onResize() {
-    this.setHeightTimeout();
-  };
-
-  setHeightTimeout() {
-    clearTimeout(this.resizeTimeout);
-    this.resizeTimeout = setTimeout(() => this.setHeight(), 200);
-  };
-
-  setHeight() {
-    const height = document.getElementById("main-container")?.offsetHeight - 54 - this.offsetHeight();
-    const fixedHeight = this.fixedHeight() || height;
-    this.height.set(this.autoHeight()? "auto" : (fixedHeight + "px"));
-    this.heightNb.set(height);
-  };
 
   ngOnInit() {};
 

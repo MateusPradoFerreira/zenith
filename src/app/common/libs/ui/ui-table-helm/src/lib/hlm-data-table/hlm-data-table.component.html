@@ -64,77 +64,90 @@
   </div>
 </div>
 
-<ng-container *ngIf="prevBodyTemplate" [ngTemplateOutlet]="prevBodyTemplate"></ng-container>
+<div *ngIf="prevBodyTemplate">
+  <ng-container [ngTemplateOutlet]="prevBodyTemplate"></ng-container>
+</div>
 
 <ng-container *ngIf="bodyTemplate" [ngTemplateOutlet]="bodyTemplate"></ng-container>
 <ng-container *ngIf="!bodyTemplate && layoutBodyTemplate && !['table', 'grid'].includes(layout())" [ngTemplateOutlet]="layoutBodyTemplate"></ng-container>
 <ng-container *ngIf="!bodyTemplate && body() && ['table', 'grid'].includes(layout())" [ngTemplateOutlet]="body()" />
 
 <ng-template #table>
-  <div [style]="{ height: height() }">
-    <hlm-table hlm stickyHeader [class]="_computedClass()">
-      <hlm-trow class="bg-slate-50 mr-1.5" *ngIf="colHeader() && columns()?.length">
-        <hlm-th *ngIf="multiselect()" class="!px-4">
-          <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
-        </hlm-th>
-        <hlm-th *ngFor="let column of columns()" [class]="column?.class + ' truncate'">
-          {{ column.header }}
-        </hlm-th>
-        <hlm-th *ngIf="actionFn()" class="w-16" />
-      </hlm-trow>
-      <div class="h-full {{ scroll() === 'scroll'? 'overflow-y-scroll' : 'overflow-y-auto' }} custom-scroll {{ !paginatedValues().length && !tableBodyTemplate? '[&_hlm-trow:last-child]:border-b-0' : '' }}">
-        <ng-container *ngIf="tableBodyTemplate" [ngTemplateOutlet]="tableBodyTemplate"></ng-container>
-        <ng-container *ngIf="!tableBodyTemplate">
-          <hlm-trow class="cursor-pointer overflow-hidden {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
-            <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4">
-              <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
-            </hlm-td>
-            <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
-            <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" (click)="$event.stopPropagation()">
-              <span class="flex items-center gap-2">
-                <button hlmBtn size="icon" variant="ghost" icon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
-              </span>
-              <ng-template #menu>
-                <hlm-menu class="w-48" [items]="actions()[rowData.id]" />
-              </ng-template>
-            </hlm-td>
-          </hlm-trow>
-        </ng-container>
-        <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && !tableBodyTemplate">
-          <hlm-td class="w-full flex justify-center flex-col">
-            <div class="border border-slate-200/30 p-5 rounded-4xl {{ showEmptyMessOnTbBody()? 'mb-5' : '' }}" *ngIf="showEmptyIconOnTbBody()">
-              <div class="border border-slate-200/50 p-5 rounded-4xl">
-                <div class="border border-slate-200 p-8 rounded-4xl">
-                  <i-lucide [name]="emptyIconOnTbBody()"></i-lucide>
+  <hlm-table hlm stickyHeader class="h-full border-t border-slate-200 grid grid-cols-1 grid-rows-[1fr_auto] overflow-hidden">
+
+    <div class="w-full overflow-hidden lg:overflow-x-auto 2xl:overflow-x-hidden custom-scroll grid grid-cols-1 grid-rows-1">
+      <div class="w-full min-w-max 2xl:min-w-full 2xl:max-w-full overflow-hidden grid grid-cols-1 {{ hasColHeader()? 'grid-rows-[auto_1fr]' : 'grid-rows-[1fr]' }}">
+        <hlm-trow class="bg-slate-50 pr-1.5" *ngIf="hasColHeader()">
+          <hlm-th *ngIf="multiselect()" class="!px-4">
+            <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
+          </hlm-th>
+          <hlm-th *ngFor="let column of columns()" [class]="column?.class">
+            {{ column.header }}
+          </hlm-th>
+          <hlm-th *ngIf="actionFn()" class="w-16" />
+        </hlm-trow>
+
+        <div class="w-full overflow-y-scroll overflow-x-hidden custom-scroll {{ !paginatedValues().length && !tableBodyTemplate? '[&_hlm-trow:last-child]:border-b-0' : '' }}">
+
+          <ng-container *ngIf="tableBodyTemplate" [ngTemplateOutlet]="tableBodyTemplate"></ng-container>
+          <ng-container *ngIf="!tableBodyTemplate">
+            <hlm-trow class="cursor-pointer {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
+              <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4">
+                <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
+              </hlm-td>
+              <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
+              <hlm-td *ngIf="actionFn()" class="justify-end w-16 py-0.5" (click)="$event.stopPropagation()">
+                <span class="flex items-center gap-2">
+                  <button hlmBtn size="icon" variant="ghost" icon="ellipsis-vertical" [brnMenuTriggerFor]="menu" *ngIf="actions()[rowData.id]"></button>
+                </span>
+                <ng-template #menu>
+                  <hlm-menu class="w-48" [items]="actions()[rowData.id]" />
+                </ng-template>
+              </hlm-td>
+            </hlm-trow>
+          </ng-container>
+
+          <hlm-trow class="hover:bg-transparent mr-1.5 h-full" *ngIf="!paginatedValues().length && !tableBodyTemplate">
+            <hlm-td class="w-full flex justify-center flex-col" [truncate]="false">
+              <div class="border border-slate-200/30 p-5 rounded-4xl {{ showEmptyMessOnTbBody()? 'mb-5' : '' }}" *ngIf="showEmptyIconOnTbBody()">
+                <div class="border border-slate-200/50 p-5 rounded-4xl">
+                  <div class="border border-slate-200 p-8 rounded-4xl">
+                    <i-lucide [name]="emptyIconOnTbBody()"></i-lucide>
+                  </div>
                 </div>
               </div>
-            </div>
-            <span class="text-base font-medium" *ngIf="showEmptyMessOnTbBody()">
-              OOPS! Nenhum registro encontrado!
-            </span>
-            <div class="text-sm" *ngIf="showEmptyMessOnTbBody()">
-              Não tem nada para ser visualizado com os filtros selecionados! 
-            </div>
-            <div class="mt-2 mb-15" *ngIf="showEmptyMessOnTbBody()">
-              <ng-container [ngTemplateOutlet]="emptyActionsTemplate" />
-            </div>
-          </hlm-td>
-        </hlm-trow>
+              <span class="text-base font-medium" *ngIf="showEmptyMessOnTbBody()">
+                OOPS! Nenhum registro encontrado!
+              </span>
+              <div class="text-sm" *ngIf="showEmptyMessOnTbBody()">
+                Não tem nada para ser visualizado com os filtros selecionados! 
+              </div>
+              <div class="mt-2 mb-15" *ngIf="showEmptyMessOnTbBody()">
+                <ng-container [ngTemplateOutlet]="emptyActionsTemplate" />
+              </div>
+            </hlm-td>
+          </hlm-trow>
+          
+        </div>
       </div>
-      <hlm-trow class="justify-end hover:bg-transparent mr-1.5 border-t border-b-0" *ngIf="pagination()">
-        <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="filteredValues().length"/>
-      </hlm-trow>
-    </hlm-table>
-  </div>
+    </div>
+
+    <hlm-trow class="justify-end hover:bg-transparent mr-1.5 border-t border-b-0" *ngIf="pagination()">
+      <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="filteredValues().length"/>
+    </hlm-trow>
+    
+  </hlm-table>
 </ng-template>
 
 <ng-template #grid>
-  <div class="grid grid-cols-4 gap-2 mb-2 overflow-y-auto" [style]="{ height: height() }">
-    <div *ngFor="let rowData of paginatedValues()">
-      <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: rowData }"></ng-container>
+  <div class="h-full grid grid-cols-1 grid-rows-[1fr_auto]">
+    <div class="grid grid-cols-4 gap-2 mb-2 overflow-y-auto">
+      <div *ngFor="let rowData of paginatedValues()">
+        <ng-container *ngTemplateOutlet="cellTemplate; context: { $implicit: rowData }"></ng-container>
+      </div>
     </div>
-  </div>
-  <div class="flex justify-end bg-white border-t border-slate-200">
-    <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="totalItems() || filteredValues.length"/>
+    <div class="flex justify-end bg-white border-t border-slate-200"  *ngIf="pagination()">
+      <hlm-numbered-pagination [(currentPage)]="page" [(itemsPerPage)]="size" [totalItems]="totalItems() || filteredValues.length"/>
+    </div>
   </div>
 </ng-template>

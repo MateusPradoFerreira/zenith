@@ -7,6 +7,10 @@ import { CenterOfCostFacade } from '../../../facades/center-of-cost.facade';
 @Component({
   standalone: true,
   selector: 'app-center-of-cost-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './center-of-cost-form.component.html',
 })

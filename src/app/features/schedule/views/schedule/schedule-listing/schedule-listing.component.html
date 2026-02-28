@@ -1,9 +1,9 @@
 <div [class]="styleClass()">
   <ng-container [ngTemplateOutlet]="sidebar" />
   <div class="transition-all {{ this.sidebarActive()? 'pl-[296px]' : '' }}">
-    <hlm-data-table #dt [offsetHeight]="offsetHeight()" header="Agenda" [layout]="layout()" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
+    <hlm-data-table #dt header="Agenda" [layout]="layout()" [filter]="!this.sidebarActive()" [values]="values()" [pagination]="false" [columns]="columns()" (onSelect)="handleUpdateRecord($event)" [selectionActionFn]="selectionActionFn">
       <ng-template hlmTemplate="layout-body">
-        <div class="overflow-y-auto custom-scroll border-t border-slate-200" [style]="{ height: dt.height() }">
+        <div class="overflow-y-auto custom-scroll border-t border-slate-200">
           <mwl-calendar-day-view *ngIf="range() === 'day'" [viewDate]="date()" [events]="events()" [dayStartHour]="6" (hourSegmentClicked)="dayClicked($event.date, true, true)" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" (eventTimesChanged)="eventTimesChanged($event)" [refresh]="calendarRefresh" />
           <mwl-calendar-week-view *ngIf="range() === 'week'" [viewDate]="date()" [events]="events()" (hourSegmentClicked)="dayClicked($event.date, true, true)" [dayStartHour]="6" [dayEndHour]="19" (eventClicked)="handleUpdateRecord($event.event.meta)" (eventTimesChanged)="eventTimesChanged($event)" [refresh]="calendarRefresh" />
           <mwl-calendar-month-view *ngIf="range() === 'month'" [viewDate]="date()" [events]="events()" (eventClicked)="handleUpdateRecord($event.event.meta)" (dayClicked)="dayClicked($event.day.date, $event.day.inMonth)" (eventTimesChanged)="eventTimesChanged($event)" [activeDayIsOpen]="monthDayOpen()" [refresh]="calendarRefresh" />
@@ -143,7 +143,7 @@
 
 <ng-template #emptyMessage>
   <hlm-trow class="hover:bg-transparent mr-1.5 h-full">
-    <hlm-td class="w-full flex justify-center flex-col">
+    <hlm-td class="w-full flex justify-center flex-col" [truncate]="false">
       <div class="border border-slate-200/30 p-5 rounded-4xl mb-5">
         <div class="border border-slate-200/50 p-5 rounded-4xl">
           <div class="border border-slate-200 p-8 rounded-4xl">

@@ -28,12 +28,13 @@ import type { ClassValue } from 'clsx';
 export class HlmTableComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected readonly _computedClass = computed(() =>
-		hlm('flex flex-col text-sm', this.userClass()),
+		hlm('block text-sm oveflow-hidden custom-scroll', this.userClass()),
 	);
 
 	// we aria-labelledby to be settable from outside but use the input by default.
 	public readonly _labeledByInput = input<string | null | undefined>(undefined, { alias: 'aria-labelledby' });
 	public readonly labeledBy = signal<string | null | undefined>(undefined);
+	public readonly height = input<string | null>(null);
 
 	constructor() {
 		effect(() => {

@@ -16,6 +16,10 @@ import { BankAccountService } from '../../../services/bank-account.service';
 @Component({
   standalone: true,
   selector: 'app-payable-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './payable-listing.component.html',
 })

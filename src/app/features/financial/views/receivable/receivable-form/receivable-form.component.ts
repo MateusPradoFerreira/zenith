@@ -14,6 +14,10 @@ import { PllID } from '@pollaris';
 @Component({
   standalone: true,
   selector: 'app-receivable-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './receivable-form.component.html',
 })

@@ -1,19 +1,19 @@
 <div [class]="_computedClass()">
-  <hlm-data-table [offsetHeight]="offsetHeight()" header="Fluxo de Caixa" [offsetHeight]="100" [values]="values()" [columns]="columns()" [pagination]="false" (onInputSearch)="onInputSearch($event)">
+  <hlm-data-table header="Fluxo de Caixa" [values]="values()" [columns]="columns()" [pagination]="false" (onInputSearch)="onInputSearch($event)">
     <ng-template hlmTemplate="table-body" let-rowData>
       <ng-container *ngFor="let rowData of values()">
         <app-cash-flow-tree-trow [data]="rowData"/>
       </ng-container>
       <ng-container *ngIf="!values().length" [ngTemplateOutlet]="emptyMessage" />
     </ng-template>
-    <ng-template hlmTemplate="prev-body" let-rowData>
+    <!-- <ng-template hlmTemplate="prev-body" let-rowData>
       <div class="grid grid-cols-12 gap-2 px-4 pb-2">
         <app-cash-flow-chart-card label="Receita Total" [values]="[0]" class="col-span-3" />
         <app-cash-flow-chart-card label="Rendimento Total" [values]="[0]" class="col-span-3" />
         <app-cash-flow-chart-card label="Despesa Total" [values]="[0]" class="col-span-3" />
         <app-cash-flow-chart-card label="Á Pagar" [values]="[0]" class="col-span-3" />
       </div>
-    </ng-template>
+    </ng-template> -->
     <ng-template hlmTemplate="action">
       <ng-container [formGroup]="filter.form" *ngIf="filter">
         <div class="hlm-button-group shrink-0">

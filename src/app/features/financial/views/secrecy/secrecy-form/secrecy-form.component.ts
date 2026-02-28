@@ -7,6 +7,10 @@ import { SecrecyFacade } from '../../../facades/secrecy.facade';
 @Component({
   standalone: true,
   selector: 'app-secrecy-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './secrecy-form.component.html',
 })

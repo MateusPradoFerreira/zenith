@@ -16,6 +16,10 @@ import { nextErrorHandler } from '../../../../../common/operators/error-handler.
 @Component({
   standalone: true,
   selector: 'app-payable-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './payable-form.component.html',
 })

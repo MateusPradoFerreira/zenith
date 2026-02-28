@@ -7,6 +7,10 @@ import { InboxFacade, InboxPriorityOptions } from '../../../facades/inbox.facade
 @Component({
   standalone: true,
   selector: 'app-inbox-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule],
   templateUrl: './inbox-form.component.html',
 })

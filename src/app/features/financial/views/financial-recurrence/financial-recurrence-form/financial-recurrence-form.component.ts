@@ -18,6 +18,10 @@ import { toast } from 'ngx-sonner';
 @Component({
   standalone: true,
   selector: 'app-financial-recurrence-form',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, RecurrenceFormComponent],
   templateUrl: './financial-recurrence-form.component.html',
 })

@@ -10,11 +10,11 @@ import { ReceivableFacade } from "../facades/receivable.facade";
   imports: [GlobalModule],
   template: `
     <hlm-trow *ngIf="data().type === 'BANK'? data()?.children?.length : true" (click)="handleClickRow()" class="{{ level() >= 2? 'hover:bg-slate-50' : data().type === 'MARK' || data().type === 'BANK'? ( level()? 'bg-slate-50' : 'bg-slate-100 hover:bg-slate-100') : 'hover:bg-white' }} {{ level()? 'cursor-pointer' : '' }}">
-      <hlm-td class="truncate flex-1 justify-between">
+      <hlm-td class="flex-1" truncateClass="{{ level() === 1? 'flex' : '' }} gap-4 justify-between items-center">
         <span>{{ data().name }}</span>
         <i-lucide *ngIf="level() === 1" [name]="opened()? 'chevron-down' : 'chevron-up'" size="16" class="cursor-pointer" />
       </hlm-td>
-      <hlm-td class="truncate w-29 justify-end {{ level()? 'text-slate-500' : data().type === 'RECEIVABLE_MARK'? 'font-medium text-emerald-500' : data().type === 'PAYABLE_MARK'? 'font-medium text-red-500' : 'font-medium text-blue-500' }}" *ngFor="let value of data().values">
+      <hlm-td class="w-29 justify-end {{ level()? 'text-slate-500' : data().type === 'RECEIVABLE_MARK'? 'font-medium text-emerald-500' : data().type === 'PAYABLE_MARK'? 'font-medium text-red-500' : 'font-medium text-blue-500' }}" *ngFor="let value of data().values">
         <span *ngIf="data().type !== 'PERCENT'">{{ value | currency: "BRL" }}</span>
         <span *ngIf="data().type === 'PERCENT'" class="flex {{ value >= 0? 'text-emerald-500' : 'text-red-500' }}">
           {{ value }}%

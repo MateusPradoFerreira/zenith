@@ -21,10 +21,12 @@ export type BaseFormSubmitConfig = {
 @Directive()
 export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordId> implements OnInit {
   public readonly userClass = input<ClassValue>("", { alias: "class" });
-  public readonly baseUserClass = signal<ClassValue>("py-3 xl:px-6 px-2 xl:py-4 grid grid-cols-12 gap-3.5 gap-x-2");
-	protected readonly _computedClass = computed(() =>
-		hlm(this.baseUserClass(), this.userClass()),
-	);
+  public readonly baseUserClass = signal<ClassValue>("h-full overflow-y-auto custom-scroll py-3 xl:px-6 px-2 xl:py-4");
+	protected readonly _computedClass = computed(() => hlm(this.baseUserClass(), this.userClass()));
+
+  public readonly formClass = input<ClassValue>("", { alias: "formClass" });
+  public readonly baseFormClass = signal<ClassValue>("grid grid-cols-12 gap-3.5 gap-x-2");
+	protected readonly _computedFormClass = computed(() => hlm(this.baseFormClass(), this.formClass()));
   
   id = model<PllID>(null);
   closeOnSave = model<boolean>(true);

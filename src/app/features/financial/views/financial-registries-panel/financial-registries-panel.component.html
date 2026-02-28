@@ -1,4 +1,4 @@
-<hlm-tabs tab="bank-account" class="w-full">
+<hlm-tabs tab="bank-account">
   <hlm-tabs-list>
     <button hlmTabsTrigger="bank-account">Contas Bancária</button>
     <button hlmTabsTrigger="secrecy">Títulos</button>
@@ -7,18 +7,18 @@
     <button hlmTabsTrigger="schedule-category">Categorias de Agendamento</button>
   </hlm-tabs-list>
   <div hlmTabsContent="bank-account" class="p-0">
-    <app-bank-account-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+    <app-bank-account-listing />
   </div>
   <div hlmTabsContent="secrecy" class="p-0">
-    <app-secrecy-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+    <app-secrecy-listing />
   </div>
-  <div hlmTabsContent="center-of-cost" class="">
-    <app-center-of-cost-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+  <div hlmTabsContent="center-of-cost" class="p-0">
+    <app-center-of-cost-listing />
   </div>
-  <div hlmTabsContent="plan-of-account" class="">
-    <app-plan-of-account-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+  <div hlmTabsContent="plan-of-account" class="p-0">
+    <app-plan-of-account-listing />
   </div>
-  <div hlmTabsContent="schedule-category" class="">
-    <app-schedule-category-listing class="p-0 xl:p-0" [offsetHeight]="36" />
+  <div hlmTabsContent="schedule-category" class="p-0">
+    <app-schedule-category-listing />
   </div>
 </hlm-tabs>

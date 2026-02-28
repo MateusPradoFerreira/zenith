@@ -8,6 +8,10 @@ import { ScheduleCategoryFormComponent } from '../schedule-category-form/schedul
 @Component({
   standalone: true,
   selector: 'app-schedule-category-listing',
+  host: {
+		role: 'div',
+		'[class]': '_computedClass()',
+	},
   imports: [GlobalModule, HlmDataTableComponent],
   templateUrl: './schedule-category-listing.component.html',
 })
