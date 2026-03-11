@@ -11,6 +11,7 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import { Observable, tap } from "rxjs";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
+import { Starters } from "@pollaris/forms/starters";
 
 export type InboxUQP = InboxViewParams;
 export type InboxUQR = Inbox;
@@ -32,14 +33,14 @@ export class InboxFacade extends PllFacade<Inbox, InboxFormComponent> {
       title: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       status: { value: "PENDING" },
       priority: { value: "MEDIUM" },
-      dueAt: { value: new Date() },
-      createdAt: { value: new Date(), disabled: true },
-      cancelledAt: { value: null, disabled: true, onChange: (value, form) => {
+      dueAt: { value: new Date(), starters: [Starters.toDate] },
+      createdAt: { value: new Date(), disabled: true, starters: [Starters.toDate] },
+      cancelledAt: { value: null, disabled: true, starters: [Starters.toDate], onChange: (value, form) => {
         if(!value) return;
         form.controls.dueAt.disable();
         form.controls.priority.disable();
       }},
-      processedAt: { value: null, disabled: true, onChange: (value, form) => {
+      processedAt: { value: null, disabled: true, starters: [Starters.toDate], onChange: (value, form) => {
         if(!value) return;
         form.controls.dueAt.disable();
         form.controls.priority.disable();
@@ -69,8 +70,8 @@ export class InboxQueryFacade extends PllQueryFacade<InboxUQR, InboxUQP> {
     fields: {
       status: { value: "TOMAKE" },
       priority: { value: "ALL" },
-      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
+      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
     },
   };
 };

@@ -50,13 +50,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
   })));
 
   override $evUpdateUI: EventObs<PllPaginatedResponse<CashFlow>> = event(tap(response => {
-    if(!response.data.length) return;
-    const periods = response.data.shift();
-    this.values.set(response.data);
-    this.columns.set([
-      { header: "", class: "flex-1" },
-      ...periods.values.map(period => ({ header: moment(period).format("MMM YY"), class: "w-29 justify-end" })),
-    ]);
     /* this.getGraphValues(); */
   }));
 
@@ -105,12 +98,12 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
   };
 
   handleSetNextRange() {
-    this.filter.controls.date.setValue(moment(this.filter.value.date).add(1, "year").toDate());
+    this.filter.controls.date.setValue(moment(this.filter.value.date).add(1, "month").toDate());
     this.updateUI();
   };
 
   handleSetPrevRange() {
-    this.filter.controls.date.setValue(moment(this.filter.value.date).subtract(1, "year").toDate());
+    this.filter.controls.date.setValue(moment(this.filter.value.date).subtract(1, "month").toDate());
     this.updateUI();
   };
 };

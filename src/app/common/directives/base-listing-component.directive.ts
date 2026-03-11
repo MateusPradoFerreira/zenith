@@ -35,8 +35,6 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
-  cacheKey: string;
-
   columns = signal<HlmDataTableColumn[]>([]);
   actionFn: HlmDataTableActionFc<TRecordQueryModel>;
   selectionActionFn: HlmDataTableSelectionActionFc<TRecordQueryModel>;
@@ -49,7 +47,6 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
     this._configureFilterSchema();
     this.$evNgOnInit().pipe(
       switchMap(() => this.$evInitFilter()),
-      switchMap(() => this.$getCache()),
       switchMap(() => this.$updateUI()),
       errorHandler(),
     ).subscribe({
@@ -59,24 +56,6 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
 
   private _configureFilterSchema() {
     this.filter = new PllFormSchema(this.queryFacade.filterSchema);
-  };
-
-  private $setCache() {
-    if (!this.cacheKey) return of(null);
-    return this.filter.refine().pipe(tap(filter => {
-      window.localStorage.setItem(this.cacheKey, JSON.stringify(filter));
-    }));
-  };
-
-  private $getCache() {
-    if (!this.cacheKey) return of(null);
-    try {
-      const cache = window.localStorage.getItem(this.cacheKey);
-      if (!cache) return of(null);
-      return this.filter.patchValue(JSON.parse(cache) || {});
-    } catch {
-      return of(null);
-    };
   };
 
   handleApplyFilters() {
@@ -99,7 +78,6 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
     return this.filter.handleSubmit().pipe(
       tap(response => console.log("FILTERS", response)),
       switchMap(params => this.queryFacade.useQuery(params)),
-      switchMap(params => this.$setCache().pipe(map(() => params))),
       tap(response => this.values.set(response.data)),
       tap(response => this.pagination.set(response.pagination)),
       tap(response => console.log("UPDATE-UI", response.data)),

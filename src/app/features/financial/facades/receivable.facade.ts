@@ -11,6 +11,7 @@ import { ReceivableFormComponent } from "../views/receivable/receivable-form/rec
 import { Observable, tap } from "rxjs";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
+import { Starters } from "@pollaris/forms/starters";
 
 export type ReceivableUQP = ReceivableViewParams;
 export type ReceivableUQR = ReceivableViewResponse;
@@ -51,10 +52,10 @@ export class ReceivableFacade extends PllFacade<Receivable, ReceivableFormCompon
         form.controls.centerOfCostId.enable();
         form.controls.secrecyId.enable();
       }},
-      dueAt: { value: new Date(), validators: [Validators.required] },
-      paidAt: { value: null, disabled: true },
-      createdAt: { value: new Date(), validators: [Validators.required] },
-      cancelledAt: { value: null, validators: [Validators.required], disabled: true },
+      dueAt: { value: new Date(), validators: [Validators.required], starters: [Starters.toDate] },
+      paidAt: { value: null, disabled: true, starters: [Starters.toDate] },
+      createdAt: { value: new Date(), validators: [Validators.required], starters: [Starters.toDate] },
+      cancelledAt: { value: null, validators: [Validators.required], disabled: true, starters: [Starters.toDate] },
       active: { value: true },
       centerOfCostId: { value: null, validators: [Validators.required] },
       planOfAccountId: { value: null, validators: [Validators.required] },
@@ -92,8 +93,8 @@ export class ReceivableQueryFacade extends PllQueryFacade<ReceivableUQR, Receiva
       planOfAccountId: { value: null },
       bankAccountId: { value: null },
       secrecyId: { value: null },
-      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
+      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
     },
   };
 };

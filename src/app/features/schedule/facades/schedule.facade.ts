@@ -12,6 +12,7 @@ import moment from "moment";
 import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
 import { colors } from "../../../common/types/colors.type";
+import { Starters } from "@pollaris/forms/starters";
 
 export type ScheduleUQP = ScheduleViewParams;
 export type ScheduleUQR = ScheduleViewResponse;
@@ -52,8 +53,8 @@ export class ScheduleQueryFacade extends PllQueryFacade<ScheduleUQR, ScheduleUQP
   override filterSchema: PllFormSchemaConfig<ScheduleUQP> = {
     fields: {
       categoryIds: { value: [] },
-      startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required] },
-      endsAt: { value: moment().endOf("week").toDate(), validators: [Validators.required] },
+      startsAt: { value: moment().startOf("week").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
+      endsAt: { value: moment().endOf("week").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
     },
   };
 

@@ -93,8 +93,8 @@ export class PayableQueryFacade extends PllQueryFacade<PayableUQR, PayableUQP> {
       planOfAccountId: { value: null },
       bankAccountId: { value: null },
       secrecyId: { value: null },
-      startsAt: { value: moment().startOf("month").toDate() },
-      endsAt: { value: moment().endOf("month").toDate() },
+      startsAt: { value: moment().startOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
+      endsAt: { value: moment().endOf("month").toDate(), validators: [Validators.required], starters: [Starters.toDate] },
     },
   };
 };

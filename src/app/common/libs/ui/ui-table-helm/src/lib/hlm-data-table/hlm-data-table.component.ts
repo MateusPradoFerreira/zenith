@@ -35,6 +35,8 @@ export class HlmDataTableComponent implements OnInit, AfterContentInit {
   loading = input<boolean>(false);
   values = input<HlmDataTableRecord[]>([]);
   columns = input<HlmDataTableColumn[]>([]);
+  
+  hscroll = input<boolean>(true);
 
   actionFn = input<HlmDataTableActionFc<any>>();
   actions = computed<{[key: PllID]: HlmDataTableAction[]}>(() => {

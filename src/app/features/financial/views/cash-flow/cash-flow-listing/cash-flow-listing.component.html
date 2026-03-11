@@ -1,5 +1,5 @@
 <div [class]="_computedClass()">
-  <hlm-data-table header="Fluxo de Caixa" [values]="values()" [columns]="columns()" [pagination]="false" (onInputSearch)="onInputSearch($event)">
+  <hlm-data-table header="Fluxo de Caixa" [hscroll]="false" [values]="values()" [columns]="columns()" [pagination]="false" (onInputSearch)="onInputSearch($event)">
     <ng-template hlmTemplate="table-body" let-rowData>
       <ng-container *ngFor="let rowData of values()">
         <app-cash-flow-tree-trow [data]="rowData"/>

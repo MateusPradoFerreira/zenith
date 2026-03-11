@@ -1,6 +1,6 @@
 import { PllID } from "@pollaris";
 
-export type CashFlowType = "PAYABLE" | "PAYABLE_MARK" | "RECEIVABLE" | "RECEIVABLE_MARK" | "MARK" | "BANK" | "PERCENT";
+export type CashFlowType = "PAYABLE" | "PAYABLE_MARK" | "RECEIVABLE" | "RECEIVABLE_MARK" | "MARK" | "BANK" | "PERCENT" | "PERIOD";
 
 export class CashFlow {
   id: PllID;
