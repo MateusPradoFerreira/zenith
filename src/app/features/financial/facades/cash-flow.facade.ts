@@ -6,6 +6,7 @@ import { CashFlowViewParams, CashFlowViewResponse, CashFlowService } from "../se
 import { CashFlowState } from "../states/cash-flow.state";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
+import { Starters } from "@pollaris/forms/starters";
 
 export type CashFlowUQP = CashFlowViewParams;
 export type CashFlowUQR = CashFlowViewResponse;
@@ -35,7 +36,7 @@ export class CashFlowQueryFacade extends PllQueryFacade<CashFlowUQR, CashFlowUQP
       planOfAccountId: { value: null },
       bankAccountId: { value: null },
       secrecyId: { value: null },
-      date: { value: moment().toDate() },
+      date: { value: moment().toDate(), starters: [Starters.toDate] },
       query: { value: null },
     },
   };

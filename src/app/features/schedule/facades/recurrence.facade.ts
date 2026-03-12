@@ -10,6 +10,7 @@ import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
 import moment from "moment";
 import { SelectItem } from "../../../common/types/select-item.type";
 import { Observable, tap } from "rxjs";
+import { Starters } from "@pollaris/forms/starters";
 
 @Injectable({ providedIn: "root" })
 export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormComponent> {
@@ -30,9 +31,9 @@ export class RecurrenceFacade extends PllFacade<Recurrence, RecurrenceFormCompon
       byWeekday: { value: [] },
       interval: { value: 1 },
       count: { value: 1 },
-      createdAt: { value: moment().toDate() },
-      startsAt: { value: moment().toDate() },
-      endsAt: { value: moment().toDate() },
+      createdAt: { value: moment().toDate(), starters: [Starters.toDate] },
+      startsAt: { value: moment().toDate(), starters: [Starters.toDate] },
+      endsAt: { value: moment().toDate(), starters: [Starters.toDate] },
       active: { value: true },
     },
   };

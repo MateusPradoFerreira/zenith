@@ -8,6 +8,7 @@ import { FinancialRecurrenceViewParams, FinancialRecurrenceService } from "../se
 import { FinancialRecurrenceState } from "../states/financial-recurrence.state";
 import { FinancialRecurrenceFormComponent } from "../views/financial-recurrence/financial-recurrence-form/financial-recurrence-form.component";
 import { DialogContentVariants } from "@spartan-ng/ui-dialog-helm";
+import { Starters } from "@pollaris/forms/starters";
 
 export type FinancialRecurrenceUQP = FinancialRecurrenceViewParams;
 export type FinancialRecurrenceUQR = FinancialRecurrence;
@@ -34,7 +35,7 @@ export class FinancialRecurrenceFacade extends PllFacade<FinancialRecurrence, Fi
       type: { value: "PAYABLE", validators: [Validators.required] },
       name: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
       value: { value: 0, validators: [Validators.required, Validators.min(0)] },
-      date: { value: new Date(), validators: [Validators.required] },
+      date: { value: new Date(), validators: [Validators.required], starters: [Starters.toDate] },
       description: { value: null },
       createdAt: { value: new Date(), validators: [Validators.required], disabled: true },
       active: { value: true },
