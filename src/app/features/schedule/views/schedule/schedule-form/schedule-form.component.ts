@@ -73,4 +73,17 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
       { label: "Personalizar", value: "CUSTOM" },
     ];
   };
+
+  delete() {
+    this.processing.set(true);
+    this.facade.openToDelete(this.form.value.id).subscribe({
+      next: () => {
+        this._context.close(this.crrRecord);
+        this.processing.set(false);
+      },
+      error: () => {
+        this.processing.set(false);
+      }
+    });
+  };
 };

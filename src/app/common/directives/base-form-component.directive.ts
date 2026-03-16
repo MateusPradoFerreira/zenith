@@ -33,7 +33,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   isDialog = input<boolean>(false);
 
   abstract facade: PllFacade<TRecordModel, any>;
-  private readonly _context = injectBrnDialogContext();
+  readonly _context = injectBrnDialogContext();
   
   authFacade = inject(AuthFacade);
 

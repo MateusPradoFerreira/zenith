@@ -14,6 +14,7 @@ export class Schedule {
   endsAt: Date;
   startsAtTime: string;
   endsAtTime: string;
+  description: string;
 
   constructor(props: Partial<Schedule>) {
     Object.assign(this, props);

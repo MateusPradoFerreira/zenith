@@ -64,11 +64,15 @@
   </div>
 
   <div class="hlm-float-label col-span-12 xl:col-span-12">
-    <textarea hlmInput rows="7"></textarea>
+    <textarea hlmInput rows="7" formControlName="description"></textarea>
     <label>Descrição</label>
   </div>
 
-  <button class="col-span-12 xl:col-span-6" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  <div class="col-span-12 xl:col-span-6 flex gap-2">
+    <button class="aspect-square" hlmBtn type="button" size="icon" variant="soft" severity="danger" icon="trash2" (click)="delete()" *ngIf="id()"></button>
+    <button class="flex-1" hlmBtn variant="text" type="button" (click)="back()">Voltar</button>
+  </div>
+
   <button class="col-span-12 xl:col-span-6" hlmBtn variant="soft" severity="help" [disabled]="form.invalid || processing()">Salvar</button>
 
 </form>

@@ -13,6 +13,8 @@ import { CalendarEvent } from "angular-calendar";
 import { Util } from "../../../common/util/util";
 import { colors } from "../../../common/types/colors.type";
 import { Starters } from "@pollaris/forms/starters";
+import { catchError, Observable, of, switchMap, tap, throwError } from "rxjs";
+import { RecurrenceState } from "../states/recurrence.state";
 
 export type ScheduleUQP = ScheduleViewParams;
 export type ScheduleUQR = ScheduleViewResponse;
@@ -28,6 +30,8 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
   override dialogAlign: DialogContentVariants["align"] = "center";
   override closeOnSave: boolean = false;
 
+  private readonly recurrenceState = inject(RecurrenceState);
+
   override recordSchema: PllFormSchemaConfig<Schedule> = {
     fields: {
       id: { value: null },
@@ -41,7 +45,17 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
       endsAt: { value: moment().toDate(), starters: [Starters.toDate] },
       startsAtTime: { value: "08:00:00" },
       endsAtTime: { value: "08:00:00" },
+      description: { value: null },
     },
+  };
+
+  override updateRecord(data: Schedule): Observable<Schedule> {
+    return of(data).pipe(
+      switchMap(record => this.service.put(record)),
+      tap(response => this.state.remove(response.id)),
+      tap(response => this.recurrenceState.remove(response.recurrenceId)),
+      catchError(error => throwError(error)),
+    );
   };
 };
 
