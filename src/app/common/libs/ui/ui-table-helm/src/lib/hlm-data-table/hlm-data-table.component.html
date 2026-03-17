@@ -78,7 +78,7 @@
     <div class="w-full overflow-hidden lg:overflow-x-auto 2xl:overflow-x-hidden custom-scroll grid grid-cols-1 grid-rows-1">
       <div class="w-full {{ hscroll()? 'min-w-max 2xl:min-w-full 2xl:max-w-full' : 'min-w-full max-w-full' }} overflow-hidden grid grid-cols-1 {{ hasColHeader()? 'grid-rows-[auto_1fr]' : 'grid-rows-[1fr]' }}">
         <hlm-trow class="bg-slate-50 pr-1.5" *ngIf="hasColHeader()">
-          <hlm-th *ngIf="multiselect()" class="!px-4">
+          <hlm-th *ngIf="multiselect()" class="!px-4 items-center justify-center">
             <hlm-checkbox [checked]="allSelection()" (click)="handleAllSelection()" />
           </hlm-th>
           <hlm-th *ngFor="let column of columns()" [class]="column?.class">
@@ -92,7 +92,7 @@
           <ng-container *ngIf="tableBodyTemplate" [ngTemplateOutlet]="tableBodyTemplate"></ng-container>
           <ng-container *ngIf="!tableBodyTemplate">
             <hlm-trow class="cursor-pointer {{ i % 2 === 1? 'bg-slate-50/50' : '' }}" *ngFor="let rowData of paginatedValues(); let i = index" (click)="rowSelect($event, rowData)">
-              <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4">
+              <hlm-td *ngIf="multiselect()" (click)="$event.stopPropagation()" class="!px-4 items-center justify-center" [truncate]="false">
                 <hlm-checkbox [checked]="selection().includes(rowData.id)" (click)="handleSelecion(rowData.id)" />
               </hlm-td>
               <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: rowData }"></ng-container>
