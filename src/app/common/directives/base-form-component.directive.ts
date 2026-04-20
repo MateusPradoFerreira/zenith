@@ -116,16 +116,16 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   };
 
   onSubmit(config: BaseFormSubmitConfig = {}) {
-    this.$handleSubmit(config).pipe(errorHandler(true)).subscribe();
+    this.$handleSubmit(config).pipe(errorHandler({ showWarning: true })).subscribe();
   };
 
   $handleSubmit({ closeOnSave }: BaseFormSubmitConfig = {}): Observable<TRecordModel> {
     this.processing.set(true);
     return this.form.handleSubmit().pipe(
       switchMap(response => this.$evInitSumit(response).pipe(map(() => response))),
+      tap(response => console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response)),
       switchMap(response => !this.id()? this.facade.insertRecord(response) : this.facade.updateRecord(response)),
       tap(response => { 
-        console.log(!this.id()? "INSERT-RECORD" : "UPDATE-RECORD", response);
         toast.success("SUCESSO!", { description: this.id()? "Registro Atualizado com Sucesso!" : "Registro Inserido com Sucesso!" });
         this.id.set(response.id);
         this.orgRecord = response;

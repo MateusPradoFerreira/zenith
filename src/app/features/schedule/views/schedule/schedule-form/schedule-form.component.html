@@ -43,6 +43,18 @@
     <label>Categoria</label>
   </div>
 
+  <div class="hlm-float-label col-span-12 xl:col-span-12">
+    <brn-select formControlName="status" placeholder="Selecione um Status">
+      <hlm-select-trigger>
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content>
+        <hlm-option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</hlm-option>
+      </hlm-select-content>
+    </brn-select>
+    <label>Status</label>
+  </div>
+
   <div class="hlm-float-label col-span-12 xl:col-span-6">
     <hlm-date-picker formControlName="startsAt" [forceSelection]="true" />
     <label>Início</label>

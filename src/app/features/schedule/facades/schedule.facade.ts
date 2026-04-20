@@ -39,6 +39,7 @@ export class ScheduleFacade extends PllFacade<Schedule, ScheduleFormComponent> {
       recurrenceId: { value: null },
       categoryId: { value: null },
       title: { value: null, validators: [Validators.required], refiners: [Refiners.trim] },
+      status: { value: "TO_MAKE", validators: [Validators.required] },
       frequency: { value: "NO_REPETITION", validators: [Validators.required] },
       createdAt: { value: moment().toDate(), starters: [Starters.toDate] },
       startsAt: { value: moment().toDate(), starters: [Starters.toDate] },

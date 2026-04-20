@@ -139,6 +139,11 @@ export class HlmDatePickerComponent<T> implements AfterViewInit {
 		const validDate = this.inputDate()?.includes("_")? false : moment(this.inputDate(), "DD/MM/YYYY").isValid();
 		if(!validDate) {
 			this.inputDate.set(this.forceSelection() && this.date()? moment(this.date()).format("DD/MM/YYYY") : null);
+			if (!this.forceSelection()) {
+				this.date.set(null);
+				this._onChange?.(null);
+				this.changed.emit(null);
+			};
 			return;
 		};
 

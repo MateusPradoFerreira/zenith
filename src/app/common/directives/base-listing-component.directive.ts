@@ -99,7 +99,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   };
 
   handleDelete(rowData: TRecordQueryModel) {
-    this.facade.openToDelete(rowData.id).pipe(errorHandler()).subscribe({
+    this.facade.openToDelete(rowData.id).pipe(errorHandler({ header: "ERRO AO DELETAR REGISTRO!" })).subscribe({
       next: () => {
         toast.success("SUCESSO!", { description: "Registro Excluido com Sucesso!" });
         this.updateUI()
@@ -113,7 +113,7 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
 
   handleDeleteMany(data: TRecordQueryModel[]) {
     this.processing.set(true);
-    this.facade.openToDeleteMany(data.map(record => record.id)).pipe(errorHandler()).subscribe({
+    this.facade.openToDeleteMany(data.map(record => record.id)).pipe(errorHandler({ header: "ERRO AO DELETAR REGISTROS!" })).subscribe({
       next: () => {
         toast.success("SUCESSO!", { description: "Registro Excluido com Sucesso!" });
         this.updateUI()

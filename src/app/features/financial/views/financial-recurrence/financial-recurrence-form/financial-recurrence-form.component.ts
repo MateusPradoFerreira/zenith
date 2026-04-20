@@ -67,19 +67,19 @@ export class FinancialRecurrenceFormComponent extends BaseFormComponentDirective
 
   $getSecrecyOptions = () => this.secrecyService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }), nextErrorHandler({}));
+  }), nextErrorHandler());
 
   $getCenterOfCostOptions = () => this.centerOfCostService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.centerOfCostOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }), nextErrorHandler({}));
+  }), nextErrorHandler());
 
   $getPlanOfAccountOptions = () => this.planOfAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.planOfAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }), nextErrorHandler({}));
+  }), nextErrorHandler());
 
   $getBankAccountOptions = () => this.bankAccountService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.bankAccountOptions = response.data.map(record => ({ label: record.name, value: record.id }));
-  }), nextErrorHandler({}));
+  }), nextErrorHandler());
   
   generate() {
     this.processing.set(false),

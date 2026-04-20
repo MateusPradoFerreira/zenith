@@ -1,16 +1,17 @@
 import { Component, inject, input, signal, ViewChild } from '@angular/core';
 import { GlobalModule } from '../../../../../core/modules/global-module.module';
 import { BaseFormComponentDirective, event, EventObs } from '../../../../../common/directives/base-form-component.directive';
-import { Schedule, ScheduleFrequency } from '../../../models/schedule.model';
+import { Schedule, ScheduleFrequency, ScheduleStatus } from '../../../models/schedule.model';
 import { ScheduleFacade } from '../../../facades/schedule.facade';
 import { switchMap, tap } from 'rxjs';
 import { ScheduleCategoryFacade } from '../../../facades/schedule-category.facade';
 import { ScheduleCategory } from '../../../models/schedule-category.model';
 import { SelectItem } from '../../../../../common/types/select-item.type';
 import moment from 'moment';
-import { Colors, colors } from '../../../../../common/types/colors.type';
 import { RecurrenceFormComponent } from '../../recurrence/recurrence-form/recurrence-form.component';
 import { RecurrenceWeekdayOptions } from '../../../facades/recurrence.facade';
+import { errorHandler } from '../../../../../common/operators/error-handler.operator';
+import { toast } from 'ngx-sonner';
 
 @Component({
   standalone: true,
@@ -33,7 +34,13 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
 
   scheduleCategoryOptions: ScheduleCategory[] = [];
   frequencyOptions: SelectItem<ScheduleFrequency>[] = [];
-  colors = Object.entries(colors).map(([key, value]) => ({ key: key as Colors, value }));
+
+  statusOptions: SelectItem<ScheduleStatus>[] = [
+    { label: "A Fazer", value: "TO_MAKE" },
+    { label: "Em Progresso", value: "IN_PROGRESS" },
+    { label: "Finalizado", value: "FINISHED" },
+    { label: "Cancelado", value: "CANCELLED" },
+  ];
 
   @ViewChild(RecurrenceFormComponent) recurrenceFormComponent: RecurrenceFormComponent;
   
@@ -76,8 +83,9 @@ export class ScheduleFormComponent extends BaseFormComponentDirective<Schedule> 
 
   delete() {
     this.processing.set(true);
-    this.facade.openToDelete(this.form.value.id).subscribe({
+    this.facade.openToDelete(this.form.value.id).pipe(errorHandler({ header: "ERRO AO DELETAR REGISTRO!" })).subscribe({
       next: () => {
+        toast.success("SUCESSO!", { description: "Registro Excluido com Sucesso!" });
         this._context.close(this.crrRecord);
         this.processing.set(false);
       },

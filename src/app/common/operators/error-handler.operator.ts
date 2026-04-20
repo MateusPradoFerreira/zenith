@@ -2,7 +2,13 @@ import { catchError } from 'rxjs/operators';
 import { of, OperatorFunction, throwError } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
-export function errorHandler<T>(showWarning: boolean = false): OperatorFunction<T, T> {
+type ErrorHandlerData = {
+  header?: string;
+  next?: (error: any) => void;
+  showWarning?: boolean;
+};
+
+export function errorHandler<T>({ header, next, showWarning }: ErrorHandlerData = {}): OperatorFunction<T, T> {
   return (source$) => source$.pipe(
     catchError(error => {
       let message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
@@ -16,9 +22,10 @@ export function errorHandler<T>(showWarning: boolean = false): OperatorFunction<
           };
         } else toast.warning("ATENÇÃO!", { description: message });
       } else {
-        toast.error("ERRO!", { description: message });
+        toast.error(header || "ERRO!", { description: message });
       };
 
+      if(next) next(error);
       return throwError(() => error);
     })
   );
@@ -29,7 +36,7 @@ type NextErrorHandlerData = {
   next?: (error: any) => void;
 };
 
-export function nextErrorHandler<T>({ header, next }: NextErrorHandlerData): OperatorFunction<T, T> {
+export function nextErrorHandler<T>({ header, next }: NextErrorHandlerData = {}): OperatorFunction<T, T> {
   return (source$) => source$.pipe(
     catchError(error => {
       let message = error?.error?.message?.message || error?.error?.message?.details || error?.error?.message || error?.message || error;
