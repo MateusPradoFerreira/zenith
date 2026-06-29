@@ -49,6 +49,7 @@ export abstract class BaseFormComponentDirective<TRecordModel extends PllRecordI
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
+  // events
   $evNgOnInit: EventObs = event();
   $evUpdateUI: EventObs<TRecordModel> = event();
   $evInitRecord: EventObs = event();

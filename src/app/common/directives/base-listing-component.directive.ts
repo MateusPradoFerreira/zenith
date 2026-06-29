@@ -1,7 +1,7 @@
 import { computed, Directive, inject, input, model, OnInit, signal } from '@angular/core';
 import { PllFacade, PllPaginatedResponse, PllPagination, PllQueryFacade, PllRecord, PllRecordId } from '@pollaris';
 import { PllFormSchema } from '@pollaris/forms';
-import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
 import { DialogFacade, Inputkeys } from '../facades/dialog.facade';
 import { HlmDataTableActionFc, HlmDataTableColumn, HlmDataTableSelectionActionFc } from '../libs/ui/ui-table-helm/src/lib/hlm-data-table/hlm-data-table.component';
 import { BaseFormComponentDirective, event, EventObs } from './base-form-component.directive';
@@ -35,10 +35,12 @@ export abstract class BaseRecordListingComponentDirective<TRecordQueryModel exte
   loading = signal<boolean>(false);
   processing = signal<boolean>(false);
 
+  // params
   columns = signal<HlmDataTableColumn[]>([]);
   actionFn: HlmDataTableActionFc<TRecordQueryModel>;
   selectionActionFn: HlmDataTableSelectionActionFc<TRecordQueryModel>;
 
+  // events
   $evNgOnInit: EventObs<void> = event();
   $evUpdateUI: EventObs<PllPaginatedResponse<TRecordQueryModel>> = event();
   $evInitFilter: EventObs<void> = event();

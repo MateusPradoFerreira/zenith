@@ -49,16 +49,6 @@ export class CashFlowListingComponent extends BaseRecordListingComponentDirectiv
     d: this.$getBankAccountOptions(),
   })));
 
-  override $evUpdateUI: EventObs<PllPaginatedResponse<CashFlow>> = event(tap(response => {
-    /* this.getGraphValues(); */
-  }));
-
-  async getGraphValues() {
-    this.filter.refine().pipe(switchMap(filters => this.facade.service.getGraphValues(filters))).subscribe({
-      
-    });
-  };
-
   $getSecrecyOptions = () => this.secrecyService.getAllByFilter({ status: "ACTIVE" }).pipe(tap(response => {
     this.secrecyOptions = response.data.map(record => ({ label: record.name, value: record.id }));
     this.secrecyOptions.unshift({ label: "Todos", value: null });

@@ -256,11 +256,6 @@ export abstract class PllMockRestService<TRecordModel extends PllRecordId> exten
   };
 };
 
-export abstract class PllRecordMapper<TInternalModel extends PllRecordId, TExternalModel extends PllRecordId = TInternalModel> {
-  abstract to(data: TInternalModel): TExternalModel;
-  abstract from(data: TExternalModel): TInternalModel;
-};
-
 export abstract class PllFacade<TRecordModel extends PllRecordId, TComponent extends BaseFormComponentDirective<TRecordModel> = BaseFormComponentDirective<TRecordModel>> {
   abstract state: PllRecordState<TRecordModel>;
   abstract service: PllRestService<TRecordModel>;

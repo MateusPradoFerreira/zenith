@@ -7,6 +7,7 @@ export class DateStarter extends PllFormStarter<Date, any> {
     return moment(date).toDate();
   };
 };
+
 export class Starters {
   static toDate = new DateStarter();
 };
